@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "243128858489",
+    "firebase_url": "https://incla-36232.firebaseio.com",
+    "project_id": "incla-36232",
+    "storage_bucket": "incla-36232.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243128858489:android:773c5a74add576848261a8",
+        "android_client_info": {
+          "package_name": "document.document"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243128858489-23rk0pugkvpea6fd6nju9a0cdknugcn2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtKlVQaRO1KTq4UxjLT_Q0oXq8ejW6X0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243128858489-23rk0pugkvpea6fd6nju9a0cdknugcn2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
