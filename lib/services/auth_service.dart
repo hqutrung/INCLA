@@ -9,7 +9,10 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
 
-  Future<User> emailLogin(String email, String password) async {
+   Future<FirebaseUser> get getUser => _auth.currentUser();
+   Stream<FirebaseUser> get userStream => _auth.onAuthStateChanged;
+
+  Future<User> signInWithEmail(String email, String password) async {
     AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
     if (result.user == null)
       return null;
@@ -22,6 +25,10 @@ class AuthService {
       else
         return Student.fromMap(snapshot.data, email, docRef);
     }
+  }
+
+  bool hasUser() {
+    return _auth.currentUser() != null;
   }
 
   Future signOut() {
