@@ -15,16 +15,6 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-      
-  void signOut() async {
-    // try {
-    //   await widget.auth.signOut();
-    //   widget.logoutCallback();
-    // } catch (e) {
-    //   print(e);
-    // }
-  }
-
 
   List<Widget> _widgetOptions = <Widget>[
     HomeMain(),
