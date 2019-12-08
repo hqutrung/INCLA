@@ -1,4 +1,4 @@
-import 'package:document/screens/shared_widgets/home_drawer.dart';
+import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 class SessionScreen extends StatefulWidget {

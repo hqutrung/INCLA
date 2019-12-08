@@ -1,7 +1,7 @@
 import 'package:document/screens/course_screen/widgets_course_screen/widget_buoihoc.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/widget_tailieu.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/widget_sinhvien.dart';
-import 'package:document/screens/shared_widgets/home_drawer.dart';
+import 'package:document/screens/shared_widgets/main_drawer.dart';
 
 import 'package:flutter/material.dart';
 

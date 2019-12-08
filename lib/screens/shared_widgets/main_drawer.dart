@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'; 
  
 class MainDrawer extends StatefulWidget { 
-  Function signOut; 
+  final Function signOut; 
   MainDrawer({this.signOut}); 
   @override 
   _MainDrawerState createState() => _MainDrawerState(); 
