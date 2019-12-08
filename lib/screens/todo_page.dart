@@ -1,8 +1,10 @@
-import 'package:document/src/models/todo_model.dart';
+
+import 'package:document/models/todo_model.dart';
+import 'package:document/services/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-import 'package:document/src/firebase/firebase_auth.dart';
+
 import 'dart:async';
 
 class TodoPage extends StatefulWidget {

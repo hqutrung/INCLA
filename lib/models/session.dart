@@ -1,5 +1,7 @@
-import 'package:incla/models/attandance.dart';
-import 'package:incla/models/rate.dart';
+
+
+import 'attandance.dart';
+import 'rate.dart';
 
 enum SessionState {
   Inactive,

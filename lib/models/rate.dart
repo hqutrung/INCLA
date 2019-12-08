@@ -1,4 +1,6 @@
-import 'package:incla/models/attandance.dart';
+
+
+import 'attandance.dart';
 
 class Rate {
   Attendance attandance;

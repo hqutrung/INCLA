@@ -1,4 +1,5 @@
-import 'package:document/src/models/vande_model.dart';
+
+import 'package:document/models/vande_model.dart';
 import 'package:flutter/material.dart';
 
 class ThaoLuanPage extends StatelessWidget {

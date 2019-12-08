@@ -1,5 +1,7 @@
-import 'package:incla/models/attandance.dart';
-import 'package:incla/models/comment.dart';
+
+
+import 'package:document/models/attandance.dart';
+import 'package:document/models/comment.dart';
 
 class Post {
   String uid;

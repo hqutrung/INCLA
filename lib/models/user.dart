@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:incla/models/course.dart';
+
+import 'course.dart';
+
 
 enum UserType {
   Teacher,

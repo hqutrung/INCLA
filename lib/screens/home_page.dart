@@ -1,5 +1,5 @@
-import 'dart:async';
-import 'package:document/src/firebase/firebase_auth.dart';
+
+import 'package:document/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

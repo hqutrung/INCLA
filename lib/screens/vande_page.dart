@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:document/src/firebase/firebase_auth.dart';
-import 'package:document/src/models/vande_model.dart';
+import 'package:document/models/vande_model.dart';
+import 'package:document/services/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,6 @@
-import 'package:document/src/models/class_model.dart';
+
+
+import 'package:document/models/class_model.dart';
 
 class Document{
   String _name;

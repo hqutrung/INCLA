@@ -1,8 +1,10 @@
-import 'package:document/src/ui/home_page.dart';
 
+
+import 'package:document/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:document/src/firebase/firebase_auth.dart';
 
+
+import 'home_page.dart';
 import 'login_page.dart';
 
 enum AuthStatus {

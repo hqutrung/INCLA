@@ -1,5 +1,6 @@
+import 'package:document/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:document/src/firebase/firebase_auth.dart';
+
 
 class LoginSignupPage extends StatefulWidget {
   LoginSignupPage({this.auth, this.loginCallback});

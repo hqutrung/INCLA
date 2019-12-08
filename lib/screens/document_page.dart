@@ -1,4 +1,5 @@
-import 'package:document/src/models/document_model.dart';
+
+import 'package:document/models/document_model.dart';
 import 'package:flutter/material.dart';
 
 class DocumentPage extends StatefulWidget {
