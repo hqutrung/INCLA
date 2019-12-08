@@ -1,3 +1,4 @@
+import 'package:document/screens/course_screen/course_screen.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class _HomeMainState extends State<HomeMain> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: MainAppBar(
-        title: 'Thông báo',
+        title: 'Trang chủ',
         openDrawer: () => _scaffoldKey.currentState.openDrawer(),
       ),
       drawer: MainDrawer(),
@@ -30,7 +31,9 @@ class _HomeMainState extends State<HomeMain> {
               Icons.hotel,
               color: Colors.black,
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> CourseScreen()));
+            },
           ),
         ),
       ),
