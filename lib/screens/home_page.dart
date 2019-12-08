@@ -1,17 +1,16 @@
 
-import 'package:document/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  final BaseAuth auth;
-  final VoidCallback logoutCallback;
-
-  const HomePage({Key key, this.auth, this.logoutCallback}) : super(key: key);
+  static const String HOMESCREEN_PATH = '/home';
+  HomePage();
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -23,12 +22,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void signOut() async {
-    try {
-      await widget.auth.signOut();
-      widget.logoutCallback();
-    } catch (e) {
-      print(e);
-    }
+    // try {
+    //   await widget.auth.signOut();
+    //   widget.logoutCallback();
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 
   Widget showDrawer() {

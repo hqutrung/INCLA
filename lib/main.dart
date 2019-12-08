@@ -1,21 +1,23 @@
 
-import 'package:document/screens/root_page.dart';
-import 'package:document/services/firebase_auth.dart';
+import 'package:document/screens/home_page.dart';
+import 'package:document/screens/loginScreen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      // debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RootPage(auth: new Auth()),
+      routes: {
+        LoginScreen.LOGINSCREEN_PATH: (_) => LoginScreen(),
+        HomePage.HOMESCREEN_PATH: (_) => HomePage(),
+      },
     );
   }
 }
