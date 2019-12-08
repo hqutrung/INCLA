@@ -1,7 +1,7 @@
 
 
-import 'package:document/models/attandance.dart';
-import 'package:document/models/comment.dart';
+import 'attandance.dart';
+import 'comment.dart';
 
 class Post {
   String uid;

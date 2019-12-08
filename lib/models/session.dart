@@ -1,5 +1,3 @@
-
-
 import 'attandance.dart';
 import 'rate.dart';
 
