@@ -22,7 +22,7 @@ class _CourseScreenState extends State<CourseScreen> {
             bottom: TabBar(
               tabs: <Widget>[
                 Tab(
-                  icon: Icon(Icons.menu),
+                  icon: Icon(Icons.content_paste),
                   text: "Buổi học",
                 ),
                 Tab(
