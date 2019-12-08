@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Image.asset(
-                'lib/src/images/logo-uit.png',
+                'assets/images/logo-uit.png',
                 width: 40,
                 height: 40,
               ),
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                     Column(
                       children: <Widget>[
                         Image.asset(
-                          'lib/src/images/logo-uit.png',
+                          'assets/images/logo-uit.png',
                           width: 40,
                           height: 40,
                         )
@@ -287,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                         radius: 60,
                         backgroundColor: Colors.white,
                         backgroundImage:
-                            AssetImage('lib/src/images/logo-uit.png'),
+                            AssetImage('assets/images/logo-uit.png'),
                       ),
                     ),
                     Text(
