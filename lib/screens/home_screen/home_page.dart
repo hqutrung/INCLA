@@ -15,13 +15,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  static Widget appBar(String titleApp) {
-    return AppBar(
-      title: Text(titleApp),
-    );
-  }
-
+      
   void signOut() async {
     // try {
     //   await widget.auth.signOut();

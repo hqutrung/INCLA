@@ -1,3 +1,5 @@
+import 'package:document/screens/shared_widgets/main_appbar.dart';
+import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart'; 
  
 class HomeNotification extends StatefulWidget { 
@@ -6,12 +8,16 @@ class HomeNotification extends StatefulWidget {
 } 
  
 class _HomeNotificationState extends State<HomeNotification> { 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override 
   Widget build(BuildContext context) { 
     return Scaffold( 
-      appBar: AppBar( 
-        title: Text('Thông báo'), 
-      ), 
+      key: _scaffoldKey,
+      appBar: MainAppBar(
+        title: 'Thông báo',
+        openDrawer: () => _scaffoldKey.currentState.openDrawer(),
+      ),
+      drawer: MainDrawer(),
       body: ListView.builder( 
         scrollDirection: Axis.vertical, 
         itemCount: 3, 
