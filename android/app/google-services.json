@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:243128858489:android:773c5a74add576848261a8",
+        "mobilesdk_app_id": "1:243128858489:android:1b90137cdbc2dd078261a8",
         "android_client_info": {
-          "package_name": "document.document"
+          "package_name": "com.inclateam.incla"
         }
       },
       "oauth_client": [

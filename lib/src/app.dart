@@ -1,6 +1,6 @@
-import 'package:document/src/ui/buoihoc_page.dart';
-import 'package:document/src/ui/document_page.dart';
-import 'package:document/src/ui/login_page.dart';
+
+import 'package:document/src/firebase/firebase_auth.dart';
+import 'package:document/src/ui/root_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: new RootPage(auth: new Auth()),
     );
   }
 }

@@ -1,139 +1,246 @@
-import 'package:document/src/blocs/login_bloc.dart';
-import 'package:document/src/ui/buoihoc_page.dart';
-import 'package:document/src/ui/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:document/src/firebase/firebase_auth.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginSignupPage extends StatefulWidget {
+  LoginSignupPage({this.auth, this.loginCallback});
+
+  final BaseAuth auth;
+  final VoidCallback loginCallback;
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<StatefulWidget> createState() => new _LoginSignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  @override
-  LoginBloc loginBloc = new LoginBloc();
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _passController = new TextEditingController();
+class _LoginSignupPageState extends State<LoginSignupPage> {
+  final _formKey = new GlobalKey<FormState>();
 
+  String _email;
+  String _password;
+  String _errorMessage;
+
+  bool _isLoginForm;
+  bool _isLoading;
+
+  // Check if form is valid before perform login or signup
+  bool validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  // Perform login or signup
+  void validateAndSubmit() async {
+    setState(() {
+      _errorMessage = "";
+      _isLoading = true;
+    });
+    if (validateAndSave()) {
+      String userId = "";
+      try {
+        if (_isLoginForm) {
+          userId = await widget.auth.signIn(_email, _password);
+          print('Signed in: $userId');
+        } else {
+          userId = await widget.auth.signUp(_email, _password);
+          //widget.auth.sendEmailVerification();
+          //_showVerifyEmailSentDialog();
+          print('Signed up user: $userId');
+        }
+        setState(() {
+          _isLoading = false;
+        });
+
+        if (userId.length > 0 && userId != null && _isLoginForm) {
+          widget.loginCallback();
+        }
+      } catch (e) {
+        print('Error: $e');
+        setState(() {
+          _isLoading = false;
+          _errorMessage = e.message;
+          _formKey.currentState.reset();
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    _errorMessage = "";
+    _isLoading = false;
+    _isLoginForm = true;
+    super.initState();
+  }
+
+  void resetForm() {
+    _formKey.currentState.reset();
+    _errorMessage = "";
+  }
+
+  void toggleFormMode() {
+    resetForm();
+    setState(() {
+      _isLoginForm = !_isLoginForm;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+    return new Scaffold(
+        body: Stack(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'lib/src/images/logo-uit.png',
-                  height: 120,
-                  width: 120,
-                ),
-              ],
-            ),
-            StreamBuilder(
-              stream: loginBloc.emailStream,
-              builder: (context, snapshot) => TextField(
-                controller: _emailController,
-                onTap: () {},
-                textAlign: TextAlign.start,
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.email),
-                    hintText: 'Email',
-                    errorText: snapshot.hasError ? snapshot.error : null,
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan, width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            StreamBuilder(
-              stream: loginBloc.passStream,
-              builder: (context, snapshot) => TextField(
-                controller: _passController,
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.fingerprint),
-                    errorText: snapshot.hasError ? snapshot.error : null,
-                    hintText: 'Mật khẩu',
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan, width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
-                obscureText: true,
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 100,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if (loginBloc.isValidInfo(
-                          _emailController.text, _passController.text)) {
-                        loginBloc.login(
-                            _emailController.text, _passController.text, () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BuoiHocPage()));
-                        });
-                      }
-                      else showDialog(builder: (context)=> new Dialog(
-                        child: Container(
-                          color: Colors.white,
-                          height: 100,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              CircularProgressIndicator(),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Text(
-                                    'Tài khoản hoặc mật khẩu không chính xác'
-                                ),
-                              )
-                            ],
-                          ),
-                        ) ,
-                      ));
-                    },
-                    child: Text('Đăng nhập'),
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                ),
-                ButtonTheme(
-                  minWidth: 100,
-                  child: RaisedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignupPage()));
-                    },
-                    child: Text('Đăng ký'),
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                    ),
-                  ),
-                ),
-              ],
-            )
+            _showForm(),
+            _showCircularProgress(),
           ],
+        ));
+  }
+
+  Widget _showCircularProgress() {
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+
+//  void _showVerifyEmailSentDialog() {
+//    showDialog(
+//      context: context,
+//      builder: (BuildContext context) {
+//        // return object of type Dialog
+//        return AlertDialog(
+//          title: new Text("Verify your account"),
+//          content:
+//              new Text("Link to verify account has been sent to your email"),
+//          actions: <Widget>[
+//            new FlatButton(
+//              child: new Text("Dismiss"),
+//              onPressed: () {
+//                toggleFormMode();
+//                Navigator.of(context).pop();
+//              },
+//            ),
+//          ],
+//        );
+//      },
+//    );
+//  }
+
+  Widget _showForm() {
+    return new Container(
+        padding: EdgeInsets.all(16.0),
+        child: new Form(
+          key: _formKey,
+          child: new ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              showLogo(),
+              showEmailInput(),
+              showPasswordInput(),
+              showPrimaryButton(),
+              showSecondaryButton(),
+              showErrorMessage(),
+            ],
+          ),
+        ));
+  }
+
+  Widget showErrorMessage() {
+    if (_errorMessage.length > 0 && _errorMessage != null) {
+      return new Text(
+        _errorMessage,
+        style: TextStyle(
+            fontSize: 13.0,
+            color: Colors.red,
+            height: 1.0,
+            fontWeight: FontWeight.w300),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget showLogo() {
+    return new Hero(
+      tag: 'hero',
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 48.0,
+          child: Image.asset('lib/src/images/logo-uit.png'),
         ),
       ),
     );
+  }
+
+  Widget showEmailInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        decoration: new InputDecoration(
+            hintText: 'Email',
+            icon: new Icon(
+              Icons.mail,
+              color: Colors.grey,
+            )),
+        validator: (value) => value.isEmpty ? 'Chưa nhập Email' : null,
+        onSaved: (value) => _email = value.trim(),
+      ),
+    );
+  }
+
+  Widget showPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        obscureText: true,
+        autofocus: false,
+        decoration: new InputDecoration(
+            hintText: 'Password',
+            icon: new Icon(
+              Icons.lock,
+              color: Colors.grey,
+            )),
+        validator: (value) => value.isEmpty ? 'Chưa nhập password' : null,
+        onSaved: (value) => _password = value.trim(),
+      ),
+    );
+  }
+
+  Widget showSecondaryButton() {
+    return new FlatButton(
+        child: new Text(
+            _isLoginForm ? 'Tạp tài khoản' : 'Đăng nhập',
+            style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+        onPressed: toggleFormMode);
+  }
+
+  Widget showPrimaryButton() {
+    return new Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        child: SizedBox(
+          height: 40.0,
+          child: new RaisedButton(
+            elevation: 5.0,
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.blue,
+            child: new Text(_isLoginForm ? 'Đăng nhập' : 'Tạo tài khoản',
+                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+            onPressed: validateAndSubmit,
+          ),
+        ));
   }
 }
