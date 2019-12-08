@@ -22,6 +22,7 @@ class User {
   UserType type;
 
   User.fromMap(Map data, {@required this.documentReference, @required this.email}) {
+    name = data['name'];
     uid = data['uid'];
     type = UserType.values[data['user_type']];
   }

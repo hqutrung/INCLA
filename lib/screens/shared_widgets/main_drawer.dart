@@ -1,9 +1,7 @@
-import 'package:document/screens/login_screen/login_screen.dart';
+import 'package:document/models/user.dart';
 import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/wrappers.dart';
-
-import '../wrapper_screen.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatefulWidget {
   MainDrawer();
@@ -16,12 +14,15 @@ class _MainDrawerState extends State<MainDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context);
+    String name = (user != null) ? user.name : 'loading';
+    String email = (user != null) ? user.email : 'loading';
     return Drawer(
       child: ListView(
         children: <Widget>[
           UserAccountsDrawerHeader(
-            accountName: Text("Ashish Rawat"),
-            accountEmail: Text("ashishrawat2911@gmail.com"),
+            accountName: Text(name),
+            accountEmail: Text(email),
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Image.asset(
@@ -35,6 +36,7 @@ class _MainDrawerState extends State<MainDrawer> {
               title: Text('Đăng xuất'),
               onTap: () {
                 auth.signOut();
+                print('signOut');
                 Navigator.popUntil(
                   context,
                   ModalRoute.withName(Navigator.defaultRouteName),
