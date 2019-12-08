@@ -65,7 +65,9 @@ class _HomePageState extends State<HomePage> {
             return Container(
               padding: EdgeInsets.all(10),
               child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>CourseScreen()));
+                },
                 padding: EdgeInsets.all(10),
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -85,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(
                               fontSize: 20,
                             ),
-                          ),
+                          ),    
                           Text(
                             'Nguyen Minh Hoang',
                             style: TextStyle(
