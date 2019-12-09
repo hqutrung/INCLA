@@ -13,15 +13,13 @@ class User {
 
   Firestore _db = Firestore.instance;
 
-  DocumentReference documentReference;
-
   String email;
   String uid;
   String name;
   List<Course> course;
   UserType type;
 
-  User.fromMap(Map data, {@required this.documentReference, @required this.email}) {
+  User.fromMap(Map data,{@required this.email}) {
     name = data['name'];
     uid = data['uid'];
     type = UserType.values[data['user_type']];

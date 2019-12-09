@@ -16,9 +16,9 @@ class AuthService {
     DocumentSnapshot snapshot = await docRef.get();
     Map data = snapshot.data;
     if (data['user_type'] == 0)
-      return Teacher.fromMap(snapshot.data, firebaseUser.email, docRef);
+      return Teacher.fromMap(snapshot.data, firebaseUser.email);
     else
-      return Student.fromMap(snapshot.data, firebaseUser.email, docRef);
+      return Student.fromMap(snapshot.data, firebaseUser.email);
   }
 
   Stream<User> get getUserStream {
@@ -29,9 +29,9 @@ class AuthService {
       DocumentSnapshot snapshot = await docRef.get();
       Map data = snapshot.data;
       if (data['user_type'] == 0)
-        return Teacher.fromMap(snapshot.data, firebaseUser.email, docRef);
+        return Teacher.fromMap(snapshot.data, firebaseUser.email);
       else
-        return Student.fromMap(snapshot.data, firebaseUser.email, docRef);
+        return Student.fromMap(snapshot.data, firebaseUser.email);
     });
   }
 
@@ -47,9 +47,9 @@ class AuthService {
         DocumentSnapshot snapshot = await docRef.get();
         Map data = snapshot.data;
         if (data['user_type'] == 0)
-          return Teacher.fromMap(snapshot.data, email, docRef);
+          return Teacher.fromMap(snapshot.data, email);
         else
-          return Student.fromMap(snapshot.data, email, docRef);
+          return Student.fromMap(snapshot.data, email);
       }
     } catch (e) {
       print(e);
