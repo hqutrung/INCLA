@@ -19,6 +19,9 @@ class User {
   List<Course> course;
   UserType type;
 
+  User.nullUser() {
+  }
+
   User.fromMap(Map data,{@required this.email}) {
     name = data['name'];
     uid = data['uid'];

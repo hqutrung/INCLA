@@ -12,7 +12,6 @@ class _showTopicState extends State<showTopic> {
   @override
   Widget build(BuildContext context) {
     if (!isTopicDetail) {
-      print('zgxzbc');
       return ListView.builder(
         scrollDirection: Axis.vertical,
         itemCount: 3,
@@ -44,7 +43,6 @@ class _showTopicState extends State<showTopic> {
         ),
       );
     } else if (isTopicDetail) {
-      print('abc');
       return Column(
         children: <Widget>[
           ListTile(

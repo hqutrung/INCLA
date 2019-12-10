@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attandance.dart';
 import 'package:document/models/course.dart';
+import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
 
 class FireStoreHelper {
@@ -9,6 +10,7 @@ class FireStoreHelper {
   static final Map models = {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Course: (Map data) => Course.fromMap(data),
+    Session: (Map data) => Session.fromMap(data),
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -27,4 +29,6 @@ class FireStoreHelper {
       return Attendance.fromMap(data.data);
     }).toList();
   }
+
+  // Stream<List<Session>> 
 }

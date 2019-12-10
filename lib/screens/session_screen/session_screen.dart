@@ -9,8 +9,6 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

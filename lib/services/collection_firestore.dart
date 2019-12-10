@@ -19,8 +19,10 @@ class Collection<T> {
   }
 
   Stream<List<T>> streamData() {
-    return reference.snapshots().map((query) => query.documents
+    var x = reference.snapshots().map((query) => query.documents
         .map((doc) => FireStoreHelper.models[T](doc.data) as T)
         .toList());
+    print(x.first);
+    return x;
   }
 }

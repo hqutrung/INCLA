@@ -42,7 +42,7 @@ class _CourseScreenState extends State<CourseScreen> {
           ),
           body: TabBarView(
             children: <Widget>[
-              showBuoiHoc(context),
+              SessionList(courseID: widget.courseID),
               StudentList(courseID: widget.courseID),
               showTaiLieu(),
             ],

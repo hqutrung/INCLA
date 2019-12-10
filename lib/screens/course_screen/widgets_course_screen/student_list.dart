@@ -7,13 +7,11 @@ class StudentList extends StatelessWidget {
   Future<List<Attendance>> attendanceAsyncer;
 
   StudentList({@required this.courseID}) {
-    print("1");
     attendanceAsyncer = FireStoreHelper().getStudents(this.courseID);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("2");
     return FutureBuilder<List<Attendance>>(
         future: attendanceAsyncer,
         builder: (context, snapshot) {

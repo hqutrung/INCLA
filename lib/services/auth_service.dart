@@ -10,7 +10,7 @@ class AuthService {
 
   Future<User> get getUser async {
     FirebaseUser firebaseUser = await _auth.currentUser();
-    if (firebaseUser == null) return null;
+    if (firebaseUser == null) return User.nullUser();
     DocumentReference docRef =
         _db.collection(User.COLLECTION_PATH).document(firebaseUser.email);
     DocumentSnapshot snapshot = await docRef.get();
@@ -23,7 +23,7 @@ class AuthService {
 
   Stream<User> get getUserStream {
     return FirebaseAuth.instance.onAuthStateChanged.asyncMap((firebaseUser) async {
-      if (firebaseUser == null) return null;
+      if (firebaseUser == null) return User.nullUser();
       DocumentReference docRef =
           _db.collection(User.COLLECTION_PATH).document(firebaseUser.email);
       DocumentSnapshot snapshot = await docRef.get();
