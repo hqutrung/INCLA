@@ -1,11 +1,15 @@
 import 'package:document/screens/course_screen/widgets_course_screen/widget_buoihoc.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/widget_tailieu.dart';
-import 'package:document/screens/course_screen/widgets_course_screen/widget_sinhvien.dart';
+import 'package:document/screens/course_screen/widgets_course_screen/student_list.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 
 import 'package:flutter/material.dart';
 
 class CourseScreen extends StatefulWidget {
+  final String courseID;
+
+  CourseScreen({@required this.courseID});
+
   @override
   _CourseScreenState createState() => _CourseScreenState();
 }
@@ -39,7 +43,7 @@ class _CourseScreenState extends State<CourseScreen> {
           body: TabBarView(
             children: <Widget>[
               showBuoiHoc(),
-              showSinhVien(),
+              StudentList(courseID: widget.courseID),
               showTaiLieu(),
             ],
           ),

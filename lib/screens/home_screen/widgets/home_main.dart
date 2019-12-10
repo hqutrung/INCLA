@@ -39,8 +39,14 @@ class _HomeMainState extends State<HomeMain> {
             color: Colors.black,
           ),
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CourseScreen()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseScreen(
+                  courseID: course[index].courseID,
+                ),
+              ),
+            );
           },
         ),
       ),

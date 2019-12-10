@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:document/models/attandance.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/user.dart';
 
@@ -17,6 +18,13 @@ class FireStoreHelper {
         .getDocuments();
     return snapshots.documents.map((data) {
       return Course.fromMap(data.data);
+    }).toList();
+  }
+
+  Future<List<Attendance>> getStudents(String courseID) async {
+    QuerySnapshot snapshots = await _db.collection('user_course').where('courseID', isEqualTo: courseID).getDocuments();
+    return snapshots.documents.map((data) {
+      return Attendance.fromMap(data.data);
     }).toList();
   }
 }
