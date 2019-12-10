@@ -8,8 +8,15 @@ class CreateQR extends StatefulWidget {
 class _CreateQRState extends State<CreateQR> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+
+    return GestureDetector(
+      child: Container(
+        child: Icon(
+          Icons.center_focus_weak,
+          size: 250.0,
+          
+        ),
+      ),
     );
   }
 }

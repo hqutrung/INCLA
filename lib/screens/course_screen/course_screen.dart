@@ -38,7 +38,7 @@ class _CourseScreenState extends State<CourseScreen> {
           ),
           body: TabBarView(
             children: <Widget>[
-              showBuoiHoc(),
+              showBuoiHoc(context),
               showSinhVien(),
               showTaiLieu(),
             ],

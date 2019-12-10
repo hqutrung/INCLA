@@ -1,3 +1,4 @@
+import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
@@ -8,46 +9,36 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  List<Widget> _widgetOptions = <Widget>[
-    showTopic(),
-    Text('diem danh'),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: MainDrawer(),
-      appBar: AppBar(
-        title: Text('Tuần 1 - Ngày 10/10/2019'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.comment),
-            title: Text('Thảo luận'),
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          drawer: MainDrawer(),
+          appBar: AppBar(
+            title: Text('Tuần 1 - Ngày 10/10/2019'),
+            bottom: TabBar(
+              tabs: <Widget>[
+                Tab(
+                  icon: Icon(Icons.comment),
+                  text: "Thảo luận",
+                ),
+                Tab(
+                  icon: Icon(Icons.check_circle_outline),
+                  text: "Điểm danh",
+                ),
+                
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle_outline),
-            title: Text('Điểm danh'),
+          body: TabBarView(
+            children: <Widget>[
+              showTopic(),
+              RollCall(),
+            ],
           ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-    );
+        ));
   }
 }
