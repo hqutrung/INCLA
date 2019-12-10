@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Course {
-  String uid;
+  String courseID;
   String name;
-  DocumentReference documentRef;
+
+  Course.fromMap(Map data, {this.courseID}) {
+    if (courseID == null) courseID = data['courseID'];
+    name = data['name'];
+  }
 }
