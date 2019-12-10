@@ -9,8 +9,6 @@ class SessionScreen extends StatefulWidget {
 }
 
 class _SessionScreenState extends State<SessionScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -18,7 +16,30 @@ class _SessionScreenState extends State<SessionScreen> {
         child: Scaffold(
           drawer: MainDrawer(),
           appBar: AppBar(
-            title: Text('Tuần 1 - Ngày 10/10/2019'),
+            title: Text(
+              'Tuần 1 - Ngày 10/10/2019',
+              style: TextStyle(fontSize: 16.0),
+            ),
+            actions: <Widget>[
+              SizedBox(
+                height: 10,
+                width: 80,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)),
+                  child: Row(
+                    children: <Widget>[
+                      Text('5.0'),
+                      Icon(
+                        Icons.star,
+                        color: Colors.orange,
+                      )
+                    ],
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ],
             bottom: TabBar(
               tabs: <Widget>[
                 Tab(
@@ -29,7 +50,6 @@ class _SessionScreenState extends State<SessionScreen> {
                   icon: Icon(Icons.check_circle_outline),
                   text: "Điểm danh",
                 ),
-                
               ],
             ),
           ),
