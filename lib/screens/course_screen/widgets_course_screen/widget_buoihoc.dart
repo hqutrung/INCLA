@@ -2,9 +2,8 @@ import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 
-class showBuoiHoc extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+
+  Widget showBuoiHoc(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -39,4 +38,4 @@ class showBuoiHoc extends StatelessWidget {
           ),
         ));
   }
-}
+
