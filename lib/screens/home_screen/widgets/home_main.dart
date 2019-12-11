@@ -36,7 +36,7 @@ class _HomeMainState extends State<HomeMain> {
           trailing: Icon(
             Icons.hotel,
             color: Colors.black,
-          ),
+          ), 
           onTap: () {
             Navigator.push(
               context,
