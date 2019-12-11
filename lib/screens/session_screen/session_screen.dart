@@ -3,6 +3,8 @@ import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/widget_session_screen/ratedetail.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
+
+
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +72,7 @@ class _SessionScreenState extends State<SessionScreen> {
             children: <Widget>[
               showTopic(course: widget.course, sessionID: widget.sessionID,),
               RollCall(),
-              RateDetail(),
+              RateDetail()
             ],
           ),
         ));
