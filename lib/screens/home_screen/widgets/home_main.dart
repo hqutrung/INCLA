@@ -3,6 +3,7 @@ import 'package:document/models/user.dart';
 import 'package:document/screens/course_screen/course_screen.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
+import 'package:document/services/auth_service.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _HomeMainState extends State<HomeMain> {
           trailing: Icon(
             Icons.hotel,
             color: Colors.black,
-          ), 
+          ),
           onTap: () {
             Navigator.push(
               context,
@@ -54,6 +55,7 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
+    print("HomeMain build");
     return Scaffold(
       key: _scaffoldKey,
       appBar: MainAppBar(

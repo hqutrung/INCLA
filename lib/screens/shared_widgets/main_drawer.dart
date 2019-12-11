@@ -3,17 +3,13 @@ import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MainDrawer extends StatefulWidget {
+class MainDrawer extends StatelessWidget {
   MainDrawer();
-  @override
-  _MainDrawerState createState() => _MainDrawerState();
-}
-
-class _MainDrawerState extends State<MainDrawer> {
-  AuthService auth = AuthService();
+  final AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    print("Main Drawer rebuild");
     User user = Provider.of<User>(context);
     String name = (user != null) ? user.name : 'loading';
     String email = (user != null) ? user.email : 'loading';
@@ -36,11 +32,7 @@ class _MainDrawerState extends State<MainDrawer> {
               title: Text('Đăng xuất'),
               onTap: () {
                 auth.signOut();
-                ('signOut');
-                Navigator.popUntil(
-                  context,
-                  ModalRoute.withName(Navigator.defaultRouteName),
-                );
+                Navigator.pop(context);
               }),
         ],
       ),

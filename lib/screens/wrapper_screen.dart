@@ -1,27 +1,34 @@
 import 'package:document/models/user.dart';
 import 'package:document/screens/home_screen/home_page.dart';
 import 'package:document/screens/login_screen/login_screen.dart';
-import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginAndHomeWrapper extends StatelessWidget {
   static const String WRAPPER_PATH = '/';
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User>(
-        future: AuthService().getUser,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Text('Loading...');
-          else {
-            User user = snapshot.data;
-            if (user.email == null)
-              return LoginScreen();
-            else
-              return HomePage();
-          }
-          // return Text('Loading... ' + snapshot.connectionState.toString() + ' ' + snapshot.hasData.toString());
-        });
+    print("LoginAndHomeWrapper build");
+    User user = Provider.of<User>(context);
+    if (user == null) return LoadingPage();
+    if (user.email == null)
+      print("LoginAndHomeWrapper with user.email == null");
+    if (user.email == null) {
+      print("rebuild with loginScreen");
+      return LoginScreen();
+    } else {
+      print("Rebuild with HomePage");
+      return HomePage();
+    }
+  }
+}
+
+class LoadingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
   }
 }

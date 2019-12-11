@@ -1,18 +1,8 @@
-import 'package:document/screens/home_screen/home_page.dart';
 import 'package:document/screens/login_screen/widgets/login_logo.dart';
 import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String LOGINSCREEN_PATH = '/';
-  LoginScreen();
-
-  @override
-  State<StatefulWidget> createState() => new _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreen extends StatelessWidget {
   AuthService _auth = AuthService();
 
   TextEditingController emailController = TextEditingController();
@@ -23,20 +13,14 @@ class _LoginScreenState extends State<LoginScreen> {
         context: context,
         builder: (context) => Center(child: CircularProgressIndicator()));
 
-    var user = await _auth.signInWithEmail(
-        emailController.text, passwordController.text);
+    await _auth.signInWithEmail(emailController.text, passwordController.text);
 
-    Navigator.pop(context);
-
-    if (user != null) {
-      emailController.text = '';
-      passwordController.text = '';
-      Navigator.pushNamed(context, HomePage.HOMESCREEN_PATH);
-    }
+    Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
+    print("LoginScreen rebuild: " + context.toString());
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
