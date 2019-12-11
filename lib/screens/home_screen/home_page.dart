@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("Home_Page rebuild");
     return Scaffold(
       drawer: MainDrawer(),
       body: IndexedStack(

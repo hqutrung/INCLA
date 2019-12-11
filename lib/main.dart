@@ -13,24 +13,36 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Stream<User> userStream;
+
+  @override
+  void initState() {
+    userStream = AuthService().getUserStream;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        StreamProvider<User>.value(
-          value: AuthService().getUserStream,
-        ),
-      ],
-      child: MaterialApp(
-        title: 'Incla',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        routes: {
-          LoginAndHomeWrapper.WRAPPER_PATH: (_) => LoginAndHomeWrapper(),
-          HomePage.HOMESCREEN_PATH: (_) => HomePage(),
-        },
-      ),
+    return StreamBuilder<User>(
+      stream: userStream,
+      builder: (context, snapshot) {
+        print("MAIN STREAM BUILDER CALLED 1 " + (snapshot.data == null).toString());
+        if (snapshot.data != null)
+           print("MAIN STREAM BUILDER CALLED 2 " + (snapshot.data.email == null).toString());
+        return Provider<User>.value(
+          value: snapshot.data,
+          child: MaterialApp(
+            title: 'Incla',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            routes: {
+              LoginAndHomeWrapper.WRAPPER_PATH: (_) => LoginAndHomeWrapper(),
+              // HomePage.HOMESCREEN_PATH: (_) => HomePage(),
+            },
+          ),
+        );
+      },
     );
   }
 }
