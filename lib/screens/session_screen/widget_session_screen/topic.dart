@@ -13,7 +13,8 @@ class showTopic extends StatefulWidget {
   _showTopicState createState() => _showTopicState();
 }
 
-class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMixin  {
+class _showTopicState extends State<showTopic>
+    with AutomaticKeepAliveClientMixin {
   Post selectedPost;
 
   bool isTopicDetail = false;
@@ -56,7 +57,6 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                    
                     Navigator.pop(context);
                   })
             ],
@@ -124,7 +124,8 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
         ),
       );
     } else if (isTopicDetail) {
-      TextEditingController _commentTextcontroller = new TextEditingController();
+      TextEditingController _commentTextcontroller =
+          new TextEditingController();
       return Column(
         children: <Widget>[
           ListTile(
@@ -152,7 +153,8 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
               child: Text(
                 selectedPost.content,
                 textAlign: TextAlign.center,
@@ -165,23 +167,44 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
           Expanded(
             child: ListView.builder(
               itemCount: selectedPost.comments.length,
-              itemBuilder: (context, index) => Card(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+              itemBuilder: (context, index) => Row(
+                children: [
+                  SizedBox(width: 10,),
+                  CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage:
+                          AssetImage('assets/images/logo-uit.png'),
+                          radius: 25,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedPost.attendance.username,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width*0.8),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.orange[100],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: Text(selectedPost.comments[index].content),
+                      ),
+                    ],
                   ),
-                  title: Text(
-                    selectedPost.comments[index].attendance.username,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(selectedPost.comments[index].content),
-                ),
+                ],
               ),
             ),
           ),
           Container(
-           
             child: TextFormField(
               controller: _commentTextcontroller,
               decoration: InputDecoration(
@@ -189,13 +212,9 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
                   filled: true,
                   prefixIcon: Icon(
                     Icons.comment,
-                    
                   ),
-                  suffixIcon: IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                        
-                      })),
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.send), onPressed: () {})),
             ),
           ),
         ],
