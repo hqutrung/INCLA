@@ -22,7 +22,6 @@ class Collection<T> {
     var x = reference.snapshots().map((query) => query.documents
         .map((doc) => FireStoreHelper.models[T](doc.data, doc.documentID) as T)
         .toList());
-    print(x.first);
     return x;
   }
 }

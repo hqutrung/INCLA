@@ -13,7 +13,9 @@ class showTopic extends StatefulWidget {
   _showTopicState createState() => _showTopicState();
 }
 
-class _showTopicState extends State<showTopic> {
+class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMixin  {
+  Post selectedPost;
+
   bool isTopicDetail = false;
 
   Future<List<Post>> postsAsyncer;
@@ -22,7 +24,8 @@ class _showTopicState extends State<showTopic> {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          var _titleEditingController = TextEditingController(),_contentEditingController = TextEditingController();
+          var _titleEditingController = TextEditingController(),
+              _contentEditingController = TextEditingController();
           return AlertDialog(
             content: Column(
               children: <Widget>[
@@ -109,6 +112,7 @@ class _showTopicState extends State<showTopic> {
                     ),
                     onTap: () {
                       setState(() {
+                        selectedPost = posts[index];
                         isTopicDetail = !isTopicDetail;
                       });
                     },
@@ -123,37 +127,43 @@ class _showTopicState extends State<showTopic> {
       return Column(
         children: <Widget>[
           ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/logo-uit.png'),
-                backgroundColor: Colors.white,
-                radius: 25.0,
+            leading: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/logo-uit.png'),
+              backgroundColor: Colors.white,
+              radius: 25.0,
+            ),
+            title: Text(
+              selectedPost.attendance.username,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
               ),
-              title: Text(
-                'Huỳnh Quốc Trung',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            subtitle: Text(selectedPost.timestamp.toString()),
+            trailing: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                setState(() {
+                  isTopicDetail = !isTopicDetail;
+                });
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              child: Text(
+                selectedPost.content,
+                textAlign: TextAlign.center,
               ),
-              subtitle: Text('21/10/2019 3:32'),
-              trailing: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  setState(() {
-                    isTopicDetail = !isTopicDetail;
-                  });
-                },
-              )),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-                'Chương trình đào tạo hướng đến đào tạo nguồn nhân lực công nghệ thông tin chất lượng cao đạt trình độ khu vực và quốc tế, đáp ứng nhu cầu xây dựng nguồn nhân lực ngành công nghiệp công nghệ thông tin trong cả nước.Sinh viên tốt nghiệp chương trình Kỹ sư ngành Kỹ thuật phần mềm phải đáp ứng các yêu cầu:\n- Có kiến thức cơ bản vững vàng, trình độ chuyên môn giỏi, kỹ năng phát triển phần mềm chuyên nghiệp, có năng lực nghiên cứu và tư duy sáng tạo.'),
+            ),
           ),
           Divider(
             height: 10.0,
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: 30,
+              itemCount: selectedPost.comments.length,
               itemBuilder: (context, index) => Card(
                 child: ListTile(
                   leading: CircleAvatar(
@@ -161,10 +171,10 @@ class _showTopicState extends State<showTopic> {
                     backgroundImage: AssetImage('assets/images/logo-uit.png'),
                   ),
                   title: Text(
-                    'Huỳnh Quốc Trung',
+                    selectedPost.comments[index].attendance.username,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text('anbczcjsd'),
+                  subtitle: Text(selectedPost.comments[index].content),
                 ),
               ),
             ),
@@ -173,4 +183,7 @@ class _showTopicState extends State<showTopic> {
       );
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

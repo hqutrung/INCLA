@@ -36,7 +36,7 @@ class _MainDrawerState extends State<MainDrawer> {
               title: Text('Đăng xuất'),
               onTap: () {
                 auth.signOut();
-                print('signOut');
+                ('signOut');
                 Navigator.popUntil(
                   context,
                   ModalRoute.withName(Navigator.defaultRouteName),
