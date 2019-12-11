@@ -8,7 +8,43 @@ class SessionList extends StatelessWidget {
   Stream<List<Session>> sessionStream;
 
   SessionList({String courseID}) {
-    sessionStream = Collection<Session>(path: 'course/$courseID/session').streamData();
+    sessionStream =
+        Collection<Session>(path: 'course/$courseID/session').streamData();
+  }
+
+  showAddSessionDialog(BuildContext context) async {
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          var _textEditingController;
+          return AlertDialog(
+            content:  Row(
+              children: <Widget>[
+                 Expanded(
+                    child:  TextField(
+                  controller: _textEditingController,
+                  autofocus: true,
+                  decoration:  InputDecoration(
+                    labelText: 'Nội dung buổi học',
+                  ),
+                ))
+              ],
+            ),
+            actions: <Widget>[
+               FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+               FlatButton(
+                  child: const Text('Lưu'),
+                  onPressed: () {
+                   // addTodo(_textEditingController.text.toString());
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        });
   }
 
   @override
@@ -19,7 +55,9 @@ class SessionList extends StatelessWidget {
         if (snapshot.hasData) {
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {},
+              onPressed: () {
+                showAddSessionDialog(context);
+              },
               label: Text('Tạo buổi'),
               icon: Icon(Icons.add),
             ),
