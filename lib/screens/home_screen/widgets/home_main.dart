@@ -26,30 +26,28 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   Widget _buildListCourse(List<Course> course) {
-    return Expanded(
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: course.length,
-        itemBuilder: (BuildContext context, int index) => Card(
-          child: ListTile(
-            leading: Text(course[index].courseID),
-            title: Text(course[index].name),
-            subtitle: Text('Lê Thanh Trọng'),
-            trailing: Icon(
-              Icons.hotel,
-              color: Colors.black,
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CourseScreen(
-                    course: course[index],
-                  ),
-                ),
-              );
-            },
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: course.length,
+      itemBuilder: (BuildContext context, int index) => Card(
+        child: ListTile(
+          leading: Text(course[index].courseID),
+          title: Text(course[index].name),
+          subtitle: Text('Lê Thanh Trọng'),
+          trailing: Icon(
+            Icons.hotel,
+            color: Colors.black,
           ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CourseScreen(
+                  course: course[index],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -71,10 +69,7 @@ class _HomeMainState extends State<HomeMain> {
           if (!snapshot.hasData)
             return Text('LOADING...');
           else
-            return Column(children: [
-              RaisedButton(onPressed: () => {AuthService().signOut()}),
-              _buildListCourse(snapshot.data)
-            ]);
+            return _buildListCourse(snapshot.data);
         },
       ),
     );

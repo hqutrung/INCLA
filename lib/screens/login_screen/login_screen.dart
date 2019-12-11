@@ -8,14 +8,14 @@ class LoginScreen extends StatelessWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  Future login() async {
-    // showDialog(
-    //     context: context,
-    //     builder: (context) => Center(child: CircularProgressIndicator()));
+  Future login(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) => Center(child: CircularProgressIndicator()));
 
     await _auth.signInWithEmail(emailController.text, passwordController.text);
 
-    // Navigator.pop(context, true);
+    Navigator.pop(context, true);
   }
 
   @override
@@ -46,7 +46,7 @@ class LoginScreen extends StatelessWidget {
             RaisedButton(
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Text('Login'),
-              onPressed: () => login(),
+              onPressed: () => login(context),
             ),
           ],
         ),

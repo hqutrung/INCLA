@@ -9,6 +9,7 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Main Drawer rebuild");
     User user = Provider.of<User>(context);
     String name = (user != null) ? user.name : 'loading';
     String email = (user != null) ? user.email : 'loading';
@@ -31,11 +32,7 @@ class MainDrawer extends StatelessWidget {
               title: Text('Đăng xuất'),
               onTap: () {
                 auth.signOut();
-                print('signOut');
-                // Navigator.popUntil(
-                //   context,
-                //   ModalRoute.withName(Navigator.defaultRouteName),
-                // );
+                Navigator.pop(context);
               }),
         ],
       ),
