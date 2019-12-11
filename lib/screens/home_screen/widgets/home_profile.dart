@@ -23,9 +23,7 @@ class Profile extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   height: 130.0,
-                  child: const DecoratedBox(
-                    decoration: const BoxDecoration(color: Colors.cyan),
-                  ),
+                  child: Image(image: AssetImage('assets/images/anh-bia.png'),),
                 ),
               ],
             ),

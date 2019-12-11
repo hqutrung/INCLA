@@ -1,5 +1,6 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
+import 'package:document/screens/session_screen/widget_session_screen/ratedetail.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
@@ -16,9 +17,11 @@ class SessionScreen extends StatefulWidget {
 
 class _SessionScreenState extends State<SessionScreen> {
   @override
+
+
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           drawer: MainDrawer(),
           appBar: AppBar(
@@ -56,6 +59,10 @@ class _SessionScreenState extends State<SessionScreen> {
                   icon: Icon(Icons.check_circle_outline),
                   text: "Điểm danh",
                 ),
+                Tab(
+                  icon: Icon(Icons.star),
+                  text: "Đánh giá",
+                ),
               ],
             ),
           ),
@@ -63,6 +70,7 @@ class _SessionScreenState extends State<SessionScreen> {
             children: <Widget>[
               showTopic(course: widget.course, sessionID: widget.sessionID,),
               RollCall(),
+              RateDetail(),
             ],
           ),
         ));
