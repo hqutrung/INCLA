@@ -19,6 +19,49 @@ class _showTopicState extends State<showTopic> {
 
   Future<List<Post>> postsAsyncer;
 
+  showAddTopicDialog(BuildContext context) async {
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          var _TitleEditingController,_ContentEditingController ;
+          return AlertDialog(
+            content: Column(
+              children: <Widget>[
+                Expanded(
+                    child: TextField(
+                  controller: _TitleEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Tiêu đề',
+                  ),
+                )),
+                Expanded(
+                    child: TextField(
+                  controller: _ContentEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Nội dung',
+                  ),
+                ))
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              FlatButton(
+                  child: const Text('Lưu'),
+                  onPressed: () {
+                    // addTodo(_textEditingController.text.toString());
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     postsAsyncer =
@@ -33,7 +76,7 @@ class _showTopicState extends State<showTopic> {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Add your onPressed code here!
+            showAddTopicDialog(context);
           },
           label: Text('Topic'),
           icon: Icon(Icons.add),
@@ -113,9 +156,19 @@ class _showTopicState extends State<showTopic> {
           Expanded(
             child: ListView.builder(
               itemCount: 30,
-              itemBuilder: (context, index) {
-                return Text('asd');
-              },
+              itemBuilder: (context, index) => Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                  ),
+                  title: Text(
+                    'Huỳnh Quốc Trung',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text('anbczcjsd'),
+                ),
+              ),
             ),
           ),
         ],
