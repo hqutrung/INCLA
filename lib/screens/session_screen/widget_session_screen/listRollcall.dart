@@ -16,37 +16,62 @@ class _showListRollCallState extends State<showListRollCall>
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length:2,
-      child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
+    return Expanded(
+      child: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Danh sach',
+            ),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: <Widget>[
+                Tab(
+                  child: Text('Đã điểm danh'),
+                ),
+                Tab(
+                  child: Text('Chưa điểm danh'),
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
             controller: _tabController,
-            isScrollable: true,
-            indicatorWeight: 4.0,
-            indicatorColor:Color(0xffff5722),
-            unselectedLabelColor: Colors.grey,
-            tabs: <Widget>[
-              Tab(
+            children: <Widget>[
+              ListView.builder(
+                itemCount: 3,
+                itemBuilder: (context, index) => Card(
+                  child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                  ),
+                  title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                 trailing: Icon(Icons.brightness_1, color: Colors.green,size: 10,),
+                ),
 
-                child:Text('For You'),
+                ),
               ),
-              Tab(
-                
-                child: Text('Top Charts'),
+              ListView.builder(
+                itemCount: 3,
+                itemBuilder: (context, index) => Card(
+                  child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                  ),
+                  title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                 trailing: Icon(Icons.brightness_1, color: Colors.grey,size: 10,),
+                ),
+
+                ),
               ),
-              
             ],
           ),
         ),
-         body: TabBarView(
-           controller: _tabController,
-            children: <Widget>[
-              Text('abc'),
-              Text('andc'),
-           
-            ],
-         ),
       ),
     );
   }

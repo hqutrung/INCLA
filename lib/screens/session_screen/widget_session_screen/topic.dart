@@ -89,9 +89,17 @@ class _showTopicState extends State<showTopic> {
           Expanded(
             child: ListView.builder(
               itemCount: 30,
-              itemBuilder: (context, index) {
-                return Text('asd');
-              },
+              itemBuilder: (context, index) => Card(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                  ),
+                  title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text('anbczcjsd'),
+                ),
+              ),
             ),
           ),
         ],
