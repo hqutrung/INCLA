@@ -38,33 +38,43 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: <Widget>[
-            LoginLogo(),
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            children: <Widget>[
+              LoginLogo(),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                ),
               ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
+              TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                ),
+                controller: passwordController,
               ),
-              controller: passwordController,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            RaisedButton(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Text('Login'),
-              onPressed: () => login(context),
-            ),
-          ],
+              SizedBox(
+                height: 15,
+              ),
+              RaisedButton(
+                
+                shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(18.0),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                child: Text(
+                  'Login',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.blue,
+                onPressed: () => login(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
