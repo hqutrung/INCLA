@@ -10,7 +10,6 @@ class _showTopicState extends State<showTopic> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool isTopicDetail = false;
 
-
   @override
   Widget build(BuildContext context) {
     if (!isTopicDetail) {
@@ -87,7 +86,14 @@ class _showTopicState extends State<showTopic> {
           Divider(
             height: 10.0,
           ),
-          
+          Expanded(
+            child: ListView.builder(
+              itemCount: 30,
+              itemBuilder: (context, index) {
+                return Text('asd');
+              },
+            ),
+          ),
         ],
       );
     }
