@@ -11,7 +11,7 @@ class LoginAndHomeWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     print("LoginAndHomeWrapper build");
     User user = Provider.of<User>(context);
-    if (user == null) return Text("Loading...");//LoadingPage();
+    if (user == null) return LoadingPage();
     if (user.email == null)
       print("LoginAndHomeWrapper with user.email == null");
     if (user.email == null) {
@@ -27,9 +27,8 @@ class LoginAndHomeWrapper extends StatelessWidget {
 class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GlowingOverscrollIndicator(
-      axisDirection: AxisDirection.down,
-      color: Colors.blue,
+    return Scaffold(
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }
