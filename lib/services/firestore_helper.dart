@@ -33,15 +33,42 @@ class FireStoreHelper {
     }).toList();
   }
 
-  Future<List<Post>> getPosts(
-      String courseID, String sessionID) async {
+  Future<List<Post>> getPosts(String courseID, String sessionID) async {
     QuerySnapshot snapshots = await _db
-        .collection('course').document(courseID).collection('post')
+        .collection('course')
+        .document(courseID)
+        .collection('post')
         .where('sessionID', isEqualTo: sessionID)
         .getDocuments();
     return snapshots.documents.map((data) {
       return Post.fromMap(data.data);
     }).toList();
   }
+
+  Future createSession(Course course, String topic) async {
+    try {
+      await _db
+          .collection('course')
+          .document(course.courseID)
+          .collection('session')
+          .add({
+        'start': Timestamp.fromDate(DateTime.now()),
+        'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
+        'topic': topic,
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future deleteSession(Course course, String id) async {
+    try {
+      _db.collection('course').document(course.courseID).collection('session').document(id).delete();
+    } catch(e) {
+      print(e.toString());
+    }
+  }
+
+  
   // Stream<List<Session>>
 }

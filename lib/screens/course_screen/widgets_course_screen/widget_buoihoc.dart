@@ -2,6 +2,7 @@ import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/services/collection_firestore.dart';
+import 'package:document/services/firestore_helper.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class SessionList extends StatelessWidget {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          var _textEditingController;
+          TextEditingController _textEditingController = TextEditingController();
           return AlertDialog(
             content:  Row(
               children: <Widget>[
@@ -43,6 +44,7 @@ class SessionList extends StatelessWidget {
                   child: const Text('Lưu'),
                   onPressed: () {
                    // addTodo(_textEditingController.text.toString());
+                    FireStoreHelper().createSession(course, _textEditingController.text);
                     Navigator.pop(context);
                   })
             ],
@@ -89,7 +91,7 @@ class SessionList extends StatelessWidget {
                       caption: 'Xoá',
                       color: Colors.red,
                       icon: Icons.delete_outline,
-                      onTap: () {},
+                      onTap: () => FireStoreHelper().deleteSession(course, snapshot.data[index].id),
                     ),
                   ],
                 ),

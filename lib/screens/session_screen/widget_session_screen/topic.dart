@@ -56,7 +56,7 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                    // addTodo(_textEditingController.text.toString());
+                    
                     Navigator.pop(context);
                   })
             ],
