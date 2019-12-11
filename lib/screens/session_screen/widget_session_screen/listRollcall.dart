@@ -21,10 +21,8 @@ class _showListRollCallState extends State<showListRollCall>
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
-              'Danh sach',
-            ),
-            bottom: TabBar(
+            automaticallyImplyLeading: false,
+            title: TabBar(
               controller: _tabController,
               tabs: <Widget>[
                 Tab(

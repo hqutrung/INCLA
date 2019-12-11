@@ -124,6 +124,7 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
         ),
       );
     } else if (isTopicDetail) {
+      TextEditingController _commentTextcontroller = new TextEditingController();
       return Column(
         children: <Widget>[
           ListTile(
@@ -177,6 +178,24 @@ class _showTopicState extends State<showTopic>  with AutomaticKeepAliveClientMix
                   subtitle: Text(selectedPost.comments[index].content),
                 ),
               ),
+            ),
+          ),
+          Container(
+           
+            child: TextFormField(
+              controller: _commentTextcontroller,
+              decoration: InputDecoration(
+                  hintText: 'Trả lời',
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.comment,
+                    
+                  ),
+                  suffixIcon: IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        
+                      })),
             ),
           ),
         ],
