@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/course_screen/course_screen.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
-import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +42,7 @@ class _HomeMainState extends State<HomeMain> {
               context,
               MaterialPageRoute(
                 builder: (context) => CourseScreen(
-                  courseID: course[index].courseID,
+                  course: course[index],
                 ),
               ),
             );

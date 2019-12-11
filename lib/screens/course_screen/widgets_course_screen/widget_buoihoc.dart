@@ -1,3 +1,4 @@
+import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/services/collection_firestore.dart';
@@ -5,10 +6,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 
 class SessionList extends StatelessWidget {
+  final Course course;
   Stream<List<Session>> sessionStream;
 
-  SessionList({String courseID}) {
-    sessionStream = Collection<Session>(path: 'course/$courseID/session').streamData();
+  SessionList({@required this.course}) {
+    sessionStream =
+        Collection<Session>(path: 'course/${course.courseID}/session')
+            .streamData();
   }
 
   @override
@@ -33,9 +37,14 @@ class SessionList extends StatelessWidget {
                     subtitle: Text(snapshot.data[index].startTime.toString()),
                     onTap: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SessionScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SessionScreen(
+                            course: course,
+                            sessionID: snapshot.data[index].id,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   actions: <Widget>[

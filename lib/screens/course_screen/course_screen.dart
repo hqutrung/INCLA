@@ -1,20 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:document/models/course.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/widget_buoihoc.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/widget_tailieu.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/student_list.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
+import 'package:document/services/firestore_helper.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CourseScreen extends StatefulWidget {
-  final String courseID;
+  final Course course;
 
-  CourseScreen({@required this.courseID});
+  CourseScreen({@required this.course});
 
   @override
   _CourseScreenState createState() => _CourseScreenState();
 }
 
 class _CourseScreenState extends State<CourseScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -40,12 +49,15 @@ class _CourseScreenState extends State<CourseScreen> {
               ],
             ),
           ),
-          body: TabBarView(
-            children: <Widget>[
-              SessionList(courseID: widget.courseID),
-              StudentList(courseID: widget.courseID),
-              showTaiLieu(),
-            ],
+          body: Provider<Course>.value(
+            value: widget.course,
+            child: TabBarView(
+              children: <Widget>[
+                SessionList(course: widget.course,),
+                StudentList(courseID: widget.course.courseID),
+                showTaiLieu(),
+              ],
+            ),
           ),
         ));
 

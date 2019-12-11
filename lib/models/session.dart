@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import 'attandance.dart';
 import 'rate.dart';
@@ -9,6 +10,7 @@ enum SessionState {
 }
 
 class Session {
+  String id;
   DateTime startTime;
   DateTime endTime;
   String topic;
@@ -16,7 +18,7 @@ class Session {
   List<Rate> rates;
   SessionState state;
 
-  Session.fromMap(Map data) {
+  Session.fromMap(Map data, {@required this.id}) {
     startTime = (data['start'] as Timestamp).toDate();
     endTime = (data['end'] as Timestamp).toDate();
     topic = data['topic'];

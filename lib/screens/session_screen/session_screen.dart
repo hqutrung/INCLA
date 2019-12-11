@@ -1,9 +1,15 @@
+import 'package:document/models/course.dart';
+import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 class SessionScreen extends StatefulWidget {
+  final Course course;
+  final String sessionID;
+
+  SessionScreen({@required this.course, @required this.sessionID});
   @override
   _SessionScreenState createState() => _SessionScreenState();
 }
@@ -55,7 +61,7 @@ class _SessionScreenState extends State<SessionScreen> {
           ),
           body: TabBarView(
             children: <Widget>[
-              showTopic(),
+              showTopic(course: widget.course, sessionID: widget.sessionID,),
               RollCall(),
             ],
           ),

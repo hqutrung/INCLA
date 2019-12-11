@@ -14,13 +14,13 @@ class Collection<T> {
   Future<List<T>> getDocuments() async {
     var documents = await reference.getDocuments();
     return documents.documents
-        .map((v) => FireStoreHelper.models[T](v.data) as T)
+        .map((v) => FireStoreHelper.models[T](v.data, v.documentID) as T)
         .toList();
   }
 
   Stream<List<T>> streamData() {
     var x = reference.snapshots().map((query) => query.documents
-        .map((doc) => FireStoreHelper.models[T](doc.data) as T)
+        .map((doc) => FireStoreHelper.models[T](doc.data, doc.documentID) as T)
         .toList());
     print(x.first);
     return x;

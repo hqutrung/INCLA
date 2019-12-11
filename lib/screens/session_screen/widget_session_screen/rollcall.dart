@@ -20,7 +20,7 @@ class _RollCallState extends State<RollCall> {
           child: Column(
             children: <Widget>[
               CreateQR(),
-              showListRollCall(),
+              // showListRollCall(),
             ],
           ),
         ),

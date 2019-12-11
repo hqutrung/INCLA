@@ -1,7 +1,14 @@
+import 'package:document/models/course.dart';
+import 'package:document/models/post.dart';
+import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class showTopic extends StatefulWidget {
+  final Course course;
+  final String sessionID;
+
+  showTopic({@required this.course, @required this.sessionID});
+
   @override
   _showTopicState createState() => _showTopicState();
 }
@@ -9,6 +16,15 @@ class showTopic extends StatefulWidget {
 class _showTopicState extends State<showTopic> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool isTopicDetail = false;
+
+  Future<List<Post>> postsAsyncer;
+
+  @override
+  void initState() {
+    postsAsyncer =
+        FireStoreHelper().getPosts(widget.course.docReference, widget.sessionID);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,35 +38,43 @@ class _showTopicState extends State<showTopic> {
           label: Text('Topic'),
           icon: Icon(Icons.add),
         ),
-        body: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int index) => Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/logo-uit.png'),
-              ),
-              title: Text('Thắc mắc bài giảng'),
-              subtitle: Text(
-                  'Người tạo: Huỳnh Quốc Trung. \n21/10/2019 3:32    4 Trả lời'),
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.bookmark,
-                  color: Colors.orange,
+        body: FutureBuilder(
+          future: postsAsyncer,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData)
+              return Text('Loading...');
+            else
+              return ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: 3,
+                itemBuilder: (BuildContext context, int index) => Card(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                    ),
+                    title: Text('Thắc mắc bài giảng'),
+                    subtitle: Text(
+                        'Người tạo: Huỳnh Quốc Trung. \n21/10/2019 3:32    4 Trả lời'),
+                    trailing: IconButton(
+                      icon: Icon(
+                        Icons.bookmark,
+                        color: Colors.orange,
+                      ),
+                      onPressed: () {
+                        setState(() {});
+                      },
+                    ),
+                    onTap: () {
+                      setState(() {
+                        isTopicDetail = !isTopicDetail;
+                        print(isTopicDetail);
+                      });
+                    },
+                  ),
                 ),
-                onPressed: () {
-                  setState(() {});
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  isTopicDetail = !isTopicDetail;
-                  print(isTopicDetail);
-                });
-              },
-            ),
-          ),
+              );
+          },
         ),
       );
     } else if (isTopicDetail) {

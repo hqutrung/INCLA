@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attandance.dart';
 import 'package:document/models/course.dart';
+import 'package:document/models/post.dart';
 import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
 
@@ -9,8 +10,7 @@ class FireStoreHelper {
 
   static final Map models = {
     User: (Map data, String email) => User.fromMap(data, email: email),
-    Course: (Map data) => Course.fromMap(data),
-    Session: (Map data) => Session.fromMap(data),
+    Session: (Map data, String uid) => Session.fromMap(data, id: uid),
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -19,16 +19,30 @@ class FireStoreHelper {
         .where('userID', isEqualTo: userID)
         .getDocuments();
     return snapshots.documents.map((data) {
-      return Course.fromMap(data.data);
+      print(data.documentID);
+      return Course.fromMap(data.data, docReference: data.reference);
     }).toList();
   }
 
   Future<List<Attendance>> getStudents(String courseID) async {
-    QuerySnapshot snapshots = await _db.collection('user_course').where('courseID', isEqualTo: courseID).getDocuments();
+    QuerySnapshot snapshots = await _db
+        .collection('user_course')
+        .where('courseID', isEqualTo: courseID)
+        .getDocuments();
     return snapshots.documents.map((data) {
       return Attendance.fromMap(data.data);
     }).toList();
   }
 
-  // Stream<List<Session>> 
+  Future<List<Post>> getPosts(
+      DocumentReference courseRef, String sessionID) async {
+    QuerySnapshot snapshots = await courseRef
+        .collection('post')
+        .where('sessionID', isEqualTo: sessionID)
+        .getDocuments();
+    return snapshots.documents.map((data) {
+      return Post.fromMap(data.data);
+    }).toList();
+  }
+  // Stream<List<Session>>
 }
