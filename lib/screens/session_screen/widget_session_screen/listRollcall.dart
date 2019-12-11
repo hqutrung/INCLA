@@ -47,6 +47,7 @@ class _showListRollCallState extends State<showListRollCall>
                   ),
                   title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  subtitle: Text('MSSV: 17520184'),
                  trailing: Icon(Icons.brightness_1, color: Colors.green,size: 10,),
                 ),
 
@@ -62,6 +63,7 @@ class _showListRollCallState extends State<showListRollCall>
                   ),
                   title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  subtitle: Text('MSSV: 17520184'),
                  trailing: Icon(Icons.brightness_1, color: Colors.grey,size: 10,),
                 ),
 
