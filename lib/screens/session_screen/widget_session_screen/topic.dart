@@ -14,7 +14,6 @@ class showTopic extends StatefulWidget {
 }
 
 class _showTopicState extends State<showTopic> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool isTopicDetail = false;
 
   Future<List<Post>> postsAsyncer;
@@ -23,13 +22,13 @@ class _showTopicState extends State<showTopic> {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          var _TitleEditingController,_ContentEditingController ;
+          var _titleEditingController = TextEditingController(),_contentEditingController = TextEditingController();
           return AlertDialog(
             content: Column(
               children: <Widget>[
                 Expanded(
                     child: TextField(
-                  controller: _TitleEditingController,
+                  controller: _titleEditingController,
                   autofocus: true,
                   decoration: InputDecoration(
                     labelText: 'Tiêu đề',
@@ -37,7 +36,7 @@ class _showTopicState extends State<showTopic> {
                 )),
                 Expanded(
                     child: TextField(
-                  controller: _ContentEditingController,
+                  controller: _contentEditingController,
                   autofocus: true,
                   decoration: InputDecoration(
                     labelText: 'Nội dung',
@@ -65,14 +64,13 @@ class _showTopicState extends State<showTopic> {
   @override
   void initState() {
     postsAsyncer =
-        FireStoreHelper().getPosts(widget.course.docReference, widget.sessionID);
+        FireStoreHelper().getPosts(widget.course.courseID, widget.sessionID);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!isTopicDetail) {
-      print('zgxzbc');
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -86,19 +84,20 @@ class _showTopicState extends State<showTopic> {
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return Text('Loading...');
-            else
+            else {
+              List<Post> posts = snapshot.data;
               return ListView.builder(
                 scrollDirection: Axis.vertical,
-                itemCount: 3,
+                itemCount: posts.length,
                 itemBuilder: (BuildContext context, int index) => Card(
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.white,
                       backgroundImage: AssetImage('assets/images/logo-uit.png'),
                     ),
-                    title: Text('Thắc mắc bài giảng'),
+                    title: Text(posts[index].title),
                     subtitle: Text(
-                        'Người tạo: Huỳnh Quốc Trung. \n21/10/2019 3:32    4 Trả lời'),
+                        'Người tạo: ${posts[index].attendance.username}. \n${posts[index].timestamp} - ${posts[index].comments.length} Trả lời'),
                     trailing: IconButton(
                       icon: Icon(
                         Icons.bookmark,
@@ -111,12 +110,12 @@ class _showTopicState extends State<showTopic> {
                     onTap: () {
                       setState(() {
                         isTopicDetail = !isTopicDetail;
-                        print(isTopicDetail);
                       });
                     },
                   ),
                 ),
               );
+            }
           },
         ),
       );
@@ -141,7 +140,6 @@ class _showTopicState extends State<showTopic> {
                 onPressed: () {
                   setState(() {
                     isTopicDetail = !isTopicDetail;
-                    print(isTopicDetail);
                   });
                 },
               )),

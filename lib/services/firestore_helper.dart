@@ -19,8 +19,7 @@ class FireStoreHelper {
         .where('userID', isEqualTo: userID)
         .getDocuments();
     return snapshots.documents.map((data) {
-      print(data.documentID);
-      return Course.fromMap(data.data, docReference: data.reference);
+      return Course.fromMap(data.data);
     }).toList();
   }
 
@@ -35,9 +34,9 @@ class FireStoreHelper {
   }
 
   Future<List<Post>> getPosts(
-      DocumentReference courseRef, String sessionID) async {
-    QuerySnapshot snapshots = await courseRef
-        .collection('post')
+      String courseID, String sessionID) async {
+    QuerySnapshot snapshots = await _db
+        .collection('course').document(courseID).collection('post')
         .where('sessionID', isEqualTo: sessionID)
         .getDocuments();
     return snapshots.documents.map((data) {

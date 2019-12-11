@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 class Course {
   String courseID;
   String name;
-  DocumentReference docReference;
 
-  Course.fromMap(Map data, {this.courseID, @required this.docReference}) {
+  Course.fromMap(Map data, {this.courseID}) {
     if (courseID == null) courseID = data['courseID'];
     name = data['name'];
   }
