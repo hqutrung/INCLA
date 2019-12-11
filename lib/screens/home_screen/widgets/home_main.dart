@@ -32,7 +32,7 @@ class _HomeMainState extends State<HomeMain> {
         child: ListTile(
           leading: Text(course[index].courseID),
           title: Text(course[index].name),
-          subtitle: Text('Huỳnh Như Ý'),
+          subtitle: Text('Lê Thanh Trọng'),
           trailing: Icon(
             Icons.hotel,
             color: Colors.black,

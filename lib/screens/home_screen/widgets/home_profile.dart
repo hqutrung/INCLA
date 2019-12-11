@@ -37,13 +37,13 @@ class Profile extends StatelessWidget {
                 Center(
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundColor: Colors.amber,
+                    backgroundColor: Colors.white,
                     child: Image.asset('assets/images/logo-uit.png'),
                     // backgroundImage: AssetImage('assets/images/logo-uit.png'),
                   ),
                 ),
                 Text(
-                  'Lê Thanh Trọng',
+                  'Huỳnh Quốc Trung',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Contact(),
@@ -68,7 +68,7 @@ class Contact extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Icon(Icons.call),
                 SizedBox(
@@ -84,70 +84,15 @@ class Contact extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(Icons.call),
+                Icon(Icons.mail),
                 SizedBox(
                   width: 120,
                 ),
-                Text('0375475075'),
+                Text('17520184@gmail.com'),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.call),
-                SizedBox(
-                  width: 120,
-                ),
-                Text('0375475075'),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.call),
-                SizedBox(
-                  width: 120,
-                ),
-                Text('0375475075'),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.call),
-                SizedBox(
-                  width: 120,
-                ),
-                Text('0375475075'),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(Icons.call),
-                SizedBox(
-                  width: 120,
-                ),
-                Text('0375475075'),
-              ],
-            ),
-          ),
+          
         ],
       ),
     );
