@@ -55,7 +55,7 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
-    print("HomeMain build");
+    // print("HomeMain build");
     return Scaffold(
       key: _scaffoldKey,
       appBar: MainAppBar(

@@ -1,6 +1,7 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/user.dart';
+import 'package:document/screens/session_screen/widget_session_screen/detail_topic.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,13 +19,20 @@ class showTopic extends StatefulWidget {
 class _showTopicState extends State<showTopic>
     with AutomaticKeepAliveClientMixin {
   Post selectedPost;
+  User user;
 
   bool isTopicDetail = false;
 
   Stream<List<Post>> postsAsyncer;
+  Stream<Post> detailPostAsyncer;
 
-  showAddTopicDialog(BuildContext context) async {
-    User user = Provider.of<User>(context, listen: false);
+  void moveBack() {
+    setState(() {
+      isTopicDetail = !isTopicDetail;
+    });
+  }
+
+  showAddTopicDialog(BuildContext context, User user) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -78,17 +86,18 @@ class _showTopicState extends State<showTopic>
   }
 
   void updatePostsAsyncer() {
-    postsAsyncer =
-        FireStoreHelper().getPostsStream(widget.course.courseID, widget.sessionID);
+    postsAsyncer = FireStoreHelper()
+        .getPostsStream(widget.course.courseID, widget.sessionID);
   }
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context);
     if (!isTopicDetail) {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            showAddTopicDialog(context);
+            showAddTopicDialog(context, user);
           },
           label: Text('Topic'),
           icon: Icon(Icons.add),
@@ -96,10 +105,6 @@ class _showTopicState extends State<showTopic>
         body: StreamBuilder(
           stream: postsAsyncer,
           builder: (context, snapshot) {
-            if (snapshot.data != null)
-              print(snapshot.data);
-            else 
-              print('snapshot is null');
             if (!snapshot.hasData)
               return Text('Loading... ' + snapshot.connectionState.toString());
             else {
@@ -129,6 +134,9 @@ class _showTopicState extends State<showTopic>
                       setState(() {
                         selectedPost = posts[index];
                         isTopicDetail = !isTopicDetail;
+                        detailPostAsyncer = FireStoreHelper()
+                            .getDetailPostStream(
+                                widget.course, selectedPost.uid);
                       });
                     },
                   ),
@@ -141,101 +149,22 @@ class _showTopicState extends State<showTopic>
     } else if (isTopicDetail) {
       TextEditingController _commentTextcontroller =
           new TextEditingController();
-      return Column(
-        children: <Widget>[
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/logo-uit.png'),
-              backgroundColor: Colors.white,
-              radius: 25.0,
-            ),
-            title: Text(
-              selectedPost.attendance.username,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            subtitle: Text(selectedPost.timestamp.toString()),
-            trailing: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                setState(() {
-                  isTopicDetail = !isTopicDetail;
-                });
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: Text(
-                selectedPost.content,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Divider(
-            height: 10.0,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: selectedPost.comments.length,
-              itemBuilder: (context, index) => Row(
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
-                    radius: 25,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        selectedPost.attendance.username,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Container(
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.8),
-                        padding: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          color: Colors.orange[100],
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(25),
-                            bottomLeft: Radius.circular(25),
-                            bottomRight: Radius.circular(25),
-                          ),
-                        ),
-                        child: Text(selectedPost.comments[index].content),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            child: TextFormField(
-              controller: _commentTextcontroller,
-              decoration: InputDecoration(
-                  hintText: 'Trả lời',
-                  filled: true,
-                  prefixIcon: Icon(
-                    Icons.comment,
-                  ),
-                  suffixIcon:
-                      IconButton(icon: Icon(Icons.send), onPressed: () {})),
-            ),
-          ),
-        ],
-      );
+      return StreamBuilder<Post>(
+          stream: detailPostAsyncer,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData)
+              return DetailTopic(
+                course: widget.course,
+                moveBack: moveBack,
+                post: selectedPost,
+              );
+            else
+              return DetailTopic(
+                course: widget.course,
+                moveBack: moveBack,
+                post: snapshot.data,
+              );
+          });
     }
   }
 

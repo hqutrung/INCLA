@@ -14,7 +14,6 @@ class _CreateQRState extends State<CreateQR> {
         child: Icon(
           Icons.center_focus_weak,
           size: 250.0,
-          
         ),
       ),
     );

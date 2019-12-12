@@ -1,5 +1,4 @@
 import 'package:document/models/user.dart';
-import 'package:document/screens/home_screen/home_page.dart';
 import 'package:document/screens/wrapper_screen.dart';
 import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +25,6 @@ class _MyAppState extends State<MyApp> {
     return StreamBuilder<User>(
       stream: userStream,
       builder: (context, snapshot) {
-        print("MAIN STREAM BUILDER CALLED 1 " + (snapshot.data == null).toString());
-        if (snapshot.data != null)
-           print("MAIN STREAM BUILDER CALLED 2 " + (snapshot.data.email == null).toString());
         return Provider<User>.value(
           value: snapshot.data,
           child: MaterialApp(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import 'attandance.dart';
 import 'comment.dart';
@@ -12,7 +13,7 @@ class Post {
   List<Comment> comments;
   DateTime timestamp;
 
-  Post.fromMap(Map data, {this.uid}) {
+  Post.fromMap(Map data, {@required this.uid}) {
     attendance = Attendance(userID: data['userID'], username: data['username']);
     timestamp = (data['timestamp'] as Timestamp).toDate();
     content = data['content'];
