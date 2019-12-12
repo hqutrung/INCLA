@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class showTaiLieu extends StatelessWidget {
+class CourseResources extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,7 +1,9 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
+import 'package:document/models/user.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class showTopic extends StatefulWidget {
   final Course course;
@@ -19,9 +21,10 @@ class _showTopicState extends State<showTopic>
 
   bool isTopicDetail = false;
 
-  Future<List<Post>> postsAsyncer;
+  Stream<List<Post>> postsAsyncer;
 
   showAddTopicDialog(BuildContext context) async {
+    User user = Provider.of<User>(context, listen: false);
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -57,6 +60,10 @@ class _showTopicState extends State<showTopic>
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
+                    FireStoreHelper().createTopic(
+                        widget.sessionID, widget.course, user,
+                        title: _titleEditingController.text,
+                        content: _contentEditingController.text);
                     Navigator.pop(context);
                   })
             ],
@@ -66,9 +73,13 @@ class _showTopicState extends State<showTopic>
 
   @override
   void initState() {
-    postsAsyncer =
-        FireStoreHelper().getPosts(widget.course.courseID, widget.sessionID);
+    updatePostsAsyncer();
     super.initState();
+  }
+
+  void updatePostsAsyncer() {
+    postsAsyncer =
+        FireStoreHelper().getPostsStream(widget.course.courseID, widget.sessionID);
   }
 
   @override
@@ -82,11 +93,15 @@ class _showTopicState extends State<showTopic>
           label: Text('Topic'),
           icon: Icon(Icons.add),
         ),
-        body: FutureBuilder(
-          future: postsAsyncer,
+        body: StreamBuilder(
+          stream: postsAsyncer,
           builder: (context, snapshot) {
+            if (snapshot.data != null)
+              print(snapshot.data);
+            else 
+              print('snapshot is null');
             if (!snapshot.hasData)
-              return Text('Loading...');
+              return Text('Loading... ' + snapshot.connectionState.toString());
             else {
               List<Post> posts = snapshot.data;
               return ListView.builder(
@@ -169,12 +184,14 @@ class _showTopicState extends State<showTopic>
               itemCount: selectedPost.comments.length,
               itemBuilder: (context, index) => Row(
                 children: [
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage:
-                          AssetImage('assets/images/logo-uit.png'),
-                          radius: 25,),
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                    radius: 25,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -186,7 +203,7 @@ class _showTopicState extends State<showTopic>
                       ),
                       Container(
                         constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width*0.8),
+                            maxWidth: MediaQuery.of(context).size.width * 0.8),
                         padding: const EdgeInsets.all(15.0),
                         decoration: BoxDecoration(
                           color: Colors.orange[100],

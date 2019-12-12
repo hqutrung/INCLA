@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/course.dart';
-import 'package:document/screens/course_screen/widgets_course_screen/widget_buoihoc.dart';
-import 'package:document/screens/course_screen/widgets_course_screen/widget_tailieu.dart';
+import 'package:document/screens/course_screen/widgets_course_screen/session_list.dart';
+import 'package:document/screens/course_screen/widgets_course_screen/course_resources.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/student_list.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
-import 'package:document/services/firestore_helper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +53,7 @@ class _CourseScreenState extends State<CourseScreen> {
               children: <Widget>[
                 SessionList(course: widget.course,),
                 StudentList(courseID: widget.course.courseID),
-                showTaiLieu(),
+                CourseResources(),
               ],
             ),
           ),

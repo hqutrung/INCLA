@@ -13,14 +13,9 @@ class LoginAndHomeWrapper extends StatelessWidget {
     User user = Provider.of<User>(context);
     if (user == null) return LoadingPage();
     if (user.email == null)
-      print("LoginAndHomeWrapper with user.email == null");
-    if (user.email == null) {
-      print("rebuild with loginScreen");
       return LoginScreen();
-    } else {
-      print("Rebuild with HomePage");
+    else
       return HomePage();
-    }
   }
 }
 

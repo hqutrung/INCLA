@@ -4,6 +4,7 @@ import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
+import 'package:flutter/material.dart';
 
 class FireStoreHelper {
   Firestore _db = Firestore.instance;
@@ -45,6 +46,27 @@ class FireStoreHelper {
     }).toList();
   }
 
+  Stream<List<Post>> getPostsStream(String courseID, String sessionID) {
+    print(courseID + ' ' + sessionID);
+    return _db
+        .collection('course')
+        .document(courseID)
+        .collection('post')
+        .where('sessionID', isEqualTo: sessionID)
+        .snapshots()
+        .map(
+      (query) {
+        print('length: ' + query.documents.length.toString());
+        return query.documents.map(
+          (snapshot) {
+            print('ASODIJASODIJAS');
+            return Post.fromMap(snapshot.data, uid: snapshot.documentID);
+          },
+        ).toList();
+      },
+    );
+  }
+
   Future createSession(Course course, String topic) async {
     try {
       await _db
@@ -63,12 +85,37 @@ class FireStoreHelper {
 
   Future deleteSession(Course course, String id) async {
     try {
-      _db.collection('course').document(course.courseID).collection('session').document(id).delete();
-    } catch(e) {
+      _db
+          .collection('course')
+          .document(course.courseID)
+          .collection('session')
+          .document(id)
+          .delete();
+    } catch (e) {
       print(e.toString());
     }
   }
 
-  
+  Future createTopic(String sessionID, Course course, User user,
+      {@required String title, @required String content}) {
+    try {
+      _db
+          .collection('course')
+          .document(course.courseID)
+          .collection('post')
+          .add({
+        'content': content,
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+        'title': title,
+        'userID': user.uid,
+        'username': user.name,
+        'read': false,
+        'sessionID': sessionID,
+      });
+    } catch (e) {
+      print('Create topic: ' + e.toString());
+    }
+  }
+
   // Stream<List<Session>>
 }
