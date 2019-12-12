@@ -16,7 +16,6 @@ class DetailTopic extends StatefulWidget {
 }
 
 class _DetailTopicState extends State<DetailTopic> {
-
   TextEditingController _commentTextcontroller = TextEditingController();
 
   @override
@@ -114,6 +113,8 @@ class _DetailTopicState extends State<DetailTopic> {
                 onPressed: () {
                   FireStoreHelper().createComment(course, widget.post.uid, user,
                       _commentTextcontroller.text);
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  _commentTextcontroller.clear();
                 },
               ),
             ),
