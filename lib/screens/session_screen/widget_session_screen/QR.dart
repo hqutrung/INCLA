@@ -18,16 +18,15 @@ showCreateQRDialog(BuildContext context) async {
             decoration: InputDecoration(hintText: "Nhập phút"),
           ),
           actions: <Widget>[
-             FlatButton(
-              child:  Text('Hủy'),
+            FlatButton(
+              child: Text('Hủy'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child:  Text('Bắt đầu'),
+              child: Text('Bắt đầu'),
               onPressed: () {
-
                 Navigator.of(context).pop();
               },
             )
@@ -39,13 +38,12 @@ showCreateQRDialog(BuildContext context) async {
 class _CreateQRState extends State<CreateQR> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: IconButton(
-        iconSize: 250.0,
-        onPressed: () {
-          showCreateQRDialog(context);
-        },
-        icon: Icon(Icons.center_focus_weak),
+    return GestureDetector(
+      onTap: () {
+        showCreateQRDialog(context);
+      },
+      child: Container(
+        child: Icon(Icons.center_focus_weak,size: 250,),
       ),
     );
   }
