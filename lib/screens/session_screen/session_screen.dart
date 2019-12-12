@@ -79,7 +79,7 @@ class _SessionScreenState extends State<SessionScreen> {
                   course: widget.course,
                   sessionID: widget.sessionID,
                 ),
-                RollCall(),
+                RollCall(sessionID: widget.sessionID),
                 RateDetail()
               ],
             ),

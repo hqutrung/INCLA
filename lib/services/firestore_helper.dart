@@ -152,7 +152,7 @@ class FireStoreHelper {
   }
 
   Future<String> createAttendance(
-      {@required Course course, int duration}) async {
+      {@required Course course, int duration, @required String sessionID}) async {
         print('create attendance called');
     try {
       await _db
@@ -161,6 +161,7 @@ class FireStoreHelper {
           .collection(C_ATTENDANCE)
           .add({
         'duration': duration,
+        'sessionID': sessionID,
         'offline': await course.getAllMembersArray(),
       });
     } catch (e) {

@@ -3,6 +3,8 @@ import 'package:document/screens/session_screen/widget_session_screen/listRollca
 import 'package:flutter/material.dart';
 
 class RollCall extends StatefulWidget {
+  final String sessionID;
+  RollCall({@required this.sessionID});
   @override
   _RollCallState createState() => _RollCallState();
 }
@@ -18,7 +20,7 @@ class _RollCallState extends State<RollCall> {
           height: height,
           child: Column(
             children: <Widget>[
-              CreateQR(),
+              QRSection(sessionID: widget.sessionID),
               showListRollCall(),
             ],
           ),
