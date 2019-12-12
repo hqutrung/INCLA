@@ -1,12 +1,12 @@
-import 'attandance.dart';
+import 'user_infor.dart';
 
 class Rate {
-  Attendance attendance;
+  UserInfor attendance;
   int star;
   String content;
 
   Rate.fromMap(Map data) {
-    attendance = Attendance(
+    attendance = UserInfor(
       userID: data['userID'],
       username: data['username'],
     );

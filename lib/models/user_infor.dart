@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class Attendance {
+class UserInfor {
   String userID;
   String username;
 
-  Attendance({@required this.userID, @required this.username});
+  UserInfor({@required this.userID, @required this.username});
 
-  Attendance.fromMap(Map data) {
+  UserInfor.fromMap(Map data) {
     userID = data['userID'];
     username = data['username'];
   }

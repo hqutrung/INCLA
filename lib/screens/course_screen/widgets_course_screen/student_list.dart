@@ -1,4 +1,4 @@
-import 'package:document/models/attandance.dart';
+import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class StudentList extends StatefulWidget {
 }
 
 class _StudentListState extends State<StudentList> with AutomaticKeepAliveClientMixin {
-  Future<List<Attendance>> studentsAsyncer;
+  Future<List<UserInfor>> studentsAsyncer;
 
   @override
   void initState() {
@@ -21,7 +21,7 @@ class _StudentListState extends State<StudentList> with AutomaticKeepAliveClient
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Attendance>>(
+    return FutureBuilder<List<UserInfor>>(
         future: studentsAsyncer,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Text('Loading');

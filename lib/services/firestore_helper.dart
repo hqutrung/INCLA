@@ -1,5 +1,7 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:document/models/attandance.dart';
+import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/session.dart';
@@ -11,6 +13,7 @@ class FireStoreHelper {
   static const String C_USER_COURSE = 'user_course';
   static const String C_POST = 'post';
   static const String C_SESSION = 'session';
+  static const String C_ATTENDANCE = 'attendance';
 
   Firestore _db = Firestore.instance;
 
@@ -30,13 +33,13 @@ class FireStoreHelper {
     }).toList();
   }
 
-  Future<List<Attendance>> getStudents(String courseID) async {
+  Future<List<UserInfor>> getStudents(String courseID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('courseID', isEqualTo: courseID)
         .getDocuments();
     return snapshots.documents.map((data) {
-      return Attendance.fromMap(data.data);
+      return UserInfor.fromMap(data.data);
     }).toList();
   }
 
@@ -75,7 +78,7 @@ class FireStoreHelper {
       await _db
           .collection(C_COURSE)
           .document(course.courseID)
-          .collection('session')
+          .collection(C_SESSION)
           .add({
         'start': Timestamp.fromDate(DateTime.now()),
         'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
@@ -146,6 +149,23 @@ class FireStoreHelper {
   ) {
     return course.reference.collection(C_POST).document(postID).snapshots().map(
         (snapshot) => Post.fromMap(snapshot.data, uid: snapshot.documentID));
+  }
+
+  Future<String> createAttendance(
+      {@required Course course, int duration}) async {
+        print('create attendance called');
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_ATTENDANCE)
+          .add({
+        'duration': duration,
+        'offline': await course.getAllMembersArray(),
+      });
+    } catch (e) {
+      print('create attendance: ' + e.toString());
+    }
   }
 
   // Stream<List<Session>>
