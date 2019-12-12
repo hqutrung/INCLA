@@ -24,40 +24,43 @@ class _CourseScreenState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          drawer: MainDrawer(),
-          appBar: AppBar(
-            title: Text('Phương pháp phát triển phần mềm hướng đối tượng'),
-            bottom: TabBar(
-              tabs: <Widget>[
-                Tab(
-                  icon: Icon(Icons.content_paste),
-                  text: "Buổi học",
-                ),
-                Tab(
-                  icon: Icon(Icons.person),
-                  text: "Sinh viên",
-                ),
-                Tab(
-                  icon: Icon(Icons.description),
-                  text: "Tài liệu",
-                ),
-              ],
+    return Provider.value(
+      value: widget.course,
+      child: DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            drawer: MainDrawer(),
+            appBar: AppBar(
+              title: Text('Phương pháp phát triển phần mềm hướng đối tượng'),
+              bottom: TabBar(
+                tabs: <Widget>[
+                  Tab(
+                    icon: Icon(Icons.content_paste),
+                    text: "Buổi học",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.person),
+                    text: "Sinh viên",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.description),
+                    text: "Tài liệu",
+                  ),
+                ],
+              ),
             ),
-          ),
-          body: Provider<Course>.value(
-            value: widget.course,
-            child: TabBarView(
-              children: <Widget>[
-                SessionList(course: widget.course,),
-                StudentList(courseID: widget.course.courseID),
-                CourseResources(),
-              ],
+            body: Provider<Course>.value(
+              value: widget.course,
+              child: TabBarView(
+                children: <Widget>[
+                  SessionList(),
+                  StudentList(),
+                  CourseResources(),
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
 
     // body: ListView.builder(
     //   scrollDirection: Axis.vertical,

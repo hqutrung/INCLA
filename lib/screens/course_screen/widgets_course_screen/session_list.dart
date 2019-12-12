@@ -5,46 +5,58 @@ import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SessionList extends StatelessWidget {
-  final Course course;
+class SessionList extends StatefulWidget {
+  SessionList();
+
+  @override
+  _SessionListState createState() => _SessionListState();
+}
+
+class _SessionListState extends State<SessionList> {
+
   Stream<List<Session>> sessionStream;
+  Course course;
 
-  SessionList({@required this.course}) {
+  void initState() {
+    course = Provider.of<Course>(context, listen: false);
     sessionStream =
         Collection<Session>(path: 'course/${course.courseID}/session')
             .streamData();
+    super.initState();
   }
 
-  showAddSessionDialog(BuildContext context) async {
+  showAddSessionDialog(BuildContext context, Course course) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          TextEditingController _textEditingController = TextEditingController();
+          TextEditingController _textEditingController =
+              TextEditingController();
           return AlertDialog(
-            content:  Row(
+            content: Row(
               children: <Widget>[
-                 Expanded(
-                    child:  TextField(
+                Expanded(
+                    child: TextField(
                   controller: _textEditingController,
                   autofocus: true,
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Nội dung buổi học',
                   ),
                 ))
               ],
             ),
             actions: <Widget>[
-               FlatButton(
+              FlatButton(
                   child: const Text('Hủy'),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-               FlatButton(
+              FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                   // addTodo(_textEditingController.text.toString());
-                    FireStoreHelper().createSession(course, _textEditingController.text);
+                    FireStoreHelper()
+                        .createSession(course, _textEditingController.text);
                     Navigator.pop(context);
                   })
             ],
@@ -54,6 +66,7 @@ class SessionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Course course = Provider.of<Course>(context);
     return StreamBuilder<List<Session>>(
       stream: sessionStream,
       builder: (context, snapshot) {
@@ -61,7 +74,7 @@ class SessionList extends StatelessWidget {
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
-                showAddSessionDialog(context);
+                showAddSessionDialog(context, course);
               },
               label: Text('Tạo buổi'),
               icon: Icon(Icons.add),
@@ -91,7 +104,8 @@ class SessionList extends StatelessWidget {
                       caption: 'Xoá',
                       color: Colors.red,
                       icon: Icons.delete_outline,
-                      onTap: () => FireStoreHelper().deleteSession(course, snapshot.data[index].id),
+                      onTap: () => FireStoreHelper()
+                          .deleteSession(course, snapshot.data[index].id),
                     ),
                   ],
                 ),

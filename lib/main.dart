@@ -34,7 +34,6 @@ class _MyAppState extends State<MyApp> {
             ),
             routes: {
               LoginAndHomeWrapper.WRAPPER_PATH: (_) => LoginAndHomeWrapper(),
-              // HomePage.HOMESCREEN_PATH: (_) => HomePage(),
             },
           ),
         );

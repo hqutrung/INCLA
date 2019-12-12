@@ -1,10 +1,14 @@
+import 'package:document/models/user.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context);
+
     final GlobalKey<ScaffoldState> _scaffoldKey =
         new GlobalKey<ScaffoldState>();
 
@@ -23,7 +27,9 @@ class Profile extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   height: 130.0,
-                  child: Image(image: AssetImage('assets/images/anh-bia.png'),),
+                  child: Image(
+                    image: AssetImage('assets/images/anh-bia.png'),
+                  ),
                 ),
               ],
             ),
@@ -41,10 +47,12 @@ class Profile extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Huỳnh Quốc Trung',
+                  user.name,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Contact(),
+                Contact(
+                  user: user,
+                ),
               ],
             ),
           ],
@@ -55,6 +63,10 @@ class Profile extends StatelessWidget {
 }
 
 class Contact extends StatelessWidget {
+  final User user;
+
+  Contact({@required this.user});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,11 +98,10 @@ class Contact extends StatelessWidget {
                 SizedBox(
                   width: 120,
                 ),
-                Text('17520184@gmail.com'),
+                Text(user.email),
               ],
             ),
           ),
-          
         ],
       ),
     );

@@ -1,19 +1,28 @@
 import 'package:document/models/attandance.dart';
+import 'package:document/models/course.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class StudentList extends StatelessWidget {
-  final String courseID;
-  Future<List<Attendance>> attendanceAsyncer;
+class StudentList extends StatefulWidget {
+  @override
+  _StudentListState createState() => _StudentListState();
+}
 
-  StudentList({@required this.courseID}) {
-    attendanceAsyncer = FireStoreHelper().getStudents(this.courseID);
+class _StudentListState extends State<StudentList> with AutomaticKeepAliveClientMixin {
+  Future<List<Attendance>> studentsAsyncer;
+
+  @override
+  void initState() {
+    Course course = Provider.of<Course>(context, listen: false);
+    studentsAsyncer = FireStoreHelper().getStudents(course.courseID);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Attendance>>(
-        future: attendanceAsyncer,
+        future: studentsAsyncer,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Text('Loading');
           return ListView.builder(
@@ -32,4 +41,7 @@ class StudentList extends StatelessWidget {
           );
         });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

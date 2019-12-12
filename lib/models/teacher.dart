@@ -1,6 +1,5 @@
 import 'user.dart';
 
-
 class Teacher extends User {
   String degree;
 

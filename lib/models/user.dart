@@ -11,16 +11,12 @@ enum UserType {
 class User {
   static const String COLLECTION_PATH = 'user';
 
-  Firestore _db = Firestore.instance;
-
   String email;
   String uid;
   String name;
-  List<Course> course;
   UserType type;
 
-  User.nullUser() {
-  }
+  User.nullUser();
 
   User.fromMap(Map data,{@required this.email}) {
     name = data['name'];
