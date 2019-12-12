@@ -9,7 +9,7 @@ class LoginAndHomeWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("LoginAndHomeWrapper build");
+    // print("LoginAndHomeWrapper build");
     User user = Provider.of<User>(context);
     if (user == null) return LoadingPage();
     if (user.email == null)

@@ -5,17 +5,24 @@ import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DetailTopic extends StatelessWidget {
+class DetailTopic extends StatefulWidget {
   final Post post;
   final Function moveBack;
-  final Course course;
 
-  DetailTopic({@required this.post, @required this.moveBack, @required this.course});
+  DetailTopic({@required this.post, @required this.moveBack});
+
+  @override
+  _DetailTopicState createState() => _DetailTopicState();
+}
+
+class _DetailTopicState extends State<DetailTopic> {
+
+  TextEditingController _commentTextcontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _commentTextcontroller = TextEditingController();
-    User user = Provider.of<User>(context);
+    Course course = Provider.of<Course>(context, listen: false);
+    User user = Provider.of<User>(context, listen: false);
     return Column(
       children: <Widget>[
         ListTile(
@@ -25,15 +32,15 @@ class DetailTopic extends StatelessWidget {
             radius: 25.0,
           ),
           title: Text(
-            post.attendance.username,
+            widget.post.attendance.username,
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text(post.timestamp.toString()),
+          subtitle: Text(widget.post.timestamp.toString()),
           trailing: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: moveBack,
+            onPressed: widget.moveBack,
           ),
         ),
         Align(
@@ -42,7 +49,7 @@ class DetailTopic extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
             child: Text(
-              post.content,
+              widget.post.content,
               textAlign: TextAlign.center,
             ),
           ),
@@ -52,7 +59,7 @@ class DetailTopic extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: post.comments.length,
+            itemCount: widget.post.comments.length,
             itemBuilder: (context, index) => Row(
               children: [
                 SizedBox(
@@ -60,14 +67,15 @@ class DetailTopic extends StatelessWidget {
                 ),
                 CircleAvatar(
                   backgroundColor: Colors.white,
-                  backgroundImage: const AssetImage('assets/images/logo-uit.png'),
+                  backgroundImage:
+                      const AssetImage('assets/images/logo-uit.png'),
                   radius: 25,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      post.comments[index].attendance.username,
+                      widget.post.comments[index].attendance.username,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -84,7 +92,7 @@ class DetailTopic extends StatelessWidget {
                           bottomRight: Radius.circular(25),
                         ),
                       ),
-                      child: Text(post.comments[index].content),
+                      child: Text(widget.post.comments[index].content),
                     ),
                   ],
                 ),
@@ -104,8 +112,8 @@ class DetailTopic extends StatelessWidget {
               suffixIcon: IconButton(
                 icon: Icon(Icons.send),
                 onPressed: () {
-                  FireStoreHelper().createComment(course,
-                      post.uid, user, _commentTextcontroller.text);
+                  FireStoreHelper().createComment(course, widget.post.uid, user,
+                      _commentTextcontroller.text);
                 },
               ),
             ),

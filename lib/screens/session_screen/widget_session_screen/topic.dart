@@ -147,20 +147,16 @@ class _showTopicState extends State<showTopic>
         ),
       );
     } else if (isTopicDetail) {
-      TextEditingController _commentTextcontroller =
-          new TextEditingController();
       return StreamBuilder<Post>(
           stream: detailPostAsyncer,
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return DetailTopic(
-                course: widget.course,
                 moveBack: moveBack,
                 post: selectedPost,
               );
             else
               return DetailTopic(
-                course: widget.course,
                 moveBack: moveBack,
                 post: snapshot.data,
               );
