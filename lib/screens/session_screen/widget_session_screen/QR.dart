@@ -43,7 +43,10 @@ class _CreateQRState extends State<CreateQR> {
         showCreateQRDialog(context);
       },
       child: Container(
-        child: Icon(Icons.center_focus_weak,size: 250,),
+        child: Icon(
+          Icons.center_focus_weak,
+          size: 250,
+        ),
       ),
     );
   }

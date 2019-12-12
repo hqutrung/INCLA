@@ -1,6 +1,7 @@
 import 'package:document/models/course.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/session_list.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/course_resources.dart';
+import 'package:document/screens/course_screen/widgets_course_screen/statistical.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/student_list.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 
@@ -27,7 +28,7 @@ class _CourseScreenState extends State<CourseScreen> {
     return Provider.value(
       value: widget.course,
       child: DefaultTabController(
-          length: 3,
+          length: 4,
           child: Scaffold(
             drawer: MainDrawer(),
             appBar: AppBar(
@@ -46,6 +47,10 @@ class _CourseScreenState extends State<CourseScreen> {
                     icon: Icon(Icons.description),
                     text: "Tài liệu",
                   ),
+                  Tab(
+                    icon: Icon(Icons.insert_chart),
+                    text: "Thống kê",
+                  ),
                 ],
               ),
             ),
@@ -56,6 +61,7 @@ class _CourseScreenState extends State<CourseScreen> {
                   SessionList(),
                   StudentList(),
                   CourseResources(),
+                  RateChart()
                 ],
               ),
             ),
