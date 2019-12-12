@@ -6,11 +6,13 @@ class Attendance {
 
   List<UserInfor> offline;
   List<UserInfor> online;
+  int duration;
 
   Attendance.fromMap(Map data) {
     offline = (data[OFFLINE_FIELD] as List ?? [])
-        .map((value) => UserInfor.fromMap(value));
+        .map((value) => UserInfor.fromMap(value)).toList();
     online = (data[ONLINE_FIELD] as List ?? [])
-        .map((value) => UserInfor.fromMap(value));
+        .map((value) => UserInfor.fromMap(value)).toList();
+    duration = data['duration'];
   }
 }

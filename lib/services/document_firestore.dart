@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'firestore_helper.dart';
 
-class Document<T>  {
+class Document<T> {
   final firestore = Firestore.instance;
   final String path;
   DocumentReference reference;

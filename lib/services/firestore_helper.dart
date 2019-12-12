@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:document/models/attendance.dart';
 import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
@@ -151,9 +152,11 @@ class FireStoreHelper {
         (snapshot) => Post.fromMap(snapshot.data, uid: snapshot.documentID));
   }
 
-  Future<String> createAttendance(
-      {@required Course course, int duration, @required String sessionID}) async {
-        print('create attendance called');
+  Future createAttendance(
+      {@required Course course,
+      int duration,
+      @required String sessionID}) async {
+    print('create attendance called');
     try {
       await _db
           .collection(C_COURSE)
@@ -167,6 +170,18 @@ class FireStoreHelper {
     } catch (e) {
       print('create attendance: ' + e.toString());
     }
+  }
+
+  Future<Attendance> getAttendance(
+      {@required Course course, @required String sessionID}) async {
+    QuerySnapshot querySnapshot = await course.reference
+        .collection(C_ATTENDANCE)
+        .where('sessionID', isEqualTo: sessionID)
+        .getDocuments();
+    if (querySnapshot.documents.length > 0) 
+      return Attendance.fromMap(querySnapshot.documents[0].data);
+    else
+      return null;
   }
 
   // Stream<List<Session>>

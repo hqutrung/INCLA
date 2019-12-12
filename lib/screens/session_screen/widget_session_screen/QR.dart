@@ -1,7 +1,9 @@
+import 'package:document/models/attendance.dart';
 import 'package:document/models/course.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class QRSection extends StatefulWidget {
   final String sessionID;
@@ -11,6 +13,10 @@ class QRSection extends StatefulWidget {
 }
 
 class _QRSectionState extends State<QRSection> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void showCreateQRDialog(BuildContext context, Course course) {
     TextEditingController _textFieldController = TextEditingController();
@@ -43,6 +49,7 @@ class _QRSectionState extends State<QRSection> {
                         duration: i,
                         sessionID: widget.sessionID);
                   Navigator.of(context).pop();
+                  setState(() {});
                 },
               )
             ],
@@ -53,19 +60,34 @@ class _QRSectionState extends State<QRSection> {
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context);
-    return GestureDetector(
-      onTap: () {
-        print('ontap');
-        showCreateQRDialog(context, course);
-      },
-      child: Container(
-        height: 250,
-        width: 250,
-        child: Icon(
-          Icons.center_focus_weak,
-          size: 250.0,
-        ),
+    return FutureBuilder<Attendance>(
+      future: FireStoreHelper().getAttendance(
+        course: course,
+        sessionID: widget.sessionID,
       ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.data == null) {
+            return GestureDetector(
+              onTap: () => showCreateQRDialog(context, course),
+              child: Container(
+                height: 250,
+                width: 250,
+                child: Icon(Icons.center_focus_weak, size: 250.0),
+              ),
+            );
+          } else
+            return Container(
+              height: 250,
+              width: 250,
+              child: QrImage(
+                data: widget.sessionID,
+                size: 250.0,
+              ),
+            );
+        } else
+          return Text('Loading... ' + snapshot.connectionState.toString());
+      },
     );
   }
 }
