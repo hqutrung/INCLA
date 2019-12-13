@@ -156,7 +156,6 @@ class FireStoreHelper {
       {@required Course course,
       int duration,
       @required String sessionID}) async {
-    print('create attendance called');
     try {
       await _db
           .collection(C_COURSE)
@@ -196,5 +195,23 @@ class FireStoreHelper {
         .map((QuerySnapshot query) => Attendance.fromMap(
             query.documents[0].data,
             reference: query.documents[0].reference));
+  }
+
+  void presentAttendance(
+      {@required Course course,
+      @required String attendanceID,
+      @required User user}) {
+    DocumentReference attendance =
+        course.reference.collection(C_ATTENDANCE).document(attendanceID);
+    if (attendance != null) {
+      attendance.setData({
+        'offline': FieldValue.arrayRemove([
+          {'userID': user.uid, 'username': user.name},
+        ]),
+        'online': FieldValue.arrayUnion([
+          {'userID': user.uid, 'username': user.name}
+        ]),
+      }, merge: true);
+    }
   }
 }

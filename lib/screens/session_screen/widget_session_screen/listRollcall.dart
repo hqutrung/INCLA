@@ -74,7 +74,7 @@ class _AttendanceListState extends State<AttendanceList>
                       offline[index].username,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text('MSSV: ${offline[index].userID}}'),
+                    subtitle: Text('MSSV: ${offline[index].userID}'),
                     trailing: Icon(
                       Icons.brightness_1,
                       color: Colors.grey,
