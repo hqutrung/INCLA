@@ -1,11 +1,17 @@
+import 'package:document/models/attendance.dart';
+import 'package:document/models/user_infor.dart';
 import 'package:flutter/material.dart';
 
-class showListRollCall extends StatefulWidget {
+class AttendanceList extends StatefulWidget {
+  final Attendance attendance;
+
+  AttendanceList({@required this.attendance});
+
   @override
-  _showListRollCallState createState() => _showListRollCallState();
+  _AttendanceListState createState() => _AttendanceListState();
 }
 
-class _showListRollCallState extends State<showListRollCall>
+class _AttendanceListState extends State<AttendanceList>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   @override
@@ -16,6 +22,8 @@ class _showListRollCallState extends State<showListRollCall>
 
   @override
   Widget build(BuildContext context) {
+    List<UserInfor> online = widget.attendance.online;
+    List<UserInfor> offline = widget.attendance.offline;
     return Expanded(
       child: DefaultTabController(
         length: 2,
@@ -25,12 +33,8 @@ class _showListRollCallState extends State<showListRollCall>
             title: TabBar(
               controller: _tabController,
               tabs: <Widget>[
-                Tab(
-                  child: Text('Đã điểm danh'),
-                ),
-                Tab(
-                  child: Text('Chưa điểm danh'),
-                ),
+                Tab(child: Text('Đã điểm danh')),
+                Tab(child: Text('Chưa điểm danh')),
               ],
             ),
           ),
@@ -38,35 +42,45 @@ class _showListRollCallState extends State<showListRollCall>
             controller: _tabController,
             children: <Widget>[
               ListView.builder(
-                itemCount: 3,
+                itemCount: online.length,
                 itemBuilder: (context, index) => Card(
                   child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                    ),
+                    title: Text(
+                      online[index].username,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text('MSSV: ${online[index].userID}'),
+                    trailing: Icon(
+                      Icons.brightness_1,
+                      color: Colors.green,
+                      size: 10,
+                    ),
                   ),
-                  title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('MSSV: 17520184'),
-                 trailing: Icon(Icons.brightness_1, color: Colors.green,size: 10,),
-                ),
-
                 ),
               ),
               ListView.builder(
-                itemCount: 3,
+                itemCount: offline.length,
                 itemBuilder: (context, index) => Card(
                   child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                    ),
+                    title: Text(
+                      offline[index].username,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text('MSSV: ${offline[index].userID}}'),
+                    trailing: Icon(
+                      Icons.brightness_1,
+                      color: Colors.grey,
+                      size: 10,
+                    ),
                   ),
-                  title: Text('Huỳnh Quốc Trung', style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text('MSSV: 17520184'),
-                 trailing: Icon(Icons.brightness_1, color: Colors.grey,size: 10,),
-                ),
-
                 ),
               ),
             ],

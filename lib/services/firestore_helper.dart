@@ -166,6 +166,7 @@ class FireStoreHelper {
         'duration': duration,
         'sessionID': sessionID,
         'offline': await course.getAllMembersArray(),
+        'timestamp': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
       print('create attendance: ' + e.toString());
@@ -178,11 +179,22 @@ class FireStoreHelper {
         .collection(C_ATTENDANCE)
         .where('sessionID', isEqualTo: sessionID)
         .getDocuments();
-    if (querySnapshot.documents.length > 0) 
-      return Attendance.fromMap(querySnapshot.documents[0].data);
+    if (querySnapshot.documents.length > 0)
+      return Attendance.fromMap(querySnapshot.documents[0].data,
+          reference: querySnapshot.documents[0].reference);
     else
       return null;
   }
 
-  // Stream<List<Session>>
+  Stream<Attendance> getAttendanceStream(
+      {@required Course course, @required String sessionID}) {
+    return course.reference
+        .collection(C_ATTENDANCE)
+        .where('sessionID', isEqualTo: sessionID)
+        .limit(1)
+        .snapshots()
+        .map((QuerySnapshot query) => Attendance.fromMap(
+            query.documents[0].data,
+            reference: query.documents[0].reference));
+  }
 }
