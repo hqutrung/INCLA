@@ -9,37 +9,53 @@ class StudentList extends StatefulWidget {
   _StudentListState createState() => _StudentListState();
 }
 
-class _StudentListState extends State<StudentList> with AutomaticKeepAliveClientMixin {
+class _StudentListState extends State<StudentList>
+    with AutomaticKeepAliveClientMixin {
   Future<List<UserInfor>> studentsAsyncer;
+  Course course;
 
   @override
   void initState() {
-    Course course = Provider.of<Course>(context, listen: false);
+    course = Provider.of<Course>(context, listen: false);
     studentsAsyncer = FireStoreHelper().getStudents(course.courseID);
     super.initState();
   }
 
+  Widget _buildStudentList(List<UserInfor> members) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: members.length,
+      itemBuilder: (BuildContext context, int index) => Card(
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: AssetImage('assets/images/logo-uit.png'),
+            backgroundColor: Colors.white,
+          ),
+          title: Text(members[index].username),
+          subtitle: Text('MSSV: ${members[index].userID}'),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<UserInfor>>(
-        future: studentsAsyncer,
+    List<UserInfor> members = course.members;
+    if (course.members == null)
+      return FutureBuilder(
+        future: course.getAllMembersAsync(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return Text('Loading');
-          return ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) => Card(
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/logo-uit.png'),
-                  backgroundColor: Colors.white,
-                ),
-                title: Text(snapshot.data[index].username),
-                subtitle: Text('MSSV: ${snapshot.data[index].userID}'),
-              ),
-            ),
-          );
-        });
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == null)
+              return Text('Lớp chưa đăng ký học sinh nào');
+            else
+              return _buildStudentList(snapshot.data);
+          } else
+            return Text('Loading');
+        },
+      );
+    else
+      return _buildStudentList(members);
   }
 
   @override

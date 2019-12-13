@@ -11,10 +11,10 @@ class Course {
   Course.fromMap(Map data, {this.courseID, this.reference}) {
     if (courseID == null) courseID = data['courseID'];
     name = data['name'];
-    getAllMembers();
+    getAllMembersAsync();
   }
 
-  Future<List<UserInfor>> getAllMembers() async {
+  Future<List<UserInfor>> getAllMembersAsync() async {
     if (members == null)
       members = await FireStoreHelper().getStudents(courseID);
     print('length: ' + members.length.toString());
@@ -22,7 +22,7 @@ class Course {
   }
 
   Future<List<Map<String, dynamic>>> getAllMembersArray() async {
-    if (members == null) await getAllMembers();
+    if (members == null) await getAllMembersAsync();
     List<Map<String, dynamic>> listMap = List<Map<String, dynamic>>();
     for (int i = 0; i < members.length; i++) {
       Map<String, dynamic> x = {'userID': members[i].userID, 'username': members[i].username};
