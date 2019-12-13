@@ -101,6 +101,7 @@ List<Series<StudentStatistical, DateTime>> studentseris = [
       domainFn: (StudentStatistical attendantdata, _) => attendantdata.date,
       measureFn: (StudentStatistical attendantdata, _) => attendantdata.soluong,
       colorFn: (_, __) => MaterialPalette.green.shadeDefault,
+
     ),
     Series(
       data: absentdata,
@@ -108,6 +109,7 @@ List<Series<StudentStatistical, DateTime>> studentseris = [
       domainFn: (StudentStatistical absentdata, _) => absentdata.date,
       measureFn: (StudentStatistical absentdata, _) => absentdata.soluong,
       colorFn: (_, __) => MaterialPalette.red.shadeDefault,
+
     )
   ];
 
@@ -134,6 +136,7 @@ List<Series<StudentStatistical, DateTime>> studentseris = [
                       includeArea: true,
                     ),
                     behaviors: [
+                      
                       ChartTitle('Số lượng',
                           behaviorPosition: BehaviorPosition.start),
                       ChartTitle('Ngày',
