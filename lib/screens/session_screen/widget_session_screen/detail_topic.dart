@@ -3,6 +3,7 @@ import 'package:document/models/post.dart';
 import 'package:document/models/user.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class DetailTopic extends StatefulWidget {
@@ -59,42 +60,57 @@ class _DetailTopicState extends State<DetailTopic> {
         Expanded(
           child: ListView.builder(
             itemCount: widget.post.comments.length,
-            itemBuilder: (context, index) => Row(
-              children: [
-                SizedBox(
-                  width: 10,
-                ),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage:
-                      const AssetImage('assets/images/logo-uit.png'),
-                  radius: 25,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.post.comments[index].attendance.username,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8),
-                      padding: const EdgeInsets.all(15.0),
-                      decoration: BoxDecoration(
-                        color: Colors.orange[100],
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                          bottomRight: Radius.circular(25),
+            itemBuilder: (context, index) => Slidable(
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage:
+                        const AssetImage('assets/images/logo-uit.png'),
+                    radius: 25,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.post.comments[index].attendance.username,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      child: Text(widget.post.comments[index].content),
-                    ),
-                  ],
-                ),
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8),
+                        padding: const EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          color: Colors.orange[100],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: Text(widget.post.comments[index].content),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actionPane: SlidableDrawerActionPane(),
+              actions: <Widget>[
+                IconSlideAction(
+                        color: Colors.red,
+                        icon: Icons.delete_outline,
+                        onTap: (){}
+                      ),
+                      IconSlideAction(
+                        color: Colors.green,
+                        icon: Icons.edit,
+                        onTap: (){}
+                      ),
               ],
             ),
           ),

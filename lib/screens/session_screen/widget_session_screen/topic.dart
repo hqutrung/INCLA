@@ -4,6 +4,7 @@ import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/detail_topic.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class showTopic extends StatefulWidget {
@@ -113,32 +114,48 @@ class _showTopicState extends State<showTopic>
                 scrollDirection: Axis.vertical,
                 itemCount: posts.length,
                 itemBuilder: (BuildContext context, int index) => Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage('assets/images/logo-uit.png'),
-                    ),
-                    title: Text(posts[index].title),
-                    subtitle: Text(
-                        'Người tạo: ${posts[index].attendance.username}. \n${posts[index].timestamp} - ${posts[index].comments.length} Trả lời'),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.bookmark,
-                        color: Colors.orange,
+                  child: Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage:
+                            AssetImage('assets/images/logo-uit.png'),
                       ),
-                      onPressed: () {
-                        setState(() {});
+                      title: Text(posts[index].title),
+                      subtitle: Text(
+                          'Người tạo: ${posts[index].attendance.username}. \n${posts[index].timestamp} - ${posts[index].comments.length} Trả lời'),
+                      trailing: IconButton(
+                        icon: Icon(
+                          Icons.bookmark,
+                          color: Colors.orange,
+                        ),
+                        onPressed: () {
+                          setState(() {});
+                        },
+                      ),
+                      onTap: () {
+                        setState(() {
+                          selectedPost = posts[index];
+                          isTopicDetail = !isTopicDetail;
+                          detailPostAsyncer = FireStoreHelper()
+                              .getDetailPostStream(
+                                  widget.course, selectedPost.uid);
+                        });
                       },
                     ),
-                    onTap: () {
-                      setState(() {
-                        selectedPost = posts[index];
-                        isTopicDetail = !isTopicDetail;
-                        detailPostAsyncer = FireStoreHelper()
-                            .getDetailPostStream(
-                                widget.course, selectedPost.uid);
-                      });
-                    },
+                    actions: <Widget>[
+                      IconSlideAction(
+                        color: Colors.red,
+                        icon: Icons.delete_outline,
+                        onTap: (){}
+                      ),
+                      IconSlideAction(
+                        color: Colors.green,
+                        icon: Icons.edit,
+                        onTap: (){}
+                      ),
+                    ],
                   ),
                 ),
               );
