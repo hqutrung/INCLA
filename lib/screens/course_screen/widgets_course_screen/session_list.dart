@@ -63,6 +63,42 @@ class _SessionListState extends State<SessionList> {
           );
         });
   }
+  showEditSessionDialog(BuildContext context, Course course) async {
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          TextEditingController _textEditingController =
+              TextEditingController();
+          return AlertDialog(
+            content: Row(
+              children: <Widget>[
+                Expanded(
+                    child: TextField(
+                  controller: _textEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Nội dung buổi học',
+                  ),
+                ))
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              FlatButton(
+                  child: const Text('Lưu'),
+                  onPressed: () {
+                    // FireStoreHelper()
+                    //     .createSession(course, _textEditingController.text);
+                    // Navigator.pop(context);
+                  })
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,11 +137,17 @@ class _SessionListState extends State<SessionList> {
                   ),
                   actions: <Widget>[
                     IconSlideAction(
-                      caption: 'Xoá',
                       color: Colors.red,
                       icon: Icons.delete_outline,
                       onTap: () => FireStoreHelper()
                           .deleteSession(course, snapshot.data[index].id),
+                    ),
+                     IconSlideAction(
+                      color: Colors.green,
+                      icon: Icons.edit,
+                      onTap: () {
+                        showEditSessionDialog(context, course);
+                      },
                     ),
                   ],
                 ),
