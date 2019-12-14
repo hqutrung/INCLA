@@ -14,3 +14,13 @@ class Rate {
     content = data['content'];
   }
 }
+
+class Rates {
+  List<Rate> rates;
+
+  Rates.fromMap(Map data) {
+    rates = (data['rates'] as List ?? [])
+        .map((rate) => Rate.fromMap(rate))
+        .toList();
+  }
+}

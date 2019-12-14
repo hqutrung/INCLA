@@ -6,7 +6,8 @@ class Course {
   String courseID;
   String name;
   DocumentReference reference;
-  List<UserInfor> members;
+
+  List<UserInfor> cachedStudents;
 
   Course.fromMap(Map data, {this.courseID, this.reference}) {
     if (courseID == null) courseID = data['courseID'];
@@ -15,17 +16,17 @@ class Course {
   }
 
   Future<List<UserInfor>> getAllMembersAsync() async {
-    if (members == null)
-      members = await FireStoreHelper().getStudents(courseID);
-    print('length: ' + members.length.toString());
-    return members;
+    if (cachedStudents == null)
+      cachedStudents = await FireStoreHelper().getStudents(courseID);
+    print('length: ' + cachedStudents.length.toString());
+    return cachedStudents;
   }
 
   Future<List<Map<String, dynamic>>> getAllMembersArray() async {
-    if (members == null) await getAllMembersAsync();
+    if (cachedStudents == null) await getAllMembersAsync();
     List<Map<String, dynamic>> listMap = List<Map<String, dynamic>>();
-    for (int i = 0; i < members.length; i++) {
-      Map<String, dynamic> x = {'userID': members[i].userID, 'username': members[i].username};
+    for (int i = 0; i < cachedStudents.length; i++) {
+      Map<String, dynamic> x = {'userID': cachedStudents[i].userID, 'username': cachedStudents[i].username};
       listMap.add(x);
     }
     return listMap;

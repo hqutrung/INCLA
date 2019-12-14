@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
+import 'package:document/models/rate.dart';
 import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
@@ -15,6 +16,7 @@ class FireStoreHelper {
   static const String C_POST = 'post';
   static const String C_SESSION = 'session';
   static const String C_ATTENDANCE = 'attendance';
+  static const String C_RATE = 'rate';
 
   Firestore _db = Firestore.instance;
 
@@ -90,13 +92,14 @@ class FireStoreHelper {
     }
   }
 
-Future updateSession(Course course, String topic, String sessionID) async {
+  Future updateSession(Course course, String topic, String sessionID) async {
     try {
       await _db
           .collection(C_COURSE)
           .document(course.courseID)
           .collection(C_SESSION)
-          .document(sessionID).updateData({
+          .document(sessionID)
+          .updateData({
         'topic': topic,
       });
     } catch (e) {
@@ -157,7 +160,6 @@ Future updateSession(Course course, String topic, String sessionID) async {
       print('create comment error: ' + e.toString());
     }
   }
-
 
   Stream<Post> getDetailPostStream(
     Course course,
@@ -228,5 +230,30 @@ Future updateSession(Course course, String topic, String sessionID) async {
         ]),
       }, merge: true);
     }
+  }
+
+  Stream<Rates> getRatesStream(
+      {@required Course course, @required String sessionID}) {
+    return course.reference
+        .collection(C_RATE)
+        .document(sessionID)
+        .snapshots()
+        .map((DocumentSnapshot query) => Rates.fromMap(query.data));
+  }
+
+  Future rateSession(
+      {@required Course course,
+      @required String sessionID,
+      @required User user,
+      @required String content,
+      @required int value}) async {
+    course.reference.collection(C_RATE).document(sessionID).setData({
+      'rates': FieldValue.arrayUnion([{
+        'userID': user.uid,
+        'username': user.name,
+        'value': value,
+        'content': content
+      }])
+    });
   }
 }

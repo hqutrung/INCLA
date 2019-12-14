@@ -40,8 +40,8 @@ class _StudentListState extends State<StudentList>
 
   @override
   Widget build(BuildContext context) {
-    List<UserInfor> members = course.members;
-    if (course.members == null)
+    List<UserInfor> members = course.cachedStudents;
+    if (course.cachedStudents == null)
       return FutureBuilder(
         future: course.getAllMembersAsync(),
         builder: (context, snapshot) {
