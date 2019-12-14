@@ -88,43 +88,62 @@ class _RateDetailState extends State<RateDetail> {
   }
 
   Widget _buildRateList(List<Rate> rates) {
-    return Container(
-      child: ListView.builder(
-        itemCount: rates.length,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Row(children: <Widget>[
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/logo-uit.png'),
-              backgroundColor: Colors.white,
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: ListView.builder(
+            itemCount: rates.length,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Row(children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                  backgroundColor: Colors.white,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(rates[index].content)
+                    ],
                   ),
-                  Text(rates[index].content)
-                ],
-              ),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(rates[index].star.toString()),
+                    Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                    )
+                  ],
+                ),
+              ]),
             ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(rates[index].star.toString()),
-                Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                )
-              ],
-            ),
-          ]),
+          ),
         ),
-      ),
+        FlatButton(
+          color: ThemeData().primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          onPressed: () {
+            showRatingDialog();
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+            child: Text(
+              'Tạo đánh giá',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
