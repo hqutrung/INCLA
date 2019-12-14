@@ -3,6 +3,7 @@ import 'package:document/models/rate.dart';
 import 'package:document/models/user.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class RateDetail extends StatefulWidget {
@@ -19,6 +20,64 @@ class _RateDetailState extends State<RateDetail> {
   Course course;
   User user;
 
+  showRatingDialog() {
+    return showDialog<String>(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          double rate;
+          TextEditingController _textEditingController =
+              TextEditingController();
+          return AlertDialog(
+            title: Text('Đánh giá'),
+            content: Column(
+              children: <Widget>[
+                Expanded(
+                  child: RatingBar(
+                    initialRating: 0,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemSize: 35,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                      setState(() {
+                        rate = rating;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                    child: TextField(
+                  controller: _textEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Nội dung',
+                  ),
+                ))
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              FlatButton(
+                  child: const Text('Lưu'),
+                  onPressed: () {
+                    print('cos $rate');
+                  })
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     course = Provider.of<Course>(context, listen: false);
@@ -34,38 +93,36 @@ class _RateDetailState extends State<RateDetail> {
         itemCount: rates.length,
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/logo-uit.png'),
-                backgroundColor: Colors.white,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(rates[index].content)
-                  ],
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
+          child: Row(children: <Widget>[
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/images/logo-uit.png'),
+              backgroundColor: Colors.white,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(rates[index].star.toString()),
-                  Icon(
-                    Icons.star,
-                    color: Colors.orange,
-                  )
+                  Text(
+                    '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(rates[index].content)
                 ],
               ),
-            ],
-          ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text(rates[index].star.toString()),
+                Icon(
+                  Icons.star,
+                  color: Colors.orange,
+                )
+              ],
+            ),
+          ]),
         ),
       ),
     );
@@ -73,36 +130,55 @@ class _RateDetailState extends State<RateDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Rates>(
-      stream: ratesStream,
-      builder: (context, snapshot) {
-        // print('wtf');
-        // return Container(
-        //   height: 50,
-        //   width: 100,
-        //   child: IconButton(
-        //     icon: Icon(Icons.star),
-        //     color: Colors.blue,
-        //     onPressed: () {
-        //       // FireStoreHelper()
-        //       //     .createRates(course: course, sessionID: widget.sessionID);
-        //       FireStoreHelper().rateSession(
-        //           course: course,
-        //           sessionID: widget.sessionID,
-        //           user: user,
-        //           content: '',
-        //           value: 5);
-        //     },
-        //   ),
-        // );
-        if (snapshot.connectionState == ConnectionState.active) {
-          if (snapshot.hasData)
-            return _buildRateList(snapshot.data.rates);
-          else
-            return Text('Nothing to show...');
-        } else
-          return Text('Loading...' + snapshot.connectionState.toString());
-      },
+    return Column(
+      children: [
+        StreamBuilder<Rates>(
+          stream: ratesStream,
+          builder: (context, snapshot) {
+            // print('wtf');
+            // return Container(
+            //   height: 50,
+            //   width: 100,
+            //   child: IconButton(
+            //     icon: Icon(Icons.star),
+            //     color: Colors.blue,
+            //     onPressed: () {
+            //       // FireStoreHelper()
+            //       //     .createRates(course: course, sessionID: widget.sessionID);
+            //       FireStoreHelper().rateSession(
+            //           course: course,
+            //           sessionID: widget.sessionID,
+            //           user: user,
+            //           content: '',
+            //           value: 5);
+            //     },
+            //   ),
+            // );
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData)
+                return _buildRateList(snapshot.data.rates);
+              else
+                return Text('Nothing to show...');
+            } else
+              return Text('Loading...' + snapshot.connectionState.toString());
+          },
+        ),
+        FlatButton(
+          color: ThemeData().primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+          onPressed: () {
+            showRatingDialog();
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+            child: Text(
+              'Tạo đánh giá',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
