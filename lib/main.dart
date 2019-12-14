@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
           value: snapshot.data,
           child: MaterialApp(
             title: 'Incla',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),

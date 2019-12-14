@@ -36,26 +36,7 @@ class _SessionScreenState extends State<SessionScreen> {
                 'Tuần 1 - Ngày 10/10/2019',
                 style: TextStyle(fontSize: 16.0),
               ),
-              actions: <Widget>[
-                SizedBox(
-                  height: 10,
-                  width: 80,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0)),
-                    child: Row(
-                      children: <Widget>[
-                        Text('5.0'),
-                        Icon(
-                          Icons.star,
-                          color: Colors.orange,
-                        )
-                      ],
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
+              
               bottom: TabBar(
                 tabs: <Widget>[
                   Tab(
