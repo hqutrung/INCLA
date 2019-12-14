@@ -90,6 +90,20 @@ class FireStoreHelper {
     }
   }
 
+Future updateSession(Course course, String topic, String sessionID) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_SESSION)
+          .document(sessionID).updateData({
+        'topic': topic,
+      });
+    } catch (e) {
+      print('create session: ' + e.toString());
+    }
+  }
+
   Future deleteSession(Course course, String id) async {
     try {
       _db
@@ -143,6 +157,7 @@ class FireStoreHelper {
       print('create comment error: ' + e.toString());
     }
   }
+
 
   Stream<Post> getDetailPostStream(
     Course course,

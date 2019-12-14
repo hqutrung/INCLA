@@ -19,6 +19,42 @@ class DetailTopic extends StatefulWidget {
 class _DetailTopicState extends State<DetailTopic> {
   TextEditingController _commentTextcontroller = TextEditingController();
 
+  showEditCommentDialog(BuildContext context, Course course, String content,
+      ) async {
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          TextEditingController _textEditingController =
+              TextEditingController(text: content);
+          return AlertDialog(
+            content: Row(
+              children: <Widget>[
+                Expanded(
+                    child: TextField(
+                  controller: _textEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Chỉnh sửa',
+                  ),
+                ))
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              FlatButton(
+                  child: const Text('Sửa'),
+                  onPressed: () {
+
+                  })
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context, listen: false);
@@ -102,15 +138,13 @@ class _DetailTopicState extends State<DetailTopic> {
               actionPane: SlidableDrawerActionPane(),
               actions: <Widget>[
                 IconSlideAction(
-                        color: Colors.red,
-                        icon: Icons.delete_outline,
-                        onTap: (){}
-                      ),
-                      IconSlideAction(
-                        color: Colors.green,
-                        icon: Icons.edit,
-                        onTap: (){}
-                      ),
+                    color: Colors.red,
+                    icon: Icons.delete_outline,
+                    onTap: () {}),
+                IconSlideAction(
+                    color: Colors.green, icon: Icons.edit, onTap: () {
+                      showEditCommentDialog(context, course, widget.post.comments[index].content);
+                    }),
               ],
             ),
           ),

@@ -63,12 +63,12 @@ class _SessionListState extends State<SessionList> {
           );
         });
   }
-  showEditSessionDialog(BuildContext context, Course course) async {
+  showEditSessionDialog(BuildContext context,Course course, String topic, String sessionID) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           TextEditingController _textEditingController =
-              TextEditingController();
+              TextEditingController(text: topic);
           return AlertDialog(
             content: Row(
               children: <Widget>[
@@ -76,8 +76,11 @@ class _SessionListState extends State<SessionList> {
                     child: TextField(
                   controller: _textEditingController,
                   autofocus: true,
+                 
                   decoration: InputDecoration(
                     labelText: 'Nội dung buổi học',
+                    
+                    
                   ),
                 ))
               ],
@@ -91,9 +94,9 @@ class _SessionListState extends State<SessionList> {
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                    // FireStoreHelper()
-                    //     .createSession(course, _textEditingController.text);
-                    // Navigator.pop(context);
+                    FireStoreHelper()
+                        .updateSession(course, _textEditingController.text, sessionID );
+                    Navigator.pop(context);
                   })
             ],
           );
@@ -146,7 +149,7 @@ class _SessionListState extends State<SessionList> {
                       color: Colors.green,
                       icon: Icons.edit,
                       onTap: () {
-                        showEditSessionDialog(context, course);
+                        showEditSessionDialog(context, course, snapshot.data[index].topic, snapshot.data[index].id);
                       },
                     ),
                   ],
