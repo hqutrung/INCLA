@@ -1,6 +1,4 @@
 import 'package:document/models/course.dart';
-import 'package:document/models/session.dart';
-import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/ratedetail.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
@@ -36,7 +34,6 @@ class _SessionScreenState extends State<SessionScreen> {
                 'Tuần 1 - Ngày 10/10/2019',
                 style: TextStyle(fontSize: 16.0),
               ),
-              
               bottom: TabBar(
                 tabs: <Widget>[
                   Tab(
