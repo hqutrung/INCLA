@@ -5,6 +5,7 @@ import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
+import 'package:document/utils/WebViewContainer.dart';
 
 class CourseResources extends StatefulWidget {
   CourseResources();
@@ -76,14 +77,15 @@ class _CourseResourcesState extends State<CourseResources> {
         });
   }
 
-  showEditResourceDialog(BuildContext context, Course course, String name, String link, String resourceID) async {
+  showEditResourceDialog(BuildContext context, Course course, String name,
+      String link, String resourceID) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           TextEditingController _nameEditingController =
-          TextEditingController(text: name);
+              TextEditingController(text: name);
           TextEditingController _linkEditingController =
-          TextEditingController(text: link);
+              TextEditingController(text: link);
           return AlertDialog(
             content: Column(
               children: <Widget>[
@@ -116,9 +118,12 @@ class _CourseResourcesState extends State<CourseResources> {
               FlatButton(
                   child: const Text('Cập nhật'),
                   onPressed: () {
-                     FireStoreHelper()
-                         .updateResource(course, _nameEditingController.text, _linkEditingController.text, resourceID);
-                     Navigator.pop(context);
+                    FireStoreHelper().updateResource(
+                        course,
+                        _nameEditingController.text,
+                        _linkEditingController.text,
+                        resourceID);
+                    Navigator.pop(context);
                   })
             ],
           );
@@ -146,17 +151,12 @@ class _CourseResourcesState extends State<CourseResources> {
                   child: Slidable(
                     actionPane: SlidableDrawerActionPane(),
                     child: ListTile(
-                      leading: Icon(Icons.insert_drive_file),
-                      title: Text(snapshot.data[index].name),
-                      subtitle: Text(snapshot.data[index].link),
-                      onTap: () {
-                        //View document
-                        //
-                        //
-                        //
-                        //
-                      },
-                    ),
+                        leading: Icon(Icons.insert_drive_file),
+                        title: Text(snapshot.data[index].name),
+                        subtitle: Text(snapshot.data[index].link),
+                        onTap: () =>
+                            //View document
+                            _handleURLView(context, snapshot.data[index].link)),
                     actions: <Widget>[
                       IconSlideAction(
                           color: Colors.red,
@@ -168,11 +168,12 @@ class _CourseResourcesState extends State<CourseResources> {
                         icon: Icons.edit,
                         onTap: () {
                           showEditResourceDialog(
-                              context,
-                              course,
-                              snapshot.data[index].name,
-                              snapshot.data[index].link,
-                              snapshot.data[index].uid,);
+                            context,
+                            course,
+                            snapshot.data[index].name,
+                            snapshot.data[index].link,
+                            snapshot.data[index].uid,
+                          );
                         },
                       ),
                     ],
@@ -183,5 +184,10 @@ class _CourseResourcesState extends State<CourseResources> {
           return Text('Loading... ' + snapshot.connectionState.toString());
       },
     );
+  }
+
+  void _handleURLView(BuildContext context, String url) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => WebViewContainer(url)));
   }
 }
