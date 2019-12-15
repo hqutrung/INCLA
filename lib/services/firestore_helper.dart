@@ -2,12 +2,13 @@ import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
-import 'package:document/models/rate.dart';
-import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
+import 'package:document/models/rate.dart';
+import 'package:document/models/resource.dart';
 import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
+import 'package:document/models/user_infor.dart';
 import 'package:flutter/material.dart';
 
 class FireStoreHelper {
@@ -17,12 +18,14 @@ class FireStoreHelper {
   static const String C_SESSION = 'session';
   static const String C_ATTENDANCE = 'attendance';
   static const String C_RATE = 'rate';
+  static const String C_RESOURCE = 'resource';
 
   Firestore _db = Firestore.instance;
 
   static final Map models = {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
+    Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -92,6 +95,22 @@ class FireStoreHelper {
     }
   }
 
+  Future createResource(Course course, String name, String link) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_RESOURCE)
+          .add({
+        'time': Timestamp.fromDate(DateTime.now()),
+        'name': name,
+        'link': link
+      });
+    } catch (e) {
+      print('create resource ' + e.toString());
+    }
+  }
+
   Future updateSession(Course course, String topic, String sessionID) async {
     try {
       await _db
@@ -101,6 +120,24 @@ class FireStoreHelper {
           .document(sessionID)
           .updateData({
         'topic': topic,
+      });
+    } catch (e) {
+      print('create session: ' + e.toString());
+    }
+  }
+
+  Future updateResource(
+      Course course, String name, String link, String resourceID) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_RESOURCE)
+          .document(resourceID)
+          .updateData({
+        'time': Timestamp.fromDate(DateTime.now()),
+        'name': name,
+        'link': link
       });
     } catch (e) {
       print('create session: ' + e.toString());
@@ -117,6 +154,19 @@ class FireStoreHelper {
           .delete();
     } catch (e) {
       print('delete session: ' + e.toString());
+    }
+  }
+
+  Future deleteResource(Course course, String resourceID) async {
+    try {
+      _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_RESOURCE)
+          .document(resourceID)
+          .delete();
+    } catch (e) {
+      print('delete resource: ' + e.toString());
     }
   }
 
@@ -234,11 +284,21 @@ class FireStoreHelper {
 
   Stream<Rates> getRatesStream(
       {@required Course course, @required String sessionID}) {
-    return course.reference
+    print('?: ' + sessionID);
+    var x = course.reference
         .collection(C_RATE)
         .document(sessionID)
         .snapshots()
         .map((DocumentSnapshot query) => Rates.fromMap(query.data));
+    // course.reference
+    //     .collection(C_RATE)
+    //     .document(sessionID)
+    //     .get()
+    //     .then((querySnapshot) {
+    //   print(querySnapshot.data);
+    // });
+
+    return x;
   }
 
   Future rateSession(
@@ -247,13 +307,19 @@ class FireStoreHelper {
       @required User user,
       @required String content,
       @required int value}) async {
-    course.reference.collection(C_RATE).document(sessionID).setData({
-      'rates': FieldValue.arrayUnion([{
-        'userID': user.uid,
-        'username': user.name,
-        'value': value,
-        'content': content
-      }])
-    });
+    try {
+      course.reference.collection(C_RATE).document(sessionID).setData({
+        'rates': FieldValue.arrayUnion([
+          {
+            'value': value,
+            'content': content,
+            'userID': user.uid,
+            'username': user.name,
+          }
+        ])
+      }, merge: true);
+    } catch (e) {
+      print('rate session: ' + e.toString());
+    }
   }
 }

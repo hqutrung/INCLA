@@ -1,16 +1,37 @@
-import 'package:document/screens/shared_widgets/confirm_dialog.dart';
+import 'package:document/models/course.dart';
+import 'package:document/models/resource.dart';
+import 'package:document/services/collection_firestore.dart';
+import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
-class CourseResources extends StatelessWidget {
+class CourseResources extends StatefulWidget {
+  CourseResources();
+
   @override
-  showAddResourceDialog(BuildContext context) async {
+  _CourseResourcesState createState() => _CourseResourcesState();
+}
+
+class _CourseResourcesState extends State<CourseResources> {
+  Stream<List<Resource>> resourceStream;
+  Course course;
+
+  void initState() {
+    course = Provider.of<Course>(context, listen: false);
+    resourceStream =
+        Collection<Resource>(path: 'course/${course.courseID}/resource')
+            .streamData();
+    super.initState();
+  }
+
+  showAddResourceDialog(BuildContext context, Course course) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           TextEditingController _nameEditingController =
               TextEditingController();
-              TextEditingController _linkEditingController =
+          TextEditingController _linkEditingController =
               TextEditingController();
           return AlertDialog(
             content: Column(
@@ -29,7 +50,7 @@ class CourseResources extends StatelessWidget {
                     controller: _linkEditingController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: 'Link Google Driver',
+                      labelText: 'Link tài liệu (PDF)',
                     ),
                   ),
                 ),
@@ -44,58 +65,123 @@ class CourseResources extends StatelessWidget {
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                    // FireStoreHelper()
-                    //     .createSession(course, _textEditingController.text);
-                    // Navigator.pop(context);
+                    FireStoreHelper().createResource(
+                        course,
+                        _nameEditingController.text,
+                        _linkEditingController.text);
+                    Navigator.pop(context);
                   })
             ],
           );
         });
   }
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            showAddResourceDialog(context);
-          },
-          label: Text('Tài liệu'),
-          icon: Icon(Icons.add),
-        ),
-        body: ListView.builder(
-          itemCount: 1,
-          itemBuilder: (BuildContext context, int index) => Card(
-            child: Slidable(
-              actionPane: SlidableDrawerActionPane(),
-              child: ListTile(
-                leading: Icon(Icons.insert_drive_file),
-                title: Text('Lý thuyết OOP'),
-                subtitle: Text('lttoop.doc'),
-                // Text('SE102.K12 - Lập trình hướng Đối tượng'),
-                // Text('Ngày tạo: 20/10/2019'),
-                onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (context) => SessionScreen()));
-                },
-              ),
-              actions: <Widget>[
-                IconSlideAction(
-                  color: Colors.red,
-                  icon: Icons.delete_outline,
-                  onTap: () {
-                    confirmDialog(context, 'Xác nhận xóa tài liệu?', () {
-                          //Firebase xóa 
-                        });
-                  },
+  showEditResourceDialog(BuildContext context, Course course, String name, String link, String resourceID) async {
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          TextEditingController _nameEditingController =
+          TextEditingController(text: name);
+          TextEditingController _linkEditingController =
+          TextEditingController(text: link);
+          return AlertDialog(
+            content: Column(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    controller: _nameEditingController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Thông tin tài liệu',
+                    ),
+                  ),
                 ),
-                IconSlideAction(
-                  color: Colors.green,
-                  icon: Icons.edit,
-                  onTap: () {},
+                Expanded(
+                  child: TextField(
+                    controller: _linkEditingController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Link tài liệu (PDF)',
+                    ),
+                  ),
                 ),
               ],
             ),
-          ),
-        ));
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              FlatButton(
+                  child: const Text('Cập nhật'),
+                  onPressed: () {
+                     FireStoreHelper()
+                         .updateResource(course, _nameEditingController.text, _linkEditingController.text, resourceID);
+                     Navigator.pop(context);
+                  })
+            ],
+          );
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Course course = Provider.of<Course>(context);
+    return StreamBuilder<List<Resource>>(
+      stream: resourceStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Scaffold(
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () {
+                  showAddResourceDialog(context, course);
+                },
+                label: Text('Tài liệu'),
+                icon: Icon(Icons.add),
+              ),
+              body: ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) => Card(
+                  child: Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    child: ListTile(
+                      leading: Icon(Icons.insert_drive_file),
+                      title: Text(snapshot.data[index].name),
+                      subtitle: Text(snapshot.data[index].link),
+                      onTap: () {
+                        //View document
+                        //
+                        //
+                        //
+                        //
+                      },
+                    ),
+                    actions: <Widget>[
+                      IconSlideAction(
+                          color: Colors.red,
+                          icon: Icons.delete_outline,
+                          onTap: () => FireStoreHelper().deleteResource(
+                              course, snapshot.data[index].uid)),
+                      IconSlideAction(
+                        color: Colors.green,
+                        icon: Icons.edit,
+                        onTap: () {
+                          showEditResourceDialog(
+                              context,
+                              course,
+                              snapshot.data[index].name,
+                              snapshot.data[index].link,
+                              snapshot.data[index].uid,);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+        } else
+          return Text('Loading... ' + snapshot.connectionState.toString());
+      },
+    );
   }
 }
