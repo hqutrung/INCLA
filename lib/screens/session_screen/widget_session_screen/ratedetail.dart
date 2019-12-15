@@ -70,13 +70,15 @@ class _RateDetailState extends State<RateDetail> {
                   }),
               FlatButton(
                 child: const Text('Lưu'),
-                onPressed: () => FireStoreHelper().rateSession(
+                onPressed: () { FireStoreHelper().rateSession(
                   course: course,
                   content: _textEditingController.text,
                   user: user,
                   sessionID: widget.sessionID,
                   value: rate,
-                ),
+                );
+                Navigator.pop(context);
+                },
               ),
             ],
           );
