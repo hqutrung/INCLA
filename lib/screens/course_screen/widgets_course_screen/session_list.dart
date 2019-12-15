@@ -1,6 +1,7 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/session_screen.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -15,7 +16,6 @@ class SessionList extends StatefulWidget {
 }
 
 class _SessionListState extends State<SessionList> {
-
   Stream<List<Session>> sessionStream;
   Course course;
 
@@ -63,7 +63,9 @@ class _SessionListState extends State<SessionList> {
           );
         });
   }
-  showEditSessionDialog(BuildContext context,Course course, String topic, String sessionID) async {
+
+  showEditSessionDialog(BuildContext context, Course course, String topic,
+      String sessionID) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -76,11 +78,8 @@ class _SessionListState extends State<SessionList> {
                     child: TextField(
                   controller: _textEditingController,
                   autofocus: true,
-                 
                   decoration: InputDecoration(
                     labelText: 'Nội dung buổi học',
-                    
-                    
                   ),
                 ))
               ],
@@ -94,8 +93,8 @@ class _SessionListState extends State<SessionList> {
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                    FireStoreHelper()
-                        .updateSession(course, _textEditingController.text, sessionID );
+                    FireStoreHelper().updateSession(
+                        course, _textEditingController.text, sessionID);
                     Navigator.pop(context);
                   })
             ],
@@ -142,14 +141,22 @@ class _SessionListState extends State<SessionList> {
                     IconSlideAction(
                       color: Colors.red,
                       icon: Icons.delete_outline,
-                      onTap: () => FireStoreHelper()
-                          .deleteSession(course, snapshot.data[index].id),
+                      onTap: () {
+                        confirmDialog(context, 'Xác nhận xóa buổi học?', () {
+                          FireStoreHelper()
+                              .deleteSession(course, snapshot.data[index].id);
+                        });
+                      },
                     ),
-                     IconSlideAction(
+                    IconSlideAction(
                       color: Colors.green,
                       icon: Icons.edit,
                       onTap: () {
-                        showEditSessionDialog(context, course, snapshot.data[index].topic, snapshot.data[index].id);
+                        showEditSessionDialog(
+                            context,
+                            course,
+                            snapshot.data[index].topic,
+                            snapshot.data[index].id);
                       },
                     ),
                   ],

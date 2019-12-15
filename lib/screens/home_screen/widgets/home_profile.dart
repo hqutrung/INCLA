@@ -92,13 +92,41 @@ class Contact extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Icon(Icons.mail),
                 SizedBox(
                   width: 120,
                 ),
                 Text(user.email),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Icon(Icons.calendar_today),
+                SizedBox(
+                  width: 120,
+                ),
+                Text('29/11/1999'),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Icon(Icons.supervised_user_circle),
+                SizedBox(
+                  width: 120,
+                ),
+                Text((user.type == UserType.Student) ? 'Sinh viên':'Giảng viên'),
               ],
             ),
           ),
