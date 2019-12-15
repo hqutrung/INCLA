@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
 import 'package:document/models/rate.dart';
@@ -7,7 +5,9 @@ import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/session.dart';
+import 'package:document/models/resource.dart';
 import 'package:document/models/user.dart';
+import 'package:document/models/user_infor.dart';
 import 'package:flutter/material.dart';
 
 class FireStoreHelper {
@@ -17,12 +17,14 @@ class FireStoreHelper {
   static const String C_SESSION = 'session';
   static const String C_ATTENDANCE = 'attendance';
   static const String C_RATE = 'rate';
+  static const String C_RESOURCE = 'resource';
 
   Firestore _db = Firestore.instance;
 
   static final Map models = {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
+    Resource: (Map data, String name) => Resource.fromMap(data, name: name),
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -83,10 +85,10 @@ class FireStoreHelper {
           .document(course.courseID)
           .collection(C_SESSION)
           .add({
-        'start': Timestamp.fromDate(DateTime.now()),
-        'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
-        'topic': topic,
-      });
+            'start': Timestamp.fromDate(DateTime.now()),
+            'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
+            'topic': topic,
+          });
     } catch (e) {
       print('create session: ' + e.toString());
     }
@@ -107,6 +109,22 @@ class FireStoreHelper {
     }
   }
 
+  Future createResource(Course course, String name, String link) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_RESOURCE)
+          .add({
+            'time': Timestamp.fromDate(DateTime.now()),
+            'name': name,
+            'link': link
+          });
+    } catch (e) {
+      print('create resource ' + e.toString());
+    }
+  }
+
   Future deleteSession(Course course, String id) async {
     try {
       _db
@@ -117,6 +135,19 @@ class FireStoreHelper {
           .delete();
     } catch (e) {
       print('delete session: ' + e.toString());
+    }
+  }
+
+  Future deleteResource(Course course, String name) async {
+    try {
+      _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_RESOURCE)
+          .document(name)
+          .delete();
+    } catch (e) {
+      print('delete resource: ' + e.toString());
     }
   }
 
