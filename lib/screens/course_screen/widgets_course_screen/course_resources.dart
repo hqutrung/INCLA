@@ -50,7 +50,7 @@ class _CourseResourcesState extends State<CourseResources> {
                     controller: _linkEditingController,
                     autofocus: true,
                     decoration: InputDecoration(
-                      labelText: 'Link Google Driver',
+                      labelText: 'Link tài liệu (PDF)',
                     ),
                   ),
                 ),
@@ -76,23 +76,35 @@ class _CourseResourcesState extends State<CourseResources> {
         });
   }
 
-  showEditResourceDialog(BuildContext context, Course course) async {
+  showEditResourceDialog(BuildContext context, Course course, String name, String link, String resourceID) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          TextEditingController _textEditingController =
-              TextEditingController();
+          TextEditingController _nameEditingController =
+          TextEditingController(text: name);
+          TextEditingController _linkEditingController =
+          TextEditingController(text: link);
           return AlertDialog(
-            content: Row(
+            content: Column(
               children: <Widget>[
                 Expanded(
-                    child: TextField(
-                  controller: _textEditingController,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    labelText: 'Nội dung buổi học',
+                  child: TextField(
+                    controller: _nameEditingController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Thông tin tài liệu',
+                    ),
                   ),
-                ))
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _linkEditingController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: 'Link tài liệu (PDF)',
+                    ),
+                  ),
+                ),
               ],
             ),
             actions: <Widget>[
@@ -102,11 +114,11 @@ class _CourseResourcesState extends State<CourseResources> {
                     Navigator.pop(context);
                   }),
               FlatButton(
-                  child: const Text('Lưu'),
+                  child: const Text('Cập nhật'),
                   onPressed: () {
-                    // FireStoreHelper()
-                    //     .editResource(course, _nameEditingController.text, _linkEditingController.text);
-                    // Navigator.pop(context);
+                     FireStoreHelper()
+                         .updateResource(course, _nameEditingController.text, _linkEditingController.text, resourceID);
+                     Navigator.pop(context);
                   })
             ],
           );
@@ -119,7 +131,6 @@ class _CourseResourcesState extends State<CourseResources> {
     return StreamBuilder<List<Resource>>(
       stream: resourceStream,
       builder: (context, snapshot) {
-        print('snapshot = ' + snapshot.data.toString());
         if (snapshot.hasData) {
           return Scaffold(
               floatingActionButton: FloatingActionButton.extended(
@@ -140,19 +151,28 @@ class _CourseResourcesState extends State<CourseResources> {
                       subtitle: Text(snapshot.data[index].link),
                       onTap: () {
                         //View document
+                        //
+                        //
+                        //
+                        //
                       },
                     ),
                     actions: <Widget>[
                       IconSlideAction(
                           color: Colors.red,
                           icon: Icons.delete_outline,
-                          onTap: () => FireStoreHelper()
-                              .deleteResource(course, snapshot.data[index].name)),
+                          onTap: () => FireStoreHelper().deleteResource(
+                              course, snapshot.data[index].uid)),
                       IconSlideAction(
                         color: Colors.green,
                         icon: Icons.edit,
                         onTap: () {
-                          showEditResourceDialog(context, course);
+                          showEditResourceDialog(
+                              context,
+                              course,
+                              snapshot.data[index].name,
+                              snapshot.data[index].link,
+                              snapshot.data[index].uid,);
                         },
                       ),
                     ],

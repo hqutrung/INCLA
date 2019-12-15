@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
-import 'package:document/models/rate.dart';
-import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
-import 'package:document/models/session.dart';
+import 'package:document/models/rate.dart';
 import 'package:document/models/resource.dart';
+import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
 import 'package:document/models/user_infor.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class FireStoreHelper {
   static final Map models = {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
-    Resource: (Map data, String name) => Resource.fromMap(data, name: name),
+    Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -94,20 +93,6 @@ class FireStoreHelper {
     }
   }
 
-  Future updateSession(Course course, String topic, String sessionID) async {
-    try {
-      await _db
-          .collection(C_COURSE)
-          .document(course.courseID)
-          .collection(C_SESSION)
-          .document(sessionID)
-          .updateData({
-        'topic': topic,
-      });
-    } catch (e) {
-      print('create session: ' + e.toString());
-    }
-  }
 
   Future createResource(Course course, String name, String link) async {
     try {
@@ -125,6 +110,38 @@ class FireStoreHelper {
     }
   }
 
+  Future updateSession(Course course, String topic, String sessionID) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_SESSION)
+          .document(sessionID)
+          .updateData({
+        'topic': topic,
+      });
+    } catch (e) {
+      print('create session: ' + e.toString());
+    }
+  }
+
+  Future updateResource(Course course, String name, String link, String resourceID) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_RESOURCE)
+          .document(resourceID)
+          .updateData({
+            'time': Timestamp.fromDate(DateTime.now()),
+            'name': name,
+            'link': link
+          });
+    } catch (e) {
+      print('create session: ' + e.toString());
+    }
+  }
+
   Future deleteSession(Course course, String id) async {
     try {
       _db
@@ -138,13 +155,13 @@ class FireStoreHelper {
     }
   }
 
-  Future deleteResource(Course course, String name) async {
+  Future deleteResource(Course course, String resourceID) async {
     try {
       _db
           .collection(C_COURSE)
           .document(course.courseID)
           .collection(C_RESOURCE)
-          .document(name)
+          .document(resourceID)
           .delete();
     } catch (e) {
       print('delete resource: ' + e.toString());
