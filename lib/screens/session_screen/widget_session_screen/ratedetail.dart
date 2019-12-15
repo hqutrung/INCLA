@@ -93,8 +93,9 @@ class _RateDetailState extends State<RateDetail> {
   }
 
   Widget _buildRateList(List<Rate> rates) {
-    return Scaffold(
-        body: ListView.builder(
+    return Column(children: <Widget>[
+      Expanded(
+        child: ListView.builder(
           shrinkWrap: true,
           itemCount: rates.length,
           itemBuilder: (context, index) => Padding(
@@ -131,22 +132,23 @@ class _RateDetailState extends State<RateDetail> {
             ]),
           ),
         ),
-        floatingActionButton: FlatButton(
-          color: ThemeData().primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-          onPressed: () {
-            showRatingDialog();
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-            child: Text(
-              'Tạo đánh giá',
-              style: TextStyle(color: Colors.white),
-            ),
+      ),
+      FlatButton(
+        color: ThemeData().primaryColor,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+        onPressed: () {
+          showRatingDialog();
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+          child: Text(
+            'Tạo đánh giá',
+            style: TextStyle(color: Colors.white),
           ),
         ),
-        );
+      ),
+    ]);
   }
 
   @override
