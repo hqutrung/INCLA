@@ -2,6 +2,7 @@ import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/detail_topic.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -148,7 +149,11 @@ class _showTopicState extends State<showTopic>
                       IconSlideAction(
                         color: Colors.red,
                         icon: Icons.delete_outline,
-                        onTap: (){}
+                        onTap: (){
+                          confirmDialog(context, 'Xác nhận xóa topic?', () {
+                          //Firebase xóa
+                        });
+                        }
                       ),
                       IconSlideAction(
                         color: Colors.green,

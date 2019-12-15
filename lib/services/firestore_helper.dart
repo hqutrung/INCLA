@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
 import 'package:document/models/course.dart';
@@ -84,15 +86,14 @@ class FireStoreHelper {
           .document(course.courseID)
           .collection(C_SESSION)
           .add({
-            'start': Timestamp.fromDate(DateTime.now()),
-            'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
-            'topic': topic,
-          });
+        'start': Timestamp.fromDate(DateTime.now()),
+        'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
+        'topic': topic,
+      });
     } catch (e) {
       print('create session: ' + e.toString());
     }
   }
-
 
   Future createResource(Course course, String name, String link) async {
     try {
@@ -101,10 +102,10 @@ class FireStoreHelper {
           .document(course.courseID)
           .collection(C_RESOURCE)
           .add({
-            'time': Timestamp.fromDate(DateTime.now()),
-            'name': name,
-            'link': link
-          });
+        'time': Timestamp.fromDate(DateTime.now()),
+        'name': name,
+        'link': link
+      });
     } catch (e) {
       print('create resource ' + e.toString());
     }
@@ -125,7 +126,8 @@ class FireStoreHelper {
     }
   }
 
-  Future updateResource(Course course, String name, String link, String resourceID) async {
+  Future updateResource(
+      Course course, String name, String link, String resourceID) async {
     try {
       await _db
           .collection(C_COURSE)
@@ -133,10 +135,10 @@ class FireStoreHelper {
           .collection(C_RESOURCE)
           .document(resourceID)
           .updateData({
-            'time': Timestamp.fromDate(DateTime.now()),
-            'name': name,
-            'link': link
-          });
+        'time': Timestamp.fromDate(DateTime.now()),
+        'name': name,
+        'link': link
+      });
     } catch (e) {
       print('create session: ' + e.toString());
     }
@@ -282,11 +284,21 @@ class FireStoreHelper {
 
   Stream<Rates> getRatesStream(
       {@required Course course, @required String sessionID}) {
-    return course.reference
+    print('?: ' + sessionID);
+    var x = course.reference
         .collection(C_RATE)
         .document(sessionID)
         .snapshots()
         .map((DocumentSnapshot query) => Rates.fromMap(query.data));
+    // course.reference
+    //     .collection(C_RATE)
+    //     .document(sessionID)
+    //     .get()
+    //     .then((querySnapshot) {
+    //   print(querySnapshot.data);
+    // });
+
+    return x;
   }
 
   Future rateSession(
@@ -295,13 +307,19 @@ class FireStoreHelper {
       @required User user,
       @required String content,
       @required int value}) async {
-    course.reference.collection(C_RATE).document(sessionID).setData({
-      'rates': FieldValue.arrayUnion([{
-        'userID': user.uid,
-        'username': user.name,
-        'value': value,
-        'content': content
-      }])
-    });
+    try {
+      course.reference.collection(C_RATE).document(sessionID).setData({
+        'rates': FieldValue.arrayUnion([
+          {
+            'value': value,
+            'content': content,
+            'userID': user.uid,
+            'username': user.name,
+          }
+        ])
+      }, merge: true);
+    } catch (e) {
+      print('rate session: ' + e.toString());
+    }
   }
 }
