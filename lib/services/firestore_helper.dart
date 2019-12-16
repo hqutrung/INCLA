@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
 import 'package:document/models/course.dart';
+import 'package:document/models/notification.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/rate.dart';
 import 'package:document/models/resource.dart';
@@ -19,6 +20,8 @@ class FireStoreHelper {
   static const String C_ATTENDANCE = 'attendance';
   static const String C_RATE = 'rate';
   static const String C_RESOURCE = 'resource';
+  static const String C_NOTIFICATION = 'notification';
+  static const String C_NOTIS = 'notis';
 
   Firestore _db = Firestore.instance;
 
@@ -26,6 +29,7 @@ class FireStoreHelper {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
     Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
+
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -322,4 +326,17 @@ class FireStoreHelper {
       print('rate session: ' + e.toString());
     }
   }
+
+  Future<List<Noti>> getNotification({@required userID}) async {
+    QuerySnapshot snapshots = await _db
+        .collection(C_NOTIFICATION)
+        .document(userID)
+        .collection(C_NOTIS)
+        .getDocuments();
+        
+    return snapshots.documents.map((data){
+      return Noti.fromMap(data.data);
+    }).toList();
+  }
+
 }

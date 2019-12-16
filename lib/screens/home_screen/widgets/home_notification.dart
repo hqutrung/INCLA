@@ -1,6 +1,10 @@
+import 'package:document/models/notification.dart';
+import 'package:document/models/user.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
+import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeNotification extends StatefulWidget {
   @override
@@ -9,6 +13,38 @@ class HomeNotification extends StatefulWidget {
 
 class _HomeNotificationState extends State<HomeNotification> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  Future<List<Noti>> notiList;
+
+  @override
+  void initState() {
+    User user = Provider.of<User>(context, listen: false);
+    notiList = FireStoreHelper().getNotification(userID: user.uid);
+    super.initState();
+  }
+
+  Widget _buildListNoti(List<Noti> notis) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: notis.length,
+      itemBuilder: (BuildContext context, int index) => Card(
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.white,
+            backgroundImage: AssetImage('assets/images/logo-uit.png'),
+          ),
+          title: Text(notis[index].title),
+          subtitle:
+              Text(notis[index].usercreate.username +' '+ notis[index].content),
+          trailing: Text('2h'),
+          onTap: () {
+            //Navigator.push(context,MaterialPageRoute(builder: (context) => CourseScreen()));
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,24 +54,10 @@ class _HomeNotificationState extends State<HomeNotification> {
           openDrawer: () => _scaffoldKey.currentState.openDrawer(),
         ),
         drawer: MainDrawer(),
-        body: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int index) => Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/logo-uit.png'),
-              ),
-              title: Text('New topic đã được tạo'),
-              subtitle: Text(
-                  'Huỳnh Quốc Trung đã tạo 1 topic mới trong lớp SE312.K11'),
-              trailing: Text('2h'),
-              onTap: () {
-                //Navigator.push(context,MaterialPageRoute(builder: (context) => CourseScreen()));
-              },
-            ),
-          ),
-        ));
+        body: FutureBuilder(
+            future: notiList,
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Noti>> snapshot) =>
+                    _buildListNoti(snapshot.data)));
   }
 }

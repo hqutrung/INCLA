@@ -26,7 +26,6 @@ class Profile extends StatelessWidget {
               children: <Widget>[
                 SizedBox(
                   width: double.infinity,
-                  height: 130.0,
                   child: Image(
                     image: AssetImage('assets/images/anh-bia.png'),
                   ),
