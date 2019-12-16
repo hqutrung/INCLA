@@ -29,7 +29,6 @@ class FireStoreHelper {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
     Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
-
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -174,6 +173,7 @@ class FireStoreHelper {
     }
   }
 
+
   void createTopic(String sessionID, Course course, User user,
       {@required String title, @required String content}) {
     try {
@@ -190,6 +190,7 @@ class FireStoreHelper {
         'read': false,
         'sessionID': sessionID,
       });
+      addNotification(creator: user, userID: '17520184',courseID: course.courseID,sessionID: sessionID);
     } catch (e) {
       print('Create topic: ' + e.toString());
     }
@@ -327,16 +328,41 @@ class FireStoreHelper {
     }
   }
 
-  Future<List<Noti>> getNotification({@required userID}) async {
-    QuerySnapshot snapshots = await _db
+  Stream<List<Noti>> getNotification({@required userID}) {
+    return _db
         .collection(C_NOTIFICATION)
         .document(userID)
         .collection(C_NOTIS)
-        .getDocuments();
-        
-    return snapshots.documents.map((data){
-      return Noti.fromMap(data.data);
-    }).toList();
+        .snapshots()
+        .map(
+          (query) => query.documents
+              .map(
+                (snapshot) =>
+                    Noti.fromMap(snapshot.data),
+              )
+              .toList(),
+        );
   }
 
+  Future addNotification(
+      {@required User creator, @required String userID, @required String courseID,@required String sessionID}) async {
+    try {
+      await _db
+          .collection(C_NOTIFICATION)
+          .document(userID)
+          .collection(C_NOTIS)
+          .add({
+        'title': "Thảo luận mới đã được tạo",
+        'creatorID': creator.uid,
+        'creatorName': creator.name,
+        'content': "đã tạo thảo luận mới trong lớp",
+        'courseID': courseID,
+        'sessionID': sessionID,
+        'typeNoti': 1,
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+      });
+    } catch (e) {
+      print('create attendance: ' + e.toString());
+    }
+  }
 }

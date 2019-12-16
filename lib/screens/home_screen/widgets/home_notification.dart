@@ -1,5 +1,6 @@
 import 'package:document/models/notification.dart';
 import 'package:document/models/user.dart';
+import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:document/services/firestore_helper.dart';
@@ -14,7 +15,8 @@ class HomeNotification extends StatefulWidget {
 class _HomeNotificationState extends State<HomeNotification> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  Future<List<Noti>> notiList;
+  Stream<List<Noti>> notiList;
+  
 
   @override
   void initState() {
@@ -34,11 +36,14 @@ class _HomeNotificationState extends State<HomeNotification> {
             backgroundImage: AssetImage('assets/images/logo-uit.png'),
           ),
           title: Text(notis[index].title),
-          subtitle:
-              Text(notis[index].usercreate.username +' '+ notis[index].content),
+          subtitle: Text(notis[index].usercreate.username +
+              ' ' +
+              notis[index].content +
+              ' ' +
+              notis[index].courseID),
           trailing: Text('2h'),
           onTap: () {
-            //Navigator.push(context,MaterialPageRoute(builder: (context) => CourseScreen()));
+            //push vào buổi
           },
         ),
       ),
@@ -54,8 +59,8 @@ class _HomeNotificationState extends State<HomeNotification> {
           openDrawer: () => _scaffoldKey.currentState.openDrawer(),
         ),
         drawer: MainDrawer(),
-        body: FutureBuilder(
-            future: notiList,
+        body: StreamBuilder<List<Noti>>(
+            stream: notiList,
             builder:
                 (BuildContext context, AsyncSnapshot<List<Noti>> snapshot) =>
                     _buildListNoti(snapshot.data)));
