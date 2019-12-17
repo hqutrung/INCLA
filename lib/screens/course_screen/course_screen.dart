@@ -4,6 +4,7 @@ import 'package:document/screens/course_screen/widgets_course_screen/course_reso
 import 'package:document/screens/course_screen/widgets_course_screen/statistical.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/student_list.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
+import 'package:document/models/user.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,47 +26,85 @@ class _CourseScreenState extends State<CourseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context);
     return Provider.value(
       value: widget.course,
-      child: DefaultTabController(
-          length: 4,
-          child: Scaffold(
-            drawer: MainDrawer(),
-            appBar: AppBar(
-              title: Text('Phương pháp phát triển phần mềm hướng đối tượng'),
-              bottom: TabBar(
-                tabs: <Widget>[
-                  Tab(
-                    icon: Icon(Icons.content_paste),
-                    text: "Buổi học",
+      child: user.type == UserType.Teacher
+          ? DefaultTabController(
+              length: 4,
+              child: Scaffold(
+                drawer: MainDrawer(),
+                appBar: AppBar(
+                  title:
+                      Text('Phương pháp phát triển phần mềm hướng đối tượng'),
+                  bottom: TabBar(
+                    tabs: <Widget>[
+                      Tab(
+                        icon: Icon(Icons.content_paste),
+                        text: "Buổi học",
+                      ),
+                      Tab(
+                        icon: Icon(Icons.person),
+                        text: "Sinh viên",
+                      ),
+                      Tab(
+                        icon: Icon(Icons.description),
+                        text: "Tài liệu",
+                      ),
+                      Tab(
+                        icon: Icon(Icons.insert_chart),
+                        text: "Thống kê",
+                      ),
+                    ],
                   ),
-                  Tab(
-                    icon: Icon(Icons.person),
-                    text: "Sinh viên",
+                ),
+                body: Provider<Course>.value(
+                  value: widget.course,
+                  child: TabBarView(
+                    children: <Widget>[
+                      SessionList(),
+                      StudentList(),
+                      CourseResources(),
+                      RateChart()
+                    ],
                   ),
-                  Tab(
-                    icon: Icon(Icons.description),
-                    text: "Tài liệu",
+                ),
+              ))
+          : DefaultTabController(
+              length: 3,
+              child: Scaffold(
+                drawer: MainDrawer(),
+                appBar: AppBar(
+                  title:
+                      Text('Phương pháp phát triển phần mềm hướng đối tượng'),
+                  bottom: TabBar(
+                    tabs: <Widget>[
+                      Tab(
+                        icon: Icon(Icons.content_paste),
+                        text: "Buổi học",
+                      ),
+                      Tab(
+                        icon: Icon(Icons.person),
+                        text: "Sinh viên",
+                      ),
+                      Tab(
+                        icon: Icon(Icons.description),
+                        text: "Tài liệu",
+                      ),
+                    ],
                   ),
-                  Tab(
-                    icon: Icon(Icons.insert_chart),
-                    text: "Thống kê",
+                ),
+                body: Provider<Course>.value(
+                  value: widget.course,
+                  child: TabBarView(
+                    children: <Widget>[
+                      SessionList(),
+                      StudentList(),
+                      CourseResources(),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            body: Provider<Course>.value(
-              value: widget.course,
-              child: TabBarView(
-                children: <Widget>[
-                  SessionList(),
-                  StudentList(),
-                  CourseResources(),
-                  RateChart()
-                ],
-              ),
-            ),
-          )),
+                ),
+              )),
     );
 
     // body: ListView.builder(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:document/utils/WebViewContainer.dart';
+import 'package:document/models/user.dart';
 
 class CourseResources extends StatefulWidget {
   CourseResources();
@@ -133,18 +134,19 @@ class _CourseResourcesState extends State<CourseResources> {
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context);
+    User user = Provider.of<User>(context);
     return StreamBuilder<List<Resource>>(
       stream: resourceStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-              floatingActionButton: FloatingActionButton.extended(
+              floatingActionButton: user.type == UserType.Teacher ? FloatingActionButton.extended(
                 onPressed: () {
                   showAddResourceDialog(context, course);
                 },
                 label: Text('Tài liệu'),
                 icon: Icon(Icons.add),
-              ),
+              ) : null,
               body: ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) => Card(
@@ -153,11 +155,10 @@ class _CourseResourcesState extends State<CourseResources> {
                     child: ListTile(
                         leading: Icon(Icons.insert_drive_file),
                         title: Text(snapshot.data[index].name),
-                        subtitle: Text(snapshot.data[index].link),
                         onTap: () =>
                             //View document
                             _handleURLView(context, snapshot.data[index].link)),
-                    actions: <Widget>[
+                    actions:user.type == UserType.Teacher ? <Widget>[
                       IconSlideAction(
                           color: Colors.red,
                           icon: Icons.delete_outline,
@@ -176,7 +177,7 @@ class _CourseResourcesState extends State<CourseResources> {
                           );
                         },
                       ),
-                    ],
+                    ] : null,
                   ),
                 ),
               ));
