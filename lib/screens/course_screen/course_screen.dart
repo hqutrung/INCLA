@@ -33,7 +33,6 @@ class _CourseScreenState extends State<CourseScreen> {
           ? DefaultTabController(
               length: 4,
               child: Scaffold(
-                drawer: MainDrawer(),
                 appBar: AppBar(
                   title:
                       Text('Phương pháp phát triển phần mềm hướng đối tượng'),
@@ -73,7 +72,6 @@ class _CourseScreenState extends State<CourseScreen> {
           : DefaultTabController(
               length: 3,
               child: Scaffold(
-                drawer: MainDrawer(),
                 appBar: AppBar(
                   title:
                       Text('Phương pháp phát triển phần mềm hướng đối tượng'),

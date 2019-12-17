@@ -15,6 +15,8 @@ class User {
   String uid;
   String name;
   UserType type;
+  String phoneNumber;
+  Timestamp birthday;
 
   User.nullUser();
 
@@ -22,5 +24,8 @@ class User {
     name = data['name'];
     uid = data['uid'];
     type = UserType.values[data['user_type']];
+    phoneNumber = data['phoneNumber'];
+    birthday = data['birthday'];
+    print(birthday.toDate().toString());
   }
 }

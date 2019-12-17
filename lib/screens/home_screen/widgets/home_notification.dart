@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeNotification extends StatefulWidget {
+  final MainDrawer drawer;
+
+  const HomeNotification({Key key,@required this.drawer}) : super(key: key);
   @override
   _HomeNotificationState createState() => _HomeNotificationState();
 }
@@ -57,7 +60,7 @@ class _HomeNotificationState extends State<HomeNotification> {
         title: 'Thông báo',
         openDrawer: () => _scaffoldKey.currentState.openDrawer(),
       ),
-      drawer: MainDrawer(),
+      drawer: widget.drawer,
       body: StreamBuilder<List<Noti>>(
         initialData: [],
         stream: notiList,

@@ -4,7 +4,15 @@ import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  final MainDrawer drawer;
+
+  const Profile({Key key, @required this.drawer}) : super(key: key);
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context);
@@ -18,7 +26,7 @@ class Profile extends StatelessWidget {
         title: 'Thông tin cá nhân',
         openDrawer: () => _scaffoldKey.currentState.openDrawer(),
       ),
-      drawer: MainDrawer(),
+      drawer: widget.drawer,
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
@@ -83,7 +91,7 @@ class Contact extends StatelessWidget {
                 SizedBox(
                   width: 120,
                 ),
-                Text('0375475075'),
+                Text(user.phoneNumber),
               ],
             ),
           ),
@@ -111,7 +119,7 @@ class Contact extends StatelessWidget {
                 SizedBox(
                   width: 120,
                 ),
-                Text('29/11/1999'),
+                Text(user.birthday.toDate().toString()),
               ],
             ),
           ),
@@ -125,7 +133,9 @@ class Contact extends StatelessWidget {
                 SizedBox(
                   width: 120,
                 ),
-                Text((user.type == UserType.Student) ? 'Sinh viên':'Giảng viên'),
+                Text((user.type == UserType.Student)
+                    ? 'Sinh viên'
+                    : 'Giảng viên'),
               ],
             ),
           ),

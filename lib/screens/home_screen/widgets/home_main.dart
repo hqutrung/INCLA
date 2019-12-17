@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeMain extends StatefulWidget {
+  final MainDrawer drawer;
+
+  const HomeMain({Key key, @required this.drawer}) : super(key: key);
   @override
   _HomeMainState createState() => _HomeMainState();
 }
@@ -62,7 +65,7 @@ class _HomeMainState extends State<HomeMain> {
         title: 'Trang chủ',
         openDrawer: () => _scaffoldKey.currentState.openDrawer(),
       ),
-      drawer: MainDrawer(),
+      drawer: widget.drawer,
       body: FutureBuilder(
         future: coursesNe,
         builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {

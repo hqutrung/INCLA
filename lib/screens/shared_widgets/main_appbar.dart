@@ -5,7 +5,7 @@ class MainAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function openDrawer;
 
   // MainAppBar({@required this.title, @required this.openDrawer});
-  MainAppBar({Key key, @required this.title, @required this.openDrawer})
+  MainAppBar({Key key, @required this.title, this.openDrawer})
       : preferredSize = Size.fromHeight(kToolbarHeight),
         super(key: key);
 
@@ -17,13 +17,16 @@ class MainAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _MainAppBarState extends State<MainAppBar> {
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+        new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      
       title: Text(widget.title),
       leading: IconButton(
         icon: Icon(Icons.menu),
-        onPressed: widget.openDrawer,
+        onPressed:  widget.openDrawer,
       ),
     );
   }

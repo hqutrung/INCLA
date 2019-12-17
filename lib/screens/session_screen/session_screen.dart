@@ -29,7 +29,6 @@ class _SessionScreenState extends State<SessionScreen> {
       child: DefaultTabController(
           length: 3,
           child: Scaffold(
-            drawer: MainDrawer(),
             appBar: AppBar(
               title: Text(
                 'Tuần 1 - Ngày 10/10/2019',
