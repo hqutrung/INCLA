@@ -373,4 +373,20 @@ class FireStoreHelper {
     });
     return allRates;
   }
+
+  Future<List<Attendance>> getAllAttendance({@required Course course}) async {
+    List<Attendance> allAttendances = List<Attendance>();
+    await course.reference
+        .collection(C_ATTENDANCE)
+        .getDocuments()
+        .then((snapshot) {
+      for (int i = 0; i < snapshot.documents.length; i++) {
+        allAttendances.add(Attendance.fromMap(
+          snapshot.documents[i].data,
+          reference: snapshot.documents[i].reference,
+        ));
+      }
+    });
+    return allAttendances;
+  }
 }
