@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:document/models/attendance.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/rate.dart';
@@ -8,6 +10,8 @@ import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:charts_flutter/src/text_element.dart';
+import 'package:charts_flutter/src/text_style.dart' as style;
 
 class RateChart extends StatefulWidget {
   @override
@@ -72,7 +76,6 @@ class _RateChartState extends State<RateChart> {
         data: attendanceData,
         id: 'RateChart',
         domainFn: (StudentStatistical student, _) {
-          print(student.date);
           return student.date;
         },
         measureFn: (StudentStatistical student, _) => student.quantity,
@@ -111,12 +114,20 @@ class _RateChartState extends State<RateChart> {
                                 ),
                               ),
                             ),
+                            primaryMeasureAxis: NumericAxisSpec(
+                              showAxisLine: true,
+                              renderSpec: GridlineRendererSpec(),
+                              tickProviderSpec: BasicNumericTickProviderSpec(
+                                dataIsInWholeNumbers: true,
+                                desiredTickCount: 6,
+                                desiredMinTickCount: 6,
+                              ),
+                            ),
                             animate: true,
                             dateTimeFactory: LocalDateTimeFactory(),
                             animationDuration: Duration(seconds: 1),
                             defaultRenderer: LineRendererConfig(
-                              includeArea: true,
-                            ),
+                                includeArea: true, includePoints: true),
                             behaviors: [
                               ChartTitle('Đánh giá',
                                   behaviorPosition: BehaviorPosition.start),
@@ -151,26 +162,50 @@ class _RateChartState extends State<RateChart> {
                   initialData: [],
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
+                      String textSelect;
                       if (snapshot.data.length > 0)
                         return Expanded(
                           child: TimeSeriesChart(
                             _getAttendanceChartSeries(
                                 _getAttendanceStatistical(snapshot.data)),
-                            defaultRenderer:
-                                LineRendererConfig<DateTime>(includeArea: true),
+                            selectionModels: [
+                              SelectionModelConfig(
+                                  changedListener: (SelectionModel model) {
+                                if (model.hasDatumSelection)
+                                  textSelect = model.selectedSeries[0]
+                                      .measureFn(model.selectedDatum[0].index)
+                                      .toString();
+
+                                print(textSelect);
+                              })
+                            ],
+                            defaultRenderer: LineRendererConfig<DateTime>(
+                                includeArea: true, includePoints: true),
                             animationDuration: const Duration(seconds: 1),
+                            primaryMeasureAxis: NumericAxisSpec(
+                              showAxisLine: true,
+                              renderSpec: GridlineRendererSpec(),
+                              tickProviderSpec: BasicNumericTickProviderSpec(
+                                  desiredTickCount: 10,
+                                  desiredMinTickCount: 10),
+                            ),
+
                             domainAxis: DateTimeAxisSpec(
                               showAxisLine: true,
                               tickFormatterSpec: AutoDateTimeTickFormatterSpec(
                                 day: TimeFormatterSpec(
-                                  format: 'dd',
-                                  transitionFormat: 'dd MMM',
+                                  format: 'dd/MM',
+                                  transitionFormat: 'dd/MM',
                                 ),
                               ),
                             ),
                             animate: true,
                             // dateTimeFactory: const LocalDateTimeFactory(),
                             behaviors: [
+                              
+                              LinePointHighlighter(
+                                  symbolRenderer:
+                                      CustomCircleSymbolRenderer('3')),
                               ChartTitle('Số lượng',
                                   behaviorPosition: BehaviorPosition.start),
                               ChartTitle('Ngày',
@@ -200,5 +235,34 @@ class _RateChartState extends State<RateChart> {
         ],
       ),
     );
+  }
+}
+
+class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
+  String _text;
+  CustomCircleSymbolRenderer(String text) {
+    this._text = text;
+    print(_text);
+  }
+  @override
+  void paint(ChartCanvas canvas, Rectangle<num> bounds,
+      {List<int> dashPattern,
+      Color fillColor,
+      Color strokeColor,
+      double strokeWidthPx}) {
+    super.paint(canvas, bounds,
+        dashPattern: dashPattern,
+        fillColor: fillColor,
+        strokeColor: strokeColor,
+        strokeWidthPx: strokeWidthPx);
+    canvas.drawRect(
+        Rectangle(bounds.left - 5, bounds.top - 30, bounds.width + 10,
+            bounds.height + 10),
+        fill: Color.white);
+    var textStyle = style.TextStyle();
+    textStyle.color = Color.black;
+    textStyle.fontSize = 15;
+    canvas.drawText(TextElement('_text', style: textStyle), (bounds.left).round(),
+        (bounds.top - 28).round());
   }
 }
