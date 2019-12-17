@@ -4,6 +4,7 @@ import 'package:document/models/course.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/QR.dart';
 import 'package:document/screens/session_screen/widget_session_screen/listRollcall.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,8 +71,9 @@ class _RollCallState extends State<RollCall> {
   Future _applyQRCode() async {
     String code = await getApplyQRCode();
     User user = Provider.of<User>(context, listen: false);
-    FireStoreHelper().presentAttendance(
-        course: course, code: code, user: user);
+    String ok = FireStoreHelper().presentAttendance(
+        course: course, sessionID: widget.sessionID, code: code, user: user);
+    if (ok != null) confirmDialog(context, ok, () {});
   }
 
   @override

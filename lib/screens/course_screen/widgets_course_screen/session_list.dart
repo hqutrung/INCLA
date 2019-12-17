@@ -141,29 +141,32 @@ class _SessionListState extends State<SessionList> {
                       );
                     },
                   ),
-                  actions: user.type == UserType.Teacher ? <Widget>[
-                    IconSlideAction(
-                      color: Colors.red,
-                      icon: Icons.delete_outline,
-                      onTap: () {
-                        confirmDialog(context, 'Xác nhận xóa buổi học?', () {
-                          FireStoreHelper()
-                              .deleteSession(course, snapshot.data[index].id);
-                        });
-                      },
-                    ),
-                    IconSlideAction(
-                      color: Colors.green,
-                      icon: Icons.edit,
-                      onTap: () {
-                        showEditSessionDialog(
-                            context,
-                            course,
-                            snapshot.data[index].topic,
-                            snapshot.data[index].id);
-                      },
-                    ),
-                  ] : null,
+                  actions: user.type == UserType.Teacher
+                      ? <Widget>[
+                          IconSlideAction(
+                            color: Colors.red,
+                            icon: Icons.delete_outline,
+                            onTap: () {
+                              confirmDialog(context, 'Xác nhận xóa buổi học?',
+                                  () {
+                                FireStoreHelper().deleteSession(
+                                    course, snapshot.data[index].id);
+                              });
+                            },
+                          ),
+                          IconSlideAction(
+                            color: Colors.green,
+                            icon: Icons.edit,
+                            onTap: () {
+                              showEditSessionDialog(
+                                  context,
+                                  course,
+                                  snapshot.data[index].topic,
+                                  snapshot.data[index].id);
+                            },
+                          ),
+                        ]
+                      : null,
                 ),
               ),
             ),

@@ -269,10 +269,12 @@ class FireStoreHelper {
             Attendance.fromMap(snapshot.data, reference: snapshot.reference));
   }
 
-  void presentAttendance(
+  String presentAttendance(
       {@required Course course,
+      @required String sessionID,
       @required String code,
       @required User user}) {
+    if (sessionID != code) return 'Sai mã QR';
     DocumentReference attendance =
         course.reference.collection(C_ATTENDANCE).document(code);
     if (attendance != null) {
@@ -285,6 +287,7 @@ class FireStoreHelper {
         ]),
       }, merge: true);
     }
+    return null;
   }
 
   Stream<Rates> getRatesStream(

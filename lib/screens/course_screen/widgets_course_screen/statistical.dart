@@ -54,8 +54,6 @@ class _RateChartState extends State<RateChart> {
     ];
   }
 
-
-
   Widget rateChart() => Container(
         height: 250,
         child: Card(
