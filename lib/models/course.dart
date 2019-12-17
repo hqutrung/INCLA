@@ -6,12 +6,14 @@ class Course {
   String courseID;
   String name;
   DocumentReference reference;
+  String teachername;
 
   List<UserInfor> cachedStudents;
 
   Course.fromMap(Map data, {this.courseID, this.reference}) {
     if (courseID == null) courseID = data['courseID'];
     name = data['name'];
+    teachername = data['teachername'];
     getAllMembersAsync();
   }
 

@@ -1,5 +1,6 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
+import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/collection_firestore.dart';
@@ -105,18 +106,21 @@ class _SessionListState extends State<SessionList> {
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context);
+    User user = Provider.of<User>(context);
     return StreamBuilder<List<Session>>(
       stream: sessionStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {
-                showAddSessionDialog(context, course);
-              },
-              label: Text('Tạo buổi'),
-              icon: Icon(Icons.add),
-            ),
+            floatingActionButton: user.type == UserType.Teacher
+                ? FloatingActionButton.extended(
+                    onPressed: () {
+                      showAddSessionDialog(context, course);
+                    },
+                    label: Text('Tạo buổi'),
+                    icon: Icon(Icons.add),
+                  )
+                : Container(),
             body: ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) => Card(
@@ -137,7 +141,7 @@ class _SessionListState extends State<SessionList> {
                       );
                     },
                   ),
-                  actions: <Widget>[
+                  actions: user.type == UserType.Teacher ? <Widget>[
                     IconSlideAction(
                       color: Colors.red,
                       icon: Icons.delete_outline,
@@ -159,7 +163,7 @@ class _SessionListState extends State<SessionList> {
                             snapshot.data[index].id);
                       },
                     ),
-                  ],
+                  ] : null,
                 ),
               ),
             ),

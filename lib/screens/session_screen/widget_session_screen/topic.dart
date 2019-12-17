@@ -145,7 +145,7 @@ class _showTopicState extends State<showTopic>
                         });
                       },
                     ),
-                    actions: <Widget>[
+                    actions: (user.type == UserType.Teacher||user.uid == posts[index].attendance.userID) ? <Widget>[
                       IconSlideAction(
                         color: Colors.red,
                         icon: Icons.delete_outline,
@@ -160,7 +160,7 @@ class _showTopicState extends State<showTopic>
                         icon: Icons.edit,
                         onTap: (){}
                       ),
-                    ],
+                    ] : null,
                   ),
                 ),
               );
