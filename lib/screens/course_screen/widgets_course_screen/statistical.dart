@@ -1,7 +1,12 @@
+import 'package:document/models/course.dart';
+import 'package:document/models/rate.dart';
 import 'package:document/models/ratestatistical.dart';
 import 'package:document/models/studentstatistical.dart';
+import 'package:document/services/document_firestore.dart';
+import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart';
+import 'package:provider/provider.dart';
 
 class RateChart extends StatefulWidget {
   @override
@@ -9,30 +14,49 @@ class RateChart extends StatefulWidget {
 }
 
 class _RateChartState extends State<RateChart> {
-  static List<RateStatistical> ratedata = [
-    RateStatistical(5, DateTime(2019, 10, 11)),
-    RateStatistical(4, DateTime(2019, 10, 12)),
-    RateStatistical(5, DateTime(2019, 10, 13)),
-    RateStatistical(2.4, DateTime(2019, 10, 14)),
-    RateStatistical(5, DateTime(2019, 10, 15)),
-    RateStatistical(5, DateTime(2019, 10, 16)),
-    RateStatistical(5, DateTime(2019, 10, 17)),
-    RateStatistical(4, DateTime(2019, 10, 18)),
-    RateStatistical(5, DateTime(2019, 10, 19)),
-    RateStatistical(5, DateTime(2019, 10, 20)),
-    RateStatistical(5, DateTime(2019, 10, 21)),
-  ];
-  List<Series<RateStatistical, DateTime>> rateseris = [
-    Series(
-      data: ratedata,
-      id: 'RateChart',
-      domainFn: (RateStatistical ratedata, _) => ratedata.date,
-      measureFn: (RateStatistical ratedata, _) => ratedata.rate,
-      colorFn: (_, __) => MaterialPalette.red.shadeDefault,
-    )
-  ];
+  Future<List<Rates>> ratesAsyncer;
 
-  Widget ratechart() => Container(
+  void initState() {
+    Course course = Provider.of<Course>(context, listen: false);
+    ratesAsyncer = FireStoreHelper().getAllRates(course: course);
+    super.initState();
+  }
+
+  List<RateStatistical> _getRateStatistical(List<Rates> rates) {
+    List<RateStatistical> rateData = List<RateStatistical>();
+    double averageRate = 0;
+    for (int i = 0; i < rates.length; i++) {
+      List<Rate> sessionRates = rates[i].rates;
+      if (sessionRates == null) {
+        print('loai dc 1 em');
+        continue;
+      }
+      print(sessionRates.length.toString() + ' jhaha');
+      for (int j = 0; j < sessionRates.length; j++)
+        averageRate += sessionRates[j].star;
+      averageRate =
+          (sessionRates.length == 0) ? 0 : (averageRate / sessionRates.length);
+      rateData.add(RateStatistical(averageRate, rates[i].timestamp));
+    }
+    return rateData;
+  }
+
+  List<Series<RateStatistical, DateTime>> _getChartSeries(
+      List<RateStatistical> rateStats) {
+    return [
+      Series(
+        data: rateStats,
+        id: 'RateChart',
+        domainFn: (RateStatistical ratedata, _) => ratedata.date,
+        measureFn: (RateStatistical ratedata, _) => ratedata.rate,
+        colorFn: (_, __) => MaterialPalette.red.shadeDefault,
+      )
+    ];
+  }
+
+
+
+  Widget rateChart() => Container(
         height: 250,
         child: Card(
           child: Padding(
@@ -43,23 +67,34 @@ class _RateChartState extends State<RateChart> {
                   "Thống kê đánh giá",
                   style: Theme.of(context).textTheme.body2,
                 ),
-                Expanded(
-                  child: TimeSeriesChart(
-                    rateseris,
-                    animate: true,
-                    dateTimeFactory: LocalDateTimeFactory(),
-                    animationDuration: Duration(seconds: 1),
-                    defaultRenderer: LineRendererConfig(
-                      includeArea: true,
-                    ),
-                    behaviors: [
-                      ChartTitle('Đánh giá',
-                          behaviorPosition: BehaviorPosition.start),
-                      ChartTitle('Ngày',
-                          behaviorPosition: BehaviorPosition.bottom),
-                    ],
-                  ),
-                )
+                FutureBuilder<List<Rates>>(
+                    future: ratesAsyncer,
+                    initialData: [],
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data.length == 0)
+                          return Text('Thiếu dữ liệu để đánh giá');
+                        return Expanded(
+                          child: TimeSeriesChart(
+                            _getChartSeries(_getRateStatistical(snapshot.data)),
+                            animate: true,
+                            dateTimeFactory: LocalDateTimeFactory(),
+                            animationDuration: Duration(seconds: 1),
+                            defaultRenderer: LineRendererConfig(
+                              includeArea: true,
+                            ),
+                            behaviors: [
+                              ChartTitle('Đánh giá',
+                                  behaviorPosition: BehaviorPosition.start),
+                              ChartTitle('Ngày',
+                                  behaviorPosition: BehaviorPosition.bottom),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Text('Loading...');
+                      }
+                    })
               ],
             ),
           ),
@@ -94,14 +129,13 @@ class _RateChartState extends State<RateChart> {
     StudentStatistical(15, DateTime(2019, 10, 21)),
   ];
 
-List<Series<StudentStatistical, DateTime>> studentseris = [
+  List<Series<StudentStatistical, DateTime>> studentseris = [
     Series(
       data: attendantdata,
       id: 'AttendantChart',
       domainFn: (StudentStatistical attendantdata, _) => attendantdata.date,
       measureFn: (StudentStatistical attendantdata, _) => attendantdata.soluong,
       colorFn: (_, __) => MaterialPalette.green.shadeDefault,
-
     ),
     Series(
       data: absentdata,
@@ -109,11 +143,8 @@ List<Series<StudentStatistical, DateTime>> studentseris = [
       domainFn: (StudentStatistical absentdata, _) => absentdata.date,
       measureFn: (StudentStatistical absentdata, _) => absentdata.soluong,
       colorFn: (_, __) => MaterialPalette.red.shadeDefault,
-
     )
   ];
-
-
 
   Widget studentchart() => Container(
         height: 250,
@@ -136,7 +167,6 @@ List<Series<StudentStatistical, DateTime>> studentseris = [
                       includeArea: true,
                     ),
                     behaviors: [
-                      
                       ChartTitle('Số lượng',
                           behaviorPosition: BehaviorPosition.start),
                       ChartTitle('Ngày',
@@ -150,14 +180,13 @@ List<Series<StudentStatistical, DateTime>> studentseris = [
         ),
       );
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            ratechart(),
+            rateChart(),
             studentchart(),
           ],
         ),

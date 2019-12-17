@@ -29,6 +29,7 @@ class FireStoreHelper {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
     Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
+    Rates: (Map data) => Rates.fromMap(data),
   };
 
   Future<List<Course>> getCourses(String userID) async {
@@ -173,7 +174,6 @@ class FireStoreHelper {
     }
   }
 
-
   void createTopic(String sessionID, Course course, User user,
       {@required String title, @required String content}) {
     try {
@@ -190,7 +190,11 @@ class FireStoreHelper {
         'read': false,
         'sessionID': sessionID,
       });
-      addNotification(creator: user, userID: '17520184',courseID: course.courseID,sessionID: sessionID);
+      addNotification(
+          creator: user,
+          userID: '17520184',
+          courseID: course.courseID,
+          sessionID: sessionID);
     } catch (e) {
       print('Create topic: ' + e.toString());
     }
@@ -233,9 +237,9 @@ class FireStoreHelper {
           .collection(C_COURSE)
           .document(course.courseID)
           .collection(C_ATTENDANCE)
-          .add({
+          .document(sessionID)
+          .setData({
         'duration': duration,
-        'sessionID': sessionID,
         'offline': await course.getAllMembersArray(),
         'timestamp': Timestamp.fromDate(DateTime.now()),
       });
@@ -246,35 +250,32 @@ class FireStoreHelper {
 
   Future<Attendance> getAttendance(
       {@required Course course, @required String sessionID}) async {
-    QuerySnapshot querySnapshot = await course.reference
+    DocumentSnapshot snapshot = await course.reference
         .collection(C_ATTENDANCE)
-        .where('sessionID', isEqualTo: sessionID)
-        .getDocuments();
-    if (querySnapshot.documents.length > 0)
-      return Attendance.fromMap(querySnapshot.documents[0].data,
-          reference: querySnapshot.documents[0].reference);
-    else
-      return null;
+        .document(sessionID)
+        .get();
+    return (snapshot == null)
+        ? null
+        : Attendance.fromMap(snapshot.data, reference: snapshot.reference);
   }
 
   Stream<Attendance> getAttendanceStream(
       {@required Course course, @required String sessionID}) {
     return course.reference
         .collection(C_ATTENDANCE)
-        .where('sessionID', isEqualTo: sessionID)
-        .limit(1)
+        .document(sessionID)
         .snapshots()
-        .map((QuerySnapshot query) => Attendance.fromMap(
-            query.documents[0].data,
-            reference: query.documents[0].reference));
+        .map((DocumentSnapshot snapshot) =>
+            Attendance.fromMap(snapshot.data, reference: snapshot.reference));
   }
 
   void presentAttendance(
       {@required Course course,
-      @required String attendanceID,
+      @required String sessionID,
+      @required String code,
       @required User user}) {
     DocumentReference attendance =
-        course.reference.collection(C_ATTENDANCE).document(attendanceID);
+        course.reference.collection(C_ATTENDANCE).document(sessionID);
     if (attendance != null) {
       attendance.setData({
         'offline': FieldValue.arrayRemove([
@@ -289,31 +290,23 @@ class FireStoreHelper {
 
   Stream<Rates> getRatesStream(
       {@required Course course, @required String sessionID}) {
-    print('?: ' + sessionID);
     var x = course.reference
         .collection(C_RATE)
         .document(sessionID)
         .snapshots()
         .map((DocumentSnapshot query) => Rates.fromMap(query.data));
-    // course.reference
-    //     .collection(C_RATE)
-    //     .document(sessionID)
-    //     .get()
-    //     .then((querySnapshot) {
-    //   print(querySnapshot.data);
-    // });
 
     return x;
   }
 
   Future rateSession(
       {@required Course course,
-      @required String sessionID,
+      @required Session session,
       @required User user,
       @required String content,
       @required int value}) async {
     try {
-      course.reference.collection(C_RATE).document(sessionID).setData({
+      course.reference.collection(C_RATE).document(session.id).setData({
         'rates': FieldValue.arrayUnion([
           {
             'value': value,
@@ -321,7 +314,8 @@ class FireStoreHelper {
             'userID': user.uid,
             'username': user.name,
           }
-        ])
+        ]),
+        'timestamp': Timestamp.fromDate(session.startTime),
       }, merge: true);
     } catch (e) {
       print('rate session: ' + e.toString());
@@ -337,15 +331,17 @@ class FireStoreHelper {
         .map(
           (query) => query.documents
               .map(
-                (snapshot) =>
-                    Noti.fromMap(snapshot.data),
+                (snapshot) => Noti.fromMap(snapshot.data),
               )
               .toList(),
         );
   }
 
   Future addNotification(
-      {@required User creator, @required String userID, @required String courseID,@required String sessionID}) async {
+      {@required User creator,
+      @required String userID,
+      @required String courseID,
+      @required String sessionID}) async {
     try {
       await _db
           .collection(C_NOTIFICATION)
@@ -364,5 +360,15 @@ class FireStoreHelper {
     } catch (e) {
       print('create attendance: ' + e.toString());
     }
+  }
+
+  Future<List<Rates>> getAllRates({@required Course course}) async {
+    List<Rates> allRates = List<Rates>();
+    await course.reference.collection(C_RATE).getDocuments().then((snapshot) {
+      for (int i = 0; i < snapshot.documents.length; i++) {
+        allRates.add(Rates.fromMap(snapshot.documents[i].data));
+      }
+    });
+    return allRates;
   }
 }

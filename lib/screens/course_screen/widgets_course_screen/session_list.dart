@@ -131,7 +131,7 @@ class _SessionListState extends State<SessionList> {
                         MaterialPageRoute(
                           builder: (context) => SessionScreen(
                             course: course,
-                            sessionID: snapshot.data[index].id,
+                            session: snapshot.data[index],
                           ),
                         ),
                       );

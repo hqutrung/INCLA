@@ -1,5 +1,6 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/rate.dart';
+import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +8,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class RateDetail extends StatefulWidget {
-  final String sessionID;
+  final Session session;
 
-  RateDetail({this.sessionID});
+  RateDetail({this.session});
 
   @override
   _RateDetailState createState() => _RateDetailState();
@@ -74,7 +75,7 @@ class _RateDetailState extends State<RateDetail> {
                   course: course,
                   content: _textEditingController.text,
                   user: user,
-                  sessionID: widget.sessionID,
+                  session: widget.session,
                   value: rate,
                 );
                 Navigator.pop(context);
@@ -90,7 +91,7 @@ class _RateDetailState extends State<RateDetail> {
     course = Provider.of<Course>(context, listen: false);
     user = Provider.of<User>(context, listen: false);
     ratesStream = FireStoreHelper()
-        .getRatesStream(course: course, sessionID: widget.sessionID);
+        .getRatesStream(course: course, sessionID: widget.session.id);
     super.initState();
   }
 

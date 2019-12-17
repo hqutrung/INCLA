@@ -70,8 +70,8 @@ class _RollCallState extends State<RollCall> {
   Future _ApplyQRCode() async {
     String code = await getApplyQRCode();
     User user = Provider.of<User>(context, listen: false);
-    FireStoreHelper()
-        .presentAttendance(course: course, attendanceID: code, user: user);
+    FireStoreHelper().presentAttendance(
+        course: course, sessionID: widget.sessionID, code: code, user: user);
   }
 
   @override

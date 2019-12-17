@@ -16,7 +16,6 @@ class _HomeNotificationState extends State<HomeNotification> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Stream<List<Noti>> notiList;
-  
 
   @override
   void initState() {
@@ -53,16 +52,26 @@ class _HomeNotificationState extends State<HomeNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: MainAppBar(
-          title: 'Thông báo',
-          openDrawer: () => _scaffoldKey.currentState.openDrawer(),
-        ),
-        drawer: MainDrawer(),
-        body: StreamBuilder<List<Noti>>(
-            stream: notiList,
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Noti>> snapshot) =>
-                    _buildListNoti(snapshot.data)));
+      key: _scaffoldKey,
+      appBar: MainAppBar(
+        title: 'Thông báo',
+        openDrawer: () => _scaffoldKey.currentState.openDrawer(),
+      ),
+      drawer: MainDrawer(),
+      body: StreamBuilder<List<Noti>>(
+        initialData: [],
+        stream: notiList,
+        builder: (BuildContext context, AsyncSnapshot<List<Noti>> snapshot) {
+          if (snapshot.connectionState != ConnectionState.active)
+            return Text('Loading...');
+          else {
+            if (snapshot.data.length == 0) {
+              return Text('Nothing to show...');
+            }
+            return _buildListNoti(snapshot.data);
+          }
+        },
+      ),
+    );
   }
 }

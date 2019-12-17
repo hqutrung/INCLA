@@ -1,4 +1,5 @@
 import 'package:document/models/course.dart';
+import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/widget_session_screen/ratedetail.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
@@ -9,9 +10,9 @@ import 'package:provider/provider.dart';
 
 class SessionScreen extends StatefulWidget {
   final Course course;
-  final String sessionID;
+  final Session session;
 
-  SessionScreen({@required this.course, @required this.sessionID});
+  SessionScreen({@required this.course, @required this.session});
   @override
   _SessionScreenState createState() => _SessionScreenState();
 }
@@ -55,10 +56,10 @@ class _SessionScreenState extends State<SessionScreen> {
               children: <Widget>[
                 showTopic(
                   course: widget.course,
-                  sessionID: widget.sessionID,
+                  sessionID: widget.session.id,
                 ),
-                RollCall(sessionID: widget.sessionID),
-                RateDetail(sessionID: widget.sessionID),
+                RollCall(sessionID: widget.session.id),
+                RateDetail(session: widget.session),
               ],
             ),
           )),
