@@ -271,11 +271,10 @@ class FireStoreHelper {
 
   void presentAttendance(
       {@required Course course,
-      @required String sessionID,
       @required String code,
       @required User user}) {
     DocumentReference attendance =
-        course.reference.collection(C_ATTENDANCE).document(sessionID);
+        course.reference.collection(C_ATTENDANCE).document(code);
     if (attendance != null) {
       attendance.setData({
         'offline': FieldValue.arrayRemove([

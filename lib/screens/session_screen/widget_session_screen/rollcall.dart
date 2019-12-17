@@ -67,11 +67,11 @@ class _RollCallState extends State<RollCall> {
     return await BarcodeScanner.scan();
   }
 
-  Future _ApplyQRCode() async {
+  Future _applyQRCode() async {
     String code = await getApplyQRCode();
     User user = Provider.of<User>(context, listen: false);
     FireStoreHelper().presentAttendance(
-        course: course, sessionID: widget.sessionID, code: code, user: user);
+        course: course, code: code, user: user);
   }
 
   @override
@@ -97,7 +97,7 @@ class _RollCallState extends State<RollCall> {
                     : [
                         QRSection(
                             code: snapshot.data.reference.documentID,
-                            createQR: _ApplyQRCode),
+                            createQR: _applyQRCode),
                         AttendanceList(attendance: snapshot.data),
                       ],
               ),
