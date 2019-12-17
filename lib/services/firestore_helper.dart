@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
 import 'package:document/models/course.dart';
@@ -8,6 +6,7 @@ import 'package:document/models/post.dart';
 import 'package:document/models/rate.dart';
 import 'package:document/models/resource.dart';
 import 'package:document/models/session.dart';
+import 'package:document/models/test.dart';
 import 'package:document/models/user.dart';
 import 'package:document/models/user_infor.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +15,7 @@ class FireStoreHelper {
   static const String C_COURSE = 'course';
   static const String C_USER_COURSE = 'user_course';
   static const String C_POST = 'post';
+  static const String C_TEST = 'test';
   static const String C_SESSION = 'session';
   static const String C_ATTENDANCE = 'attendance';
   static const String C_RATE = 'rate';
@@ -81,6 +81,24 @@ class FireStoreHelper {
               )
               .toList(),
         );
+  }
+
+  Stream<List<Test>> getTestsStream(String courseID, String sessionID) {
+    print(courseID + ' ' + sessionID);
+    return _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .collection(C_TEST)
+        .where('sessionID', isEqualTo: sessionID)
+        .snapshots()
+        .map(
+          (query) => query.documents
+          .map(
+            (snapshot) =>
+                Test.fromMap(snapshot.data, uid: snapshot.documentID),
+      )
+          .toList(),
+    );
   }
 
   Future createSession(Course course, String topic) async {
@@ -226,6 +244,14 @@ class FireStoreHelper {
   ) {
     return course.reference.collection(C_POST).document(postID).snapshots().map(
         (snapshot) => Post.fromMap(snapshot.data, uid: snapshot.documentID));
+  }
+
+  Stream<Test> getDetailTestStream(
+      Course course,
+      String testID,
+      ) {
+    return course.reference.collection(C_TEST).document(testID).snapshots().map(
+            (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
   }
 
   Future createAttendance(
