@@ -1,5 +1,5 @@
 class StudentStatistical{
   DateTime date;
-  int soluong;
-  StudentStatistical(this.soluong,this.date);
+  int quantity;
+  StudentStatistical(this.quantity,this.date);
 }

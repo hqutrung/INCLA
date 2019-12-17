@@ -19,5 +19,6 @@ class Attendance {
     online = (data[ONLINE_FIELD] as List ?? [])
         .map((value) => UserInfor.fromMap(value)).toList();
     duration = data['duration'];
+    timestamp = (data['timestamp'] as Timestamp).toDate();
   }
 }
