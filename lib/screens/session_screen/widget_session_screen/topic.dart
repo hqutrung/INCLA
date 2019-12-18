@@ -108,7 +108,7 @@ class _showTopicState extends State<showTopic>
           stream: postsAsyncer,
           builder: (context, snapshot) {
             if (!snapshot.hasData)
-              return Text('Loading... ' + snapshot.connectionState.toString());
+              return const Center(child: CircularProgressIndicator());
             else {
               List<Post> posts = snapshot.data;
               return ListView.builder(

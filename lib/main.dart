@@ -30,9 +30,9 @@ class _MyAppState extends State<MyApp> {
           child: MaterialApp(
             title: 'Incla',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: ThemeData.light(
+                // primarySwatch: Colors.blue,
+                ),
             routes: {
               LoginAndHomeWrapper.WRAPPER_PATH: (_) => LoginAndHomeWrapper(),
             },

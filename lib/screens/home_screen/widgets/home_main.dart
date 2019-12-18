@@ -70,7 +70,7 @@ class _HomeMainState extends State<HomeMain> {
         future: coursesNe,
         builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {
           if (!snapshot.hasData)
-            return Text('LOADING...');
+            return const Center(child: CircularProgressIndicator());
           else
             return _buildListCourse(snapshot.data);
         },

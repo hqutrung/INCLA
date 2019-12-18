@@ -172,7 +172,7 @@ class _SessionListState extends State<SessionList> {
             ),
           );
         } else
-          return Text('Loading... ' + snapshot.connectionState.toString());
+          return Center(child: CircularProgressIndicator());
       },
     );
   }

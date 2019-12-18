@@ -151,22 +151,25 @@ class _RateDetailState extends State<RateDetail> {
                   ]),
                 ),
               )
-            : Text('Chưa có đánh giá nào cho buổi học này'),
+            : Center(child: Text('Chưa có đánh giá nào cho buổi học này')),
       ),
       !_checkRate(rates)
-          ? FlatButton(
-              color: ThemeData().primaryColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0)),
-              onPressed: () {
-                showRatingDialog();
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-                child: Text(
-                  'Tạo đánh giá',
-                  style: TextStyle(color: Colors.white),
+          ? Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: FlatButton(
+                color: ThemeData().primaryColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0)),
+                onPressed: () {
+                  showRatingDialog();
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+                  child: Text(
+                    'Tạo đánh giá',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             )
@@ -185,7 +188,7 @@ class _RateDetailState extends State<RateDetail> {
           else
             return _buildRateList(null);
         } else
-          return Text('Loading...' + snapshot.connectionState.toString());
+          return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -64,7 +64,7 @@ class _showTestState extends State<showTest>
           stream: testsAsyncer,
           builder: (context, snapshot) {
             if (!snapshot.hasData)
-              return Text('Loading... ' + snapshot.connectionState.toString());
+              return const Center(child: CircularProgressIndicator());
             else {
               List<Test> tests = snapshot.data;
               return ListView.builder(

@@ -140,13 +140,15 @@ class _CourseResourcesState extends State<CourseResources> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
-              floatingActionButton: user.type == UserType.Teacher ? FloatingActionButton.extended(
-                onPressed: () {
-                  showAddResourceDialog(context, course);
-                },
-                label: Text('Tài liệu'),
-                icon: Icon(Icons.add),
-              ) : null,
+              floatingActionButton: user.type == UserType.Teacher
+                  ? FloatingActionButton.extended(
+                      onPressed: () {
+                        showAddResourceDialog(context, course);
+                      },
+                      label: Text('Tài liệu'),
+                      icon: Icon(Icons.add),
+                    )
+                  : null,
               body: ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) => Card(
@@ -158,31 +160,33 @@ class _CourseResourcesState extends State<CourseResources> {
                         onTap: () =>
                             //View document
                             _handleURLView(context, snapshot.data[index].link)),
-                    actions:user.type == UserType.Teacher ? <Widget>[
-                      IconSlideAction(
-                          color: Colors.red,
-                          icon: Icons.delete_outline,
-                          onTap: () => FireStoreHelper().deleteResource(
-                              course, snapshot.data[index].uid)),
-                      IconSlideAction(
-                        color: Colors.green,
-                        icon: Icons.edit,
-                        onTap: () {
-                          showEditResourceDialog(
-                            context,
-                            course,
-                            snapshot.data[index].name,
-                            snapshot.data[index].link,
-                            snapshot.data[index].uid,
-                          );
-                        },
-                      ),
-                    ] : null,
+                    actions: user.type == UserType.Teacher
+                        ? <Widget>[
+                            IconSlideAction(
+                                color: Colors.red,
+                                icon: Icons.delete_outline,
+                                onTap: () => FireStoreHelper().deleteResource(
+                                    course, snapshot.data[index].uid)),
+                            IconSlideAction(
+                              color: Colors.green,
+                              icon: Icons.edit,
+                              onTap: () {
+                                showEditResourceDialog(
+                                  context,
+                                  course,
+                                  snapshot.data[index].name,
+                                  snapshot.data[index].link,
+                                  snapshot.data[index].uid,
+                                );
+                              },
+                            ),
+                          ]
+                        : null,
                   ),
                 ),
               ));
         } else
-          return Text('Loading... ' + snapshot.connectionState.toString());
+          return Center(child: CircularProgressIndicator());
       },
     );
   }

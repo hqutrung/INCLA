@@ -137,7 +137,7 @@ class _RateChartState extends State<RateChart> {
                           ),
                         );
                       } else {
-                        return Text('Loading...');
+                        return Center(child: CircularProgressIndicator());
                       }
                     })
               ],
@@ -216,7 +216,7 @@ class _RateChartState extends State<RateChart> {
                       else
                         return const Text('Thiếu dữ liệu thống kê');
                     } else
-                      return const Text('Loading...');
+                      return const Center(child: CircularProgressIndicator());
                   },
                 )
               ],

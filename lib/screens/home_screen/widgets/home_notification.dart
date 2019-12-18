@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class HomeNotification extends StatefulWidget {
   final MainDrawer drawer;
 
-  const HomeNotification({Key key,@required this.drawer}) : super(key: key);
+  const HomeNotification({Key key, @required this.drawer}) : super(key: key);
   @override
   _HomeNotificationState createState() => _HomeNotificationState();
 }
@@ -66,10 +66,12 @@ class _HomeNotificationState extends State<HomeNotification> {
         stream: notiList,
         builder: (BuildContext context, AsyncSnapshot<List<Noti>> snapshot) {
           if (snapshot.connectionState != ConnectionState.active)
-            return Text('Loading...');
+            return const Center(child: CircularProgressIndicator());
           else {
             if (snapshot.data.length == 0) {
-              return Text('Nothing to show...');
+              return Center(
+                  child: Text('Bạn chưa có thông báo nào',
+                      style: TextStyle(fontSize: 20)));
             }
             return _buildListNoti(snapshot.data);
           }
