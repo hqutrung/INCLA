@@ -441,4 +441,13 @@ class FireStoreHelper {
         .document(noti.id)
         .updateData({'isRead': noti.isRead});
   }
+
+  Future deleteNoti(String userID, Noti noti) async {
+    await _db
+        .collection(C_NOTIFICATION)
+        .document(userID)
+        .collection(C_NOTIS)
+        .document(noti.id)
+        .delete();
+  }
 }

@@ -111,6 +111,7 @@ class _SessionListState extends State<SessionList> {
       stream: sessionStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          snapshot.data.sort((a, b) => a.startTime.compareTo(b.startTime));
           return Scaffold(
             floatingActionButton: user.type == UserType.Teacher
                 ? FloatingActionButton.extended(

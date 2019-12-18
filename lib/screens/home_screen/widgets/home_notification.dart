@@ -26,10 +26,12 @@ class _HomeNotificationState extends State<HomeNotification> {
     User user = Provider.of<User>(context, listen: false);
     userID = user.uid;
     notiList = FireStoreHelper().getNotification(userID: user.uid);
+
     super.initState();
   }
 
   Widget _buildListNoti(List<Noti> notis) {
+    notis.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return ListView.builder(
       scrollDirection: Axis.vertical,
       itemCount: notis.length,
@@ -49,7 +51,7 @@ class _HomeNotificationState extends State<HomeNotification> {
           trailing: IconButton(
             onPressed: () {
               confirmDialog(context, 'Xác nhận xóa thông báo', () {
-                print('Xoá');
+                FireStoreHelper().deleteNoti(userID, notis[index]);
               });
             },
             icon: Icon(Icons.more_horiz),
@@ -57,7 +59,6 @@ class _HomeNotificationState extends State<HomeNotification> {
           onTap: () {
             setState(() {
               notis[index].isRead = true;
-              print(userID);
               FireStoreHelper().updateIsReadNoti(userID, notis[index]);
             });
 

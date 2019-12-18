@@ -111,6 +111,7 @@ class _showTopicState extends State<showTopic>
               return const Center(child: CircularProgressIndicator());
             else {
               List<Post> posts = snapshot.data;
+              posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
               return ListView.builder(
                 scrollDirection: Axis.vertical,
                 itemCount: posts.length,

@@ -139,6 +139,7 @@ class _CourseResourcesState extends State<CourseResources> {
       stream: resourceStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          snapshot.data.sort((a, b) => a.time.compareTo(b.time));
           return Scaffold(
               floatingActionButton: user.type == UserType.Teacher
                   ? FloatingActionButton.extended(
