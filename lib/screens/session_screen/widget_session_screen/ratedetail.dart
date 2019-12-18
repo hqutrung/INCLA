@@ -20,6 +20,7 @@ class _RateDetailState extends State<RateDetail> {
   Stream<Rates> ratesStream;
   Course course;
   User user;
+  bool hasRate;
 
   showRatingDialog() {
     return showDialog<String>(
@@ -71,14 +72,15 @@ class _RateDetailState extends State<RateDetail> {
                   }),
               FlatButton(
                 child: const Text('Lưu'),
-                onPressed: () { FireStoreHelper().rateSession(
-                  course: course,
-                  content: _textEditingController.text,
-                  user: user,
-                  session: widget.session,
-                  value: rate,
-                );
-                Navigator.pop(context);
+                onPressed: () {
+                  FireStoreHelper().rateSession(
+                    course: course,
+                    content: _textEditingController.text,
+                    user: user,
+                    session: widget.session,
+                    value: rate,
+                  );
+                  Navigator.pop(context);
                 },
               ),
             ],
@@ -93,6 +95,18 @@ class _RateDetailState extends State<RateDetail> {
     ratesStream = FireStoreHelper()
         .getRatesStream(course: course, sessionID: widget.session.id);
     super.initState();
+  }
+
+  bool _checkRate(List<Rate> rates) {
+    print(hasRate.toString());
+    if (hasRate != null) return hasRate;
+    for (int i = 0; i < rates.length; i++)
+      if (rates[i].attendance.userID == user.uid) {
+        hasRate = true;
+        return hasRate;
+      }
+    hasRate = false;
+    return hasRate;
   }
 
   Widget _buildRateList(List<Rate> rates) {
@@ -136,21 +150,24 @@ class _RateDetailState extends State<RateDetail> {
           ),
         ),
       ),
-      FlatButton(
-        color: ThemeData().primaryColor,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-        onPressed: () {
-          showRatingDialog();
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
-          child: Text(
-            'Tạo đánh giá',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
+      !_checkRate(rates)
+          ? FlatButton(
+              color: ThemeData().primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              onPressed: () {
+                showRatingDialog();
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+                child: Text(
+                  'Tạo đánh giá',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            )
+          : Container(),
     ]);
   }
 
@@ -159,7 +176,6 @@ class _RateDetailState extends State<RateDetail> {
     return StreamBuilder<Rates>(
       stream: ratesStream,
       builder: (context, snapshot) {
-        print(snapshot.connectionState);
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData)
             return _buildRateList(snapshot.data.rates);
