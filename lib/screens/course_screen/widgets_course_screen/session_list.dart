@@ -25,6 +25,7 @@ class _SessionListState extends State<SessionList> {
     sessionStream =
         Collection<Session>(path: 'course/${course.courseID}/session')
             .streamData();
+
     super.initState();
   }
 
@@ -32,6 +33,7 @@ class _SessionListState extends State<SessionList> {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
+          User user = Provider.of<User>(context);
           TextEditingController _textEditingController =
               TextEditingController();
           return AlertDialog(
@@ -56,8 +58,8 @@ class _SessionListState extends State<SessionList> {
               FlatButton(
                   child: const Text('Lưu'),
                   onPressed: () {
-                    FireStoreHelper()
-                        .createSession(course, _textEditingController.text);
+                    FireStoreHelper().createSession(
+                        course, _textEditingController.text, user);
                     Navigator.pop(context);
                   })
             ],

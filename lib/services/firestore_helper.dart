@@ -102,7 +102,7 @@ class FireStoreHelper {
         );
   }
 
-  Future createSession(Course course, String topic) async {
+  Future createSession(Course course, String topic, User user) async {
     try {
       await _db
           .collection(C_COURSE)
@@ -113,6 +113,13 @@ class FireStoreHelper {
         'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
         'topic': topic,
       });
+      pushNotiAllUser(
+          creator: user,
+          courseID: course.courseID,
+          content: 'đã bắt đầu buổi mới trong lớp',
+          title: 'Bắt đầu buổi học',
+          type: 2,
+          sessionID: null);
     } catch (e) {
       print('create session: ' + e.toString());
     }
@@ -215,21 +222,36 @@ class FireStoreHelper {
         'sessionID': sessionID,
       });
       pushNotiAllUser(
-          creator: user, courseID: course.courseID, sessionID: sessionID);
+          creator: user,
+          courseID: course.courseID,
+          sessionID: sessionID,
+          title: 'Thảo luận mới',
+          content: 'đã tạo một thảo luận mới trong lớp',
+          type: 1);
     } catch (e) {
       print('Create topic: ' + e.toString());
     }
   }
 
-  Future pushNotiAllUser(
-      {User creator, String sessionID, String courseID}) async {
+  Future pushNotiAllUser({
+    User creator,
+    String sessionID,
+    String courseID,
+    String title,
+    String content,
+    int type,
+  }) async {
     List<UserInfor> listUserInfor = await getStudents(courseID);
     for (int i = 0; i < listUserInfor.length; i++) {
       addNotification(
-          creator: creator,
-          userID: listUserInfor[i].userID,
-          courseID: courseID,
-          sessionID: sessionID);
+        title: title,
+        creator: creator,
+        userID: listUserInfor[i].userID,
+        courseID: courseID,
+        sessionID: sessionID,
+        content: content,
+        type: type,
+      );
     }
   }
 
@@ -381,24 +403,28 @@ class FireStoreHelper {
         );
   }
 
-  Future addNotification(
-      {@required User creator,
-      @required String userID,
-      @required String courseID,
-      @required String sessionID}) async {
+  Future addNotification({
+    @required User creator,
+    @required String userID,
+    @required String courseID,
+    @required String sessionID,
+    @required String title,
+    @required String content,
+    @required int type,
+  }) async {
     try {
       await _db
           .collection(C_NOTIFICATION)
           .document(userID)
           .collection(C_NOTIS)
           .add({
-        'title': "Thảo luận mới đã được tạo",
+        'title': title,
         'creatorID': creator.uid,
         'creatorName': creator.name,
-        'content': "đã tạo thảo luận mới trong lớp",
+        'content': content,
         'courseID': courseID,
         'sessionID': sessionID,
-        'typeNoti': 1,
+        'typeNoti': type,
         'timestamp': Timestamp.fromDate(DateTime.now()),
         'isRead': false,
       });
