@@ -93,12 +93,12 @@ class FireStoreHelper {
         .snapshots()
         .map(
           (query) => query.documents
-          .map(
-            (snapshot) =>
-                Test.fromMap(snapshot.data, uid: snapshot.documentID),
-      )
-          .toList(),
-    );
+              .map(
+                (snapshot) =>
+                    Test.fromMap(snapshot.data, uid: snapshot.documentID),
+              )
+              .toList(),
+        );
   }
 
   Future createSession(Course course, String topic) async {
@@ -168,12 +168,17 @@ class FireStoreHelper {
 
   Future deleteSession(Course course, String id) async {
     try {
-      _db
-          .collection(C_COURSE)
-          .document(course.courseID)
-          .collection(C_SESSION)
-          .document(id)
-          .delete();
+      await course.reference.collection(C_SESSION).document(id).delete();
+      await course.reference.collection(C_RATE).document(id).delete();
+      await course.reference.collection(C_ATTENDANCE).document(id).delete();
+      await course.reference
+          .collection(C_POST)
+          .where('sessionID', isEqualTo: id)
+          .getDocuments()
+          .then((querySnapshot) {
+        for (int i = 0; i < querySnapshot.documents.length; i++)
+          querySnapshot.documents[i].reference.delete();
+      });
     } catch (e) {
       print('delete session: ' + e.toString());
     }
@@ -247,11 +252,11 @@ class FireStoreHelper {
   }
 
   Stream<Test> getDetailTestStream(
-      Course course,
-      String testID,
-      ) {
+    Course course,
+    String testID,
+  ) {
     return course.reference.collection(C_TEST).document(testID).snapshots().map(
-            (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
+        (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
   }
 
   Future createAttendance(

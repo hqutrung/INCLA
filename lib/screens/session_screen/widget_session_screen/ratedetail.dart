@@ -98,7 +98,7 @@ class _RateDetailState extends State<RateDetail> {
   }
 
   bool _checkRate(List<Rate> rates) {
-    print(hasRate.toString());
+    if (rates == null) return false;
     if (hasRate != null) return hasRate;
     for (int i = 0; i < rates.length; i++)
       if (rates[i].attendance.userID == user.uid) {
@@ -112,43 +112,46 @@ class _RateDetailState extends State<RateDetail> {
   Widget _buildRateList(List<Rate> rates) {
     return Column(children: <Widget>[
       Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: rates.length,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(children: <Widget>[
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/logo-uit.png'),
-                backgroundColor: Colors.white,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+        child: (rates != null)
+            ? ListView.builder(
+                shrinkWrap: true,
+                itemCount: rates.length,
+                itemBuilder: (context, index) => Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Row(children: <Widget>[
+                    CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                      backgroundColor: Colors.white,
                     ),
-                    Text(rates[index].content)
-                  ],
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(rates[index].content)
+                        ],
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(rates[index].star.toString()),
+                        Icon(
+                          Icons.star,
+                          color: Colors.orange,
+                        )
+                      ],
+                    ),
+                  ]),
                 ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(rates[index].star.toString()),
-                  Icon(
-                    Icons.star,
-                    color: Colors.orange,
-                  )
-                ],
-              ),
-            ]),
-          ),
-        ),
+              )
+            : Text('Chưa có đánh giá nào cho buổi học này'),
       ),
       !_checkRate(rates)
           ? FlatButton(
@@ -180,7 +183,7 @@ class _RateDetailState extends State<RateDetail> {
           if (snapshot.hasData)
             return _buildRateList(snapshot.data.rates);
           else
-            return Text('Nothing to show...');
+            return _buildRateList(null);
         } else
           return Text('Loading...' + snapshot.connectionState.toString());
       },
