@@ -20,6 +20,7 @@ confirmDialog(BuildContext context, String text, Function confirm) async {
                 child: const Text('Xác nhận'),
                 onPressed: () {
                   confirm();
+                  Navigator.pop(context);
                 })
           ],
         );

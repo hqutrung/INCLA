@@ -29,6 +29,7 @@ class FireStoreHelper {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
     Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
+    Noti: (Map data, String uid) => Noti.fromMap(data, id: uid),
     Rates: (Map data) => Rates.fromMap(data),
   };
 
@@ -214,22 +215,23 @@ class FireStoreHelper {
         'sessionID': sessionID,
       });
       pushNotiAllUser(
-          creator: user,
-          courseID: course.courseID,
-          sessionID: sessionID);
+          creator: user, courseID: course.courseID, sessionID: sessionID);
     } catch (e) {
       print('Create topic: ' + e.toString());
     }
   }
 
-Future pushNotiAllUser({User creator, String sessionID, String courseID})
-async {
-  List<UserInfor> listUserInfor = await getStudents(courseID);
-  for(int i=0; i<listUserInfor.length; i++)
-  {
-    addNotification(creator: creator, userID: listUserInfor[i].userID, courseID: courseID,sessionID: sessionID);
+  Future pushNotiAllUser(
+      {User creator, String sessionID, String courseID}) async {
+    List<UserInfor> listUserInfor = await getStudents(courseID);
+    for (int i = 0; i < listUserInfor.length; i++) {
+      addNotification(
+          creator: creator,
+          userID: listUserInfor[i].userID,
+          courseID: courseID,
+          sessionID: sessionID);
+    }
   }
-}
 
   Future createComment(
       Course course, String postID, User user, String content) async {
@@ -372,7 +374,8 @@ async {
         .map(
           (query) => query.documents
               .map(
-                (snapshot) => Noti.fromMap(snapshot.data),
+                (snapshot) =>
+                    Noti.fromMap(snapshot.data, id: snapshot.documentID),
               )
               .toList(),
         );
@@ -397,6 +400,7 @@ async {
         'sessionID': sessionID,
         'typeNoti': 1,
         'timestamp': Timestamp.fromDate(DateTime.now()),
+        'isRead': false,
       });
     } catch (e) {
       print('create attendance: ' + e.toString());
@@ -427,5 +431,14 @@ async {
       }
     });
     return allAttendances;
+  }
+
+  Future updateIsReadNoti(String userID, Noti noti) async {
+    await _db
+        .collection(C_NOTIFICATION)
+        .document(userID)
+        .collection(C_NOTIS)
+        .document(noti.id)
+        .updateData({'isRead': noti.isRead});
   }
 }

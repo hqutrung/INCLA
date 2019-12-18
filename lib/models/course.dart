@@ -14,6 +14,7 @@ class Course {
     if (courseID == null) courseID = data['courseID'];
     name = data['name'];
     teachername = data['teachername'];
+    
     getAllMembersAsync();
   }
 

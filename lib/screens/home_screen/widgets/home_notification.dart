@@ -1,6 +1,7 @@
 import 'package:document/models/notification.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/session_screen.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/screens/shared_widgets/main_appbar.dart';
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:document/services/firestore_helper.dart';
@@ -17,12 +18,13 @@ class HomeNotification extends StatefulWidget {
 
 class _HomeNotificationState extends State<HomeNotification> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  String userID;
   Stream<List<Noti>> notiList;
 
   @override
   void initState() {
     User user = Provider.of<User>(context, listen: false);
+    userID = user.uid;
     notiList = FireStoreHelper().getNotification(userID: user.uid);
     super.initState();
   }
@@ -32,6 +34,7 @@ class _HomeNotificationState extends State<HomeNotification> {
       scrollDirection: Axis.vertical,
       itemCount: notis.length,
       itemBuilder: (BuildContext context, int index) => Card(
+        color: notis[index].isRead ? Colors.white : Colors.grey[300],
         child: ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.white,
@@ -43,8 +46,21 @@ class _HomeNotificationState extends State<HomeNotification> {
               notis[index].content +
               ' ' +
               notis[index].courseID),
-          trailing: Text('2h'),
+          trailing: IconButton(
+            onPressed: () {
+              confirmDialog(context, 'Xác nhận xóa thông báo', () {
+                print('Xoá');
+              });
+            },
+            icon: Icon(Icons.more_horiz),
+          ),
           onTap: () {
+            setState(() {
+              notis[index].isRead = true;
+              print(userID);
+              FireStoreHelper().updateIsReadNoti(userID, notis[index]);
+            });
+
             //push vào buổi
           },
         ),
