@@ -213,15 +213,23 @@ class FireStoreHelper {
         'read': false,
         'sessionID': sessionID,
       });
-      addNotification(
+      pushNotiAllUser(
           creator: user,
-          userID: '17520184',
           courseID: course.courseID,
           sessionID: sessionID);
     } catch (e) {
       print('Create topic: ' + e.toString());
     }
   }
+
+Future pushNotiAllUser({User creator, String sessionID, String courseID})
+async {
+  List<UserInfor> listUserInfor = await getStudents(courseID);
+  for(int i=0; i<listUserInfor.length; i++)
+  {
+    addNotification(creator: creator, userID: listUserInfor[i].userID, courseID: courseID,sessionID: sessionID);
+  }
+}
 
   Future createComment(
       Course course, String postID, User user, String content) async {
