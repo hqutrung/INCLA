@@ -1,5 +1,6 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/resource.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
@@ -166,8 +167,13 @@ class _CourseResourcesState extends State<CourseResources> {
                             IconSlideAction(
                                 color: Colors.red,
                                 icon: Icons.delete_outline,
-                                onTap: () => FireStoreHelper().deleteResource(
-                                    course, snapshot.data[index].uid)),
+                                onTap: () {
+                                  confirmDialog(
+                                      context, 'Xác nhận xóa tài liệu', () {
+                                    FireStoreHelper().deleteResource(
+                                        course, snapshot.data[index].uid);
+                                  });
+                                }),
                             IconSlideAction(
                               color: Colors.green,
                               icon: Icons.edit,

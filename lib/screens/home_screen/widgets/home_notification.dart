@@ -42,12 +42,15 @@ class _HomeNotificationState extends State<HomeNotification> {
             backgroundColor: Colors.white,
             backgroundImage: AssetImage('assets/images/logo-uit.png'),
           ),
-          title: Text(notis[index].title),
+          title: Text(notis[index].title, style: TextStyle(fontWeight: FontWeight.w400),),
+          isThreeLine: true,
           subtitle: Text(notis[index].usercreate.username +
               ' ' +
               notis[index].content +
               ' ' +
-              notis[index].courseID),
+              notis[index].courseID +
+              '\n' +
+              notis[index].timestamp.toString()),
           trailing: IconButton(
             onPressed: () {
               confirmDialog(context, 'Xác nhận xóa thông báo', () {
