@@ -19,9 +19,10 @@ class Course {
   }
 
   Future<List<UserInfor>> getAllMembersAsync() async {
-    if (cachedStudents == null)
+    if (cachedStudents == null) {
       cachedStudents = await FireStoreHelper().getStudents(courseID);
-    print('length: ' + cachedStudents.length.toString());
+      cachedStudents.removeWhere((UserInfor user) => user.username == teachername);
+    }
     return cachedStudents;
   }
 

@@ -37,10 +37,10 @@ class _HomeMainState extends State<HomeMain> {
           leading: Text(course[index].courseID),
           title: Text(course[index].name),
           subtitle: Text(course[index].teachername),
-          trailing: Icon(
-            Icons.hotel,
-            color: Colors.black,
-          ),
+          // trailing: Icon(
+          //   Icons.hotel,
+          //   color: Colors.black,
+          // ),
           onTap: () {
             Navigator.push(
               context,

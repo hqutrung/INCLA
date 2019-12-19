@@ -94,7 +94,7 @@ class _showTopicState extends State<showTopic>
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
+    User user = Provider.of<User>(context, listen: false);
     if (!isTopicDetail) {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
@@ -111,6 +111,10 @@ class _showTopicState extends State<showTopic>
               return const Center(child: CircularProgressIndicator());
             else {
               List<Post> posts = snapshot.data;
+              if (posts.length == 0)
+                return Center(
+                  child: Text('Chưa có thảo luận nào'),
+                );
               posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
               return ListView.builder(
                 scrollDirection: Axis.vertical,
@@ -146,22 +150,24 @@ class _showTopicState extends State<showTopic>
                         });
                       },
                     ),
-                    actions: (user.type == UserType.Teacher||user.uid == posts[index].attendance.userID) ? <Widget>[
-                      IconSlideAction(
-                        color: Colors.red,
-                        icon: Icons.delete_outline,
-                        onTap: (){
-                          confirmDialog(context, 'Xác nhận xóa topic?', () {
-                          //Firebase xóa
-                        });
-                        }
-                      ),
-                      IconSlideAction(
-                        color: Colors.green,
-                        icon: Icons.edit,
-                        onTap: (){}
-                      ),
-                    ] : null,
+                    actions: (user.type == UserType.Teacher ||
+                            user.uid == posts[index].attendance.userID)
+                        ? <Widget>[
+                            IconSlideAction(
+                                color: Colors.red,
+                                icon: Icons.delete_outline,
+                                onTap: () {
+                                  confirmDialog(context, 'Xác nhận xóa topic?',
+                                      () {
+                                    //Firebase xóa
+                                  });
+                                }),
+                            IconSlideAction(
+                                color: Colors.green,
+                                icon: Icons.edit,
+                                onTap: () {}),
+                          ]
+                        : null,
                   ),
                 ),
               );
@@ -169,21 +175,22 @@ class _showTopicState extends State<showTopic>
           },
         ),
       );
-    } else if (isTopicDetail) {
+    } else {
       return StreamBuilder<Post>(
-          stream: detailPostAsyncer,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return DetailTopic(
-                moveBack: moveBack,
-                post: selectedPost,
-              );
-            else
-              return DetailTopic(
-                moveBack: moveBack,
-                post: snapshot.data,
-              );
-          });
+        stream: detailPostAsyncer,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return DetailTopic(
+              moveBack: moveBack,
+              post: selectedPost,
+            );
+          else
+            return DetailTopic(
+              moveBack: moveBack,
+              post: snapshot.data,
+            );
+        },
+      );
     }
   }
 

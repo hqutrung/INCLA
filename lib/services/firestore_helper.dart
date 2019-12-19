@@ -110,7 +110,6 @@ class FireStoreHelper {
           .collection(C_SESSION)
           .add({
         'start': Timestamp.fromDate(DateTime.now()),
-        'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
         'topic': topic,
       });
       pushNotiAllUser(
@@ -125,6 +124,21 @@ class FireStoreHelper {
     }
   }
 
+  Future endSession(Course course, String sessionID) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_SESSION)
+          .document(sessionID)
+          .setData({
+        'end': Timestamp.fromDate(DateTime.now()),
+      }, merge: true);
+    } catch (e) {
+      print('end session: ' + e.toString());
+    }
+  }
+
   Future createResource(Course course, String name, String link) async {
     try {
       await _db
@@ -134,7 +148,7 @@ class FireStoreHelper {
           .add({
         'time': Timestamp.fromDate(DateTime.now()),
         'name': name,
-        'link': link
+        'link': link,
       });
     } catch (e) {
       print('create resource ' + e.toString());
