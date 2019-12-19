@@ -105,7 +105,8 @@ class _DetailTopicState extends State<DetailTopic> {
                 : Card(
                     elevation: 2,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
                       child: Slidable(
                         child: Row(
                           children: [
@@ -114,8 +115,8 @@ class _DetailTopicState extends State<DetailTopic> {
                             ),
                             CircleAvatar(
                               backgroundColor: Colors.white,
-                              backgroundImage:
-                                  const AssetImage('assets/images/logo-uit.png'),
+                              backgroundImage: const AssetImage(
+                                  'assets/images/logo-uit.png'),
                               radius: 25,
                             ),
                             Column(
@@ -172,8 +173,8 @@ class _DetailTopicState extends State<DetailTopic> {
                                       showEditCommentDialog(
                                           context,
                                           course,
-                                          widget
-                                              .post.comments[index - 1].content);
+                                          widget.post.comments[index - 1]
+                                              .content);
                                     }),
                               ]
                             : null,

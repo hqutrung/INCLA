@@ -113,6 +113,7 @@ class _DetailTestState extends State<DetailTest> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 10),
                         child: Slidable(
+                          actionPane: Container(),
                           child: Row(
                             children: [
                               SizedBox(

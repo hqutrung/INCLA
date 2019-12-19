@@ -29,11 +29,11 @@ class _SessionListState extends State<SessionList> {
     super.initState();
   }
 
-  showAddSessionDialog(BuildContext context, Course course) async {
+  _showAddSessionDialog(BuildContext context, Course course) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          User user = Provider.of<User>(context);
+          User user = Provider.of<User>(context, listen: false);
           TextEditingController _textEditingController =
               TextEditingController();
           return AlertDialog(
@@ -67,7 +67,7 @@ class _SessionListState extends State<SessionList> {
         });
   }
 
-  showEditSessionDialog(BuildContext context, Course course, String topic,
+  _showEditSessionDialog(BuildContext context, Course course, String topic,
       String sessionID) async {
     await showDialog<String>(
         context: context,
@@ -107,8 +107,7 @@ class _SessionListState extends State<SessionList> {
 
   @override
   Widget build(BuildContext context) {
-    Course course = Provider.of<Course>(context);
-    User user = Provider.of<User>(context);
+    User user = Provider.of<User>(context, listen: false);
     return StreamBuilder<List<Session>>(
       stream: sessionStream,
       builder: (context, snapshot) {
@@ -118,7 +117,7 @@ class _SessionListState extends State<SessionList> {
             floatingActionButton: user.type == UserType.Teacher
                 ? FloatingActionButton.extended(
                     onPressed: () {
-                      showAddSessionDialog(context, course);
+                      _showAddSessionDialog(context, course);
                     },
                     label: Text('Tạo buổi'),
                     icon: Icon(Icons.add),
@@ -132,6 +131,13 @@ class _SessionListState extends State<SessionList> {
                   child: ListTile(
                     title: Text(snapshot.data[index].topic),
                     subtitle: Text(snapshot.data[index].startTime.toString()),
+                    trailing: Icon(
+                      Icons.brightness_1,
+                      color: (snapshot.data[index].endTime == null)
+                          ? Colors.green
+                          : Colors.grey,
+                      size: 13,
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -151,17 +157,17 @@ class _SessionListState extends State<SessionList> {
                             icon: Icons.delete_outline,
                             onTap: () {
                               confirmDialog(context, 'Xác nhận xóa buổi học?',
-                                  () {
+                                  () =>
                                 FireStoreHelper().deleteSession(
-                                    course, snapshot.data[index].id);
-                              });
+                                    course, snapshot.data[index].id)
+                              );
                             },
                           ),
                           IconSlideAction(
                             color: Colors.green,
                             icon: Icons.edit,
                             onTap: () {
-                              showEditSessionDialog(
+                              _showEditSessionDialog(
                                   context,
                                   course,
                                   snapshot.data[index].topic,

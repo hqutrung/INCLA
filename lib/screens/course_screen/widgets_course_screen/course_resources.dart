@@ -135,7 +135,7 @@ class _CourseResourcesState extends State<CourseResources> {
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context);
-    User user = Provider.of<User>(context);
+    User user = Provider.of<User>(context, listen: false);
     return StreamBuilder<List<Resource>>(
       stream: resourceStream,
       builder: (context, snapshot) {

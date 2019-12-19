@@ -4,6 +4,8 @@ import 'package:document/screens/session_screen/widget_session_screen/ratedetail
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
 import 'package:document/screens/session_screen/widget_session_screen/test_list.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
+import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,8 @@ class _SessionScreenState extends State<SessionScreen> {
     super.initState();
   }
 
+  _endSession() {}
+
   Widget build(BuildContext context) {
     return Provider<Course>.value(
       value: widget.course,
@@ -33,6 +37,17 @@ class _SessionScreenState extends State<SessionScreen> {
                 'Tuần 1 - Ngày 10/10/2019',
                 style: TextStyle(fontSize: 16.0),
               ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () => confirmDialog(
+                    context,
+                    'Xác nhận kết thúc buổi học?',
+                    () => FireStoreHelper()
+                        .endSession(widget.course, widget.session.id),
+                  ),
+                )
+              ],
               bottom: TabBar(
                 tabs: <Widget>[
                   Tab(
