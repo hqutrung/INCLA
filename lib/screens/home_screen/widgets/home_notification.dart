@@ -60,6 +60,7 @@ class _HomeNotificationState extends State<HomeNotification> {
             icon: Icon(Icons.more_horiz),
           ),
           onTap: () {
+            //Navigator.push(context, MaterialPageRoute(builder: (context)=> SessionScreen(course: ,session: )));
             setState(() {
               notis[index].isRead = true;
               FireStoreHelper().updateIsReadNoti(userID, notis[index]);
