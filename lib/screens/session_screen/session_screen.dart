@@ -24,8 +24,6 @@ class _SessionScreenState extends State<SessionScreen> {
     super.initState();
   }
 
-  _endSession() {}
-
   Widget build(BuildContext context) {
     return Provider<Course>.value(
       value: widget.course,
@@ -34,7 +32,7 @@ class _SessionScreenState extends State<SessionScreen> {
           child: Scaffold(
             appBar: AppBar(
               title: Text(
-                'Tuần 1 - Ngày 10/10/2019',
+                widget.session.topic,
                 style: TextStyle(fontSize: 16.0),
               ),
               actions: <Widget>[
