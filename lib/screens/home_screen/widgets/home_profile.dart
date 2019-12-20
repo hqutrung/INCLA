@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-  final MainDrawer drawer;
+  
 
-  const Profile({Key key, @required this.drawer}) : super(key: key);
+  const Profile({Key key, }) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -17,16 +17,11 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context, listen: false);
 
-    final GlobalKey<ScaffoldState> _scaffoldKey =
-        new GlobalKey<ScaffoldState>();
+    
 
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: MainAppBar(
-        title: 'Thông tin cá nhân',
-        openDrawer: () => _scaffoldKey.currentState.openDrawer(),
-      ),
-      drawer: widget.drawer,
+      
+      
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[

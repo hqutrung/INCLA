@@ -68,12 +68,10 @@ class _DetailTopicState extends State<DetailTopic> {
                 ? Column(
                     children: <Widget>[
                       ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/logo-uit.png'),
-                          backgroundColor: Colors.white,
-                          radius: 25.0,
-                        ),
+                        leading:IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: widget.moveBack,
+                        ), 
                         title: Text(
                           widget.post.attendance.username,
                           style: TextStyle(
@@ -81,9 +79,11 @@ class _DetailTopicState extends State<DetailTopic> {
                           ),
                         ),
                         subtitle: Text(widget.post.timestamp.toString()),
-                        trailing: IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: widget.moveBack,
+                        trailing: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/logo-uit.png'),
+                          backgroundColor: Colors.white,
+                          radius: 25.0,
                         ),
                       ),
                       Align(

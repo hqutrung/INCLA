@@ -9,15 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeNotification extends StatefulWidget {
-  final MainDrawer drawer;
+  
 
-  const HomeNotification({Key key, @required this.drawer}) : super(key: key);
+  const HomeNotification({Key key,}) : super(key: key);
   @override
   _HomeNotificationState createState() => _HomeNotificationState();
 }
 
 class _HomeNotificationState extends State<HomeNotification> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   String userID;
   Stream<List<Noti>> notiList;
 
@@ -76,12 +75,7 @@ class _HomeNotificationState extends State<HomeNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: MainAppBar(
-        title: 'Thông báo',
-        openDrawer: () => _scaffoldKey.currentState.openDrawer(),
-      ),
-      drawer: widget.drawer,
+      
       body: StreamBuilder<List<Noti>>(
         initialData: [],
         stream: notiList,

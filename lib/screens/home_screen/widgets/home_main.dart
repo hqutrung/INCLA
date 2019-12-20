@@ -9,15 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeMain extends StatefulWidget {
-  final MainDrawer drawer;
 
-  const HomeMain({Key key, @required this.drawer}) : super(key: key);
+  const HomeMain({Key key, }) : super(key: key);
   @override
   _HomeMainState createState() => _HomeMainState();
 }
 
 class _HomeMainState extends State<HomeMain> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<List<Course>> coursesNe;
 
@@ -60,12 +58,7 @@ class _HomeMainState extends State<HomeMain> {
   Widget build(BuildContext context) {
     // print("HomeMain build");
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: MainAppBar(
-        title: 'Trang chủ',
-        openDrawer: () => _scaffoldKey.currentState.openDrawer(),
-      ),
-      drawer: widget.drawer,
+      
       body: FutureBuilder(
         future: coursesNe,
         builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {
