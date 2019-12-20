@@ -59,6 +59,7 @@ class _DetailTopicState extends State<DetailTopic> {
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context, listen: false);
     User user = Provider.of<User>(context, listen: false);
+    final SlidableController slidableController = SlidableController();
     return Scaffold(
       body: Column(children: <Widget>[
         Expanded(
@@ -68,10 +69,10 @@ class _DetailTopicState extends State<DetailTopic> {
                 ? Column(
                     children: <Widget>[
                       ListTile(
-                        leading:IconButton(
+                        leading: IconButton(
                           icon: Icon(Icons.arrow_back),
                           onPressed: widget.moveBack,
-                        ), 
+                        ),
                         title: Text(
                           widget.post.attendance.username,
                           style: TextStyle(
@@ -108,6 +109,10 @@ class _DetailTopicState extends State<DetailTopic> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 10),
                       child: Slidable(
+                        closeOnScroll: true,
+                        actionExtentRatio: 0.13,
+                        key: Key(widget.post.comments[index - 1].toString()),
+                        controller: slidableController,
                         child: Row(
                           children: [
                             SizedBox(

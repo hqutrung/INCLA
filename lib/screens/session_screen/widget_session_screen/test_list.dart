@@ -63,6 +63,7 @@ class _showTestState extends State<showTest>
         body: StreamBuilder(
           stream: testsAsyncer,
           builder: (context, snapshot) {
+            final SlidableController slidableController = SlidableController();
             if (!snapshot.hasData)
               return const Center(child: CircularProgressIndicator());
             else {
@@ -72,6 +73,10 @@ class _showTestState extends State<showTest>
                 itemCount: tests.length,
                 itemBuilder: (BuildContext context, int index) => Card(
                   child: Slidable(
+                    closeOnScroll: true,
+                    actionExtentRatio: 0.13,
+                    key: Key(widget.key.toString()),
+                    controller: slidableController,
                     actionPane: SlidableDrawerActionPane(),
                     child: ListTile(
                       leading: CircleAvatar(

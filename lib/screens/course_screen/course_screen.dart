@@ -28,7 +28,12 @@ class _CourseScreenState extends State<CourseScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Phương pháp phát triển phần mềm hướng đối tượng'),
+          centerTitle: true,
+          title: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text(
+                widget.course.name,
+              )),
           bottom: TabBar(
             tabs: <Widget>[
               Tab(

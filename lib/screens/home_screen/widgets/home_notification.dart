@@ -1,9 +1,7 @@
 import 'package:document/models/notification.dart';
 import 'package:document/models/user.dart';
-import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
-import 'package:document/screens/shared_widgets/main_appbar.dart';
-import 'package:document/screens/shared_widgets/main_drawer.dart';
+
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

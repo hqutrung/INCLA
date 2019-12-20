@@ -107,6 +107,7 @@ class _showTopicState extends State<showTopic>
         body: StreamBuilder(
           stream: postsAsyncer,
           builder: (context, snapshot) {
+            final SlidableController slidableController = SlidableController();
             if (!snapshot.hasData)
               return const Center(child: CircularProgressIndicator());
             else {
@@ -117,60 +118,69 @@ class _showTopicState extends State<showTopic>
                 );
               posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
               return ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: posts.length,
-                itemBuilder: (BuildContext context, int index) => Card(
-                  child: Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        backgroundImage:
-                            AssetImage('assets/images/logo-uit.png'),
-                      ),
-                      title: Text(posts[index].title),
-                      subtitle: Text(
-                          'Người tạo: ${posts[index].attendance.username}. \n${posts[index].timestamp} - ${posts[index].comments.length} Trả lời'),
-                      trailing: IconButton(
-                        icon: Icon(
-                          Icons.bookmark,
-                          color: Colors.orange,
+                  scrollDirection: Axis.vertical,
+                  itemCount: posts.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: Slidable(
+                        closeOnScroll: true,
+                        actionExtentRatio: 0.13,
+                        
+                        key: Key(posts[index].uid),
+                        controller: slidableController,
+                        actionPane: SlidableScrollActionPane(),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            backgroundImage:
+                                AssetImage('assets/images/logo-uit.png'),
+                          ),
+                          title: Text(posts[index].title),
+                          subtitle: Text(
+                              'Người tạo: ${posts[index].attendance.username}. \n${posts[index].timestamp} - ${posts[index].comments.length} Trả lời'),
+                          trailing: IconButton(
+                            icon: Icon(
+                              Icons.bookmark,
+                              color: Colors.orange,
+                            ),
+                            onPressed: () {
+                              setState(() {});
+                            },
+                          ),
+                          onTap: () {
+                            setState(() {
+                              selectedPost = posts[index];
+                              isTopicDetail = !isTopicDetail;
+                              detailPostAsyncer = FireStoreHelper()
+                                  .getDetailPostStream(
+                                      widget.course, selectedPost.uid);
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {});
-                        },
+                        actions: (user.type == UserType.Teacher ||
+                                user.uid == posts[index].attendance.userID)
+                            ? <Widget>[
+                                IconSlideAction(
+                                    color: Colors.red,
+                                    icon: Icons.delete_outline,
+                                    onTap: () {
+                                      confirmDialog(
+                                          context, 'Xác nhận xóa topic?', () {
+                                        FireStoreHelper().deleteTopic(
+                                            widget.course.courseID,
+                                            posts[index].uid);
+                                      });
+                                    }),
+                               
+                                IconSlideAction(
+                                    color: Colors.green,
+                                    icon: Icons.edit,
+                                    onTap: () {}),
+                              ]
+                            : null,
                       ),
-                      onTap: () {
-                        setState(() {
-                          selectedPost = posts[index];
-                          isTopicDetail = !isTopicDetail;
-                          detailPostAsyncer = FireStoreHelper()
-                              .getDetailPostStream(
-                                  widget.course, selectedPost.uid);
-                        });
-                      },
-                    ),
-                    actions: (user.type == UserType.Teacher ||
-                            user.uid == posts[index].attendance.userID)
-                        ? <Widget>[
-                            IconSlideAction(
-                                color: Colors.red,
-                                icon: Icons.delete_outline,
-                                onTap: () {
-                                  confirmDialog(context, 'Xác nhận xóa topic?',
-                                      () {
-                                    //Firebase xóa
-                                  });
-                                }),
-                            IconSlideAction(
-                                color: Colors.green,
-                                icon: Icons.edit,
-                                onTap: () {}),
-                          ]
-                        : null,
-                  ),
-                ),
-              );
+                    );
+                  });
             }
           },
         ),

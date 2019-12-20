@@ -1,13 +1,12 @@
 import 'package:document/models/user.dart';
-import 'package:document/screens/shared_widgets/main_appbar.dart';
-import 'package:document/screens/shared_widgets/main_drawer.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-  
-
-  const Profile({Key key, }) : super(key: key);
+  const Profile({
+    Key key,
+  }) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -17,11 +16,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context, listen: false);
 
-    
-
     return Scaffold(
-      
-      
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
@@ -33,12 +28,15 @@ class _ProfileState extends State<Profile> {
                     image: AssetImage('assets/images/anh-bia.png'),
                   ),
                 ),
+                Contact(
+                  user: user,
+                ),
               ],
             ),
             Column(
               children: <Widget>[
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Center(
                   child: CircleAvatar(
@@ -47,13 +45,6 @@ class _ProfileState extends State<Profile> {
                     child: Image.asset('assets/images/logo-uit.png'),
                     // backgroundImage: AssetImage('assets/images/logo-uit.png'),
                   ),
-                ),
-                Text(
-                  user.name,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Contact(
-                  user: user,
                 ),
               ],
             ),
@@ -76,6 +67,20 @@ class Contact extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Icon(Icons.account_box),
+                SizedBox(
+                  width: 120,
+                ),
+                Text(user.name),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Row(

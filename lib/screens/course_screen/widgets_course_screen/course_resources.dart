@@ -140,6 +140,7 @@ class _CourseResourcesState extends State<CourseResources> {
       stream: resourceStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          final SlidableController slidableController = SlidableController();
           snapshot.data.sort((a, b) => a.time.compareTo(b.time));
           return Scaffold(
               floatingActionButton: user.type == UserType.Teacher
@@ -155,6 +156,10 @@ class _CourseResourcesState extends State<CourseResources> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) => Card(
                   child: Slidable(
+                    key: Key(snapshot.data[index].uid),
+                    controller: slidableController,
+                    closeOnScroll: true,
+                    actionExtentRatio: 0.13,
                     actionPane: SlidableDrawerActionPane(),
                     child: ListTile(
                         leading: Icon(Icons.insert_drive_file),

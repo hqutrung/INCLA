@@ -111,6 +111,7 @@ class _SessionListState extends State<SessionList> {
     return StreamBuilder<List<Session>>(
       stream: sessionStream,
       builder: (context, snapshot) {
+        final SlidableController slidableController = SlidableController();
         if (snapshot.hasData) {
           snapshot.data.sort((a, b) => b.startTime.compareTo(a.startTime));
           return Scaffold(
@@ -124,61 +125,67 @@ class _SessionListState extends State<SessionList> {
                   )
                 : Container(),
             body: ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) => Card(
-                child: Slidable(
-                  actionPane: SlidableDrawerActionPane(),
-                  child: ListTile(
-                    title: Text(snapshot.data[index].topic),
-                    subtitle: Text(snapshot.data[index].startTime.toString()),
-                    trailing: Icon(
-                      Icons.brightness_1,
-                      color: (snapshot.data[index].endTime == null)
-                          ? Colors.green
-                          : Colors.grey,
-                      size: 13,
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SessionScreen(
-                            course: course,
-                            session: snapshot.data[index],
-                          ),
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: Slidable(
+                      closeOnScroll: true,
+                      actionExtentRatio: 0.13,
+                      key: Key(snapshot.data[index].id),
+                      controller: slidableController,
+                      actionPane: SlidableDrawerActionPane(),
+                      child: ListTile(
+                        title: Text(snapshot.data[index].topic),
+                        subtitle:
+                            Text(snapshot.data[index].startTime.toString()),
+                        trailing: Icon(
+                          Icons.brightness_1,
+                          color: (snapshot.data[index].endTime == null)
+                              ? Colors.green
+                              : Colors.grey,
+                          size: 13,
                         ),
-                      );
-                    },
-                  ),
-                  actions: user.type == UserType.Teacher
-                      ? <Widget>[
-                          IconSlideAction(
-                            color: Colors.red,
-                            icon: Icons.delete_outline,
-                            onTap: () {
-                              confirmDialog(context, 'Xác nhận xóa buổi học?',
-                                  () =>
-                                FireStoreHelper().deleteSession(
-                                    course, snapshot.data[index].id)
-                              );
-                            },
-                          ),
-                          IconSlideAction(
-                            color: Colors.green,
-                            icon: Icons.edit,
-                            onTap: () {
-                              _showEditSessionDialog(
-                                  context,
-                                  course,
-                                  snapshot.data[index].topic,
-                                  snapshot.data[index].id);
-                            },
-                          ),
-                        ]
-                      : null,
-                ),
-              ),
-            ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SessionScreen(
+                                course: course,
+                                session: snapshot.data[index],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      actions: user.type == UserType.Teacher
+                          ? <Widget>[
+                              IconSlideAction(
+                                color: Colors.red,
+                                icon: Icons.delete_outline,
+                                onTap: () {
+                                  confirmDialog(
+                                      context,
+                                      'Xác nhận xóa buổi học?',
+                                      () => FireStoreHelper().deleteSession(
+                                          course, snapshot.data[index].id));
+                                },
+                              ),
+                              IconSlideAction(
+                                color: Colors.green,
+                                icon: Icons.edit,
+                                onTap: () {
+                                  _showEditSessionDialog(
+                                      context,
+                                      course,
+                                      snapshot.data[index].topic,
+                                      snapshot.data[index].id);
+                                },
+                              ),
+                            ]
+                          : null,
+                    ),
+                  );
+                }),
           );
         } else
           return Center(child: CircularProgressIndicator());

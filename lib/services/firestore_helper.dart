@@ -44,6 +44,8 @@ class FireStoreHelper {
     }).toList();
   }
 
+  Future<Course> getCoursefromID(String courseID) {}
+
   Future<List<UserInfor>> getStudents(String courseID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
@@ -104,7 +106,7 @@ class FireStoreHelper {
 
   Future createSession(Course course, String topic, User user) async {
     try {
-      await _db
+      var x = await _db
           .collection(C_COURSE)
           .document(course.courseID)
           .collection(C_SESSION)
@@ -118,7 +120,7 @@ class FireStoreHelper {
           content: 'đã bắt đầu buổi mới trong lớp',
           title: 'Bắt đầu buổi học',
           type: 2,
-          sessionID: null);
+          sessionID: x.documentID);
     } catch (e) {
       print('create session: ' + e.toString());
     }
@@ -488,6 +490,15 @@ class FireStoreHelper {
         .document(userID)
         .collection(C_NOTIS)
         .document(noti.id)
+        .delete();
+  }
+
+  Future deleteTopic(String courseID, String postID) async {
+    await _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .collection(C_POST)
+        .document(postID)
         .delete();
   }
 }
