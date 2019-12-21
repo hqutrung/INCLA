@@ -1,5 +1,6 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/resource.dart';
+import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
@@ -134,11 +135,13 @@ class _CourseResourcesState extends State<CourseResources> {
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context);
-    User user = Provider.of<User>(context);
+    User user = Provider.of<User>(context, listen: false);
     return StreamBuilder<List<Resource>>(
       stream: resourceStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          final SlidableController slidableController = SlidableController();
+          snapshot.data.sort((a, b) => a.time.compareTo(b.time));
           return Scaffold(
               floatingActionButton: user.type == UserType.Teacher
                   ? FloatingActionButton.extended(
@@ -153,6 +156,10 @@ class _CourseResourcesState extends State<CourseResources> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) => Card(
                   child: Slidable(
+                    key: Key(snapshot.data[index].uid),
+                    controller: slidableController,
+                    closeOnScroll: true,
+                    actionExtentRatio: 0.13,
                     actionPane: SlidableDrawerActionPane(),
                     child: ListTile(
                         leading: Icon(Icons.insert_drive_file),
@@ -165,8 +172,13 @@ class _CourseResourcesState extends State<CourseResources> {
                             IconSlideAction(
                                 color: Colors.red,
                                 icon: Icons.delete_outline,
-                                onTap: () => FireStoreHelper().deleteResource(
-                                    course, snapshot.data[index].uid)),
+                                onTap: () {
+                                  confirmDialog(
+                                      context, 'Xác nhận xóa tài liệu', () {
+                                    FireStoreHelper().deleteResource(
+                                        course, snapshot.data[index].uid);
+                                  });
+                                }),
                             IconSlideAction(
                               color: Colors.green,
                               icon: Icons.edit,

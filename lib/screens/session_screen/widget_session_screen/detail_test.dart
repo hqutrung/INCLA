@@ -22,18 +22,18 @@ class DetailTest extends StatefulWidget {
 }
 
 class _DetailTestState extends State<DetailTest> {
-
   Timer _timer;
   int _start = 900;
   int minutes;
   int seconds;
+  List<int> selection = List.filled(10, 0, growable: true);
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-          (Timer timer) => setState(
-            () {
+      (Timer timer) => setState(
+        () {
           if (_start < 1) {
             timer.cancel();
             widget.moveBack;
@@ -57,84 +57,108 @@ class _DetailTestState extends State<DetailTest> {
     super.initState();
   }
 
+  listTest() {
+    return ListView.builder(
+      itemCount: 10,
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Caau $index: 2 + 3 =  maays??',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                          groupValue: selection[index],
+                          onChanged: (value) {
+                            setState(() {
+                              selection[index] = value;
+                              print(selection);
+                            });
+                          },
+                          value: 1),
+                      Text('5'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                        groupValue: selection[index],
+                        onChanged: (value) {
+                          setState(() {
+                            selection[index] = value;
+                            print(selection);
+                          });
+                        },
+                        value: 2,
+                      ),
+                      Text('5'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                          groupValue: selection[index],
+                          onChanged: (value) {
+                            setState(() {
+                              selection[index] = value;
+                              print(selection);
+                            });
+                          },
+                          value: 3),
+                      Text('5'),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Radio(
+                          groupValue: selection[index],
+                          onChanged: (value) {
+                            setState(() {
+                              selection[index] = value;
+                              print(selection);
+                            });
+                          },
+                          value: 4),
+                      Text('5'),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context, listen: false);
     User user = Provider.of<User>(context, listen: false);
     return Scaffold(
         body: Column(children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              itemCount: widget.test.questions.length + 1,
-              itemBuilder: (context, index) => (index == 0)
-                  ? Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(
-                            widget.test.title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(widget.test.time.toString()),
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  'Thời gian: 15 phút',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                child: Text(
-                                  '$_start s',
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Divider(
-                          height: 10.0,
-                        ),
-                      ],
-                    )
-                  : Card(
-                      elevation: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 10),
-                        child: Slidable(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    widget.test.questions[index - 1].question,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+          ListTile(
+            title: Text(
+              'Kieem tra chuong 1',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            subtitle: Text('22/22/2222'),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text('Thoiwf gian: 15 phut'),
+              Text('$_start s'),
+            ],
+          ),
+          Divider(),
+          Expanded(
+            child: listTest(),
           ),
         ]),
         bottomNavigationBar: BottomAppBar(

@@ -29,6 +29,7 @@ class FireStoreHelper {
     User: (Map data, String email) => User.fromMap(data, email: email),
     Session: (Map data, String uid) => Session.fromMap(data, id: uid),
     Resource: (Map data, String uid) => Resource.fromMap(data, uid: uid),
+    Noti: (Map data, String uid) => Noti.fromMap(data, id: uid),
     Rates: (Map data) => Rates.fromMap(data),
   };
 
@@ -42,6 +43,8 @@ class FireStoreHelper {
           reference: _db.collection(C_COURSE).document(data.data['courseID']));
     }).toList();
   }
+
+  Future<Course> getCoursefromID(String courseID) {}
 
   Future<List<UserInfor>> getStudents(String courseID) async {
     QuerySnapshot snapshots = await _db
@@ -101,19 +104,40 @@ class FireStoreHelper {
         );
   }
 
-  Future createSession(Course course, String topic) async {
+  Future createSession(Course course, String topic, User user) async {
     try {
-      await _db
+      var x = await _db
           .collection(C_COURSE)
           .document(course.courseID)
           .collection(C_SESSION)
           .add({
         'start': Timestamp.fromDate(DateTime.now()),
-        'end': Timestamp.fromDate(DateTime.now().add(Duration(hours: 2))),
         'topic': topic,
       });
+      pushNotiAllUser(
+          creator: user,
+          courseID: course.courseID,
+          content: 'đã bắt đầu buổi mới trong lớp',
+          title: 'Bắt đầu buổi học',
+          type: 2,
+          sessionID: x.documentID);
     } catch (e) {
       print('create session: ' + e.toString());
+    }
+  }
+
+  Future endSession(Course course, String sessionID) async {
+    try {
+      await _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_SESSION)
+          .document(sessionID)
+          .setData({
+        'end': Timestamp.fromDate(DateTime.now()),
+      }, merge: true);
+    } catch (e) {
+      print('end session: ' + e.toString());
     }
   }
 
@@ -126,7 +150,7 @@ class FireStoreHelper {
           .add({
         'time': Timestamp.fromDate(DateTime.now()),
         'name': name,
-        'link': link
+        'link': link,
       });
     } catch (e) {
       print('create resource ' + e.toString());
@@ -213,13 +237,37 @@ class FireStoreHelper {
         'read': false,
         'sessionID': sessionID,
       });
-      addNotification(
+      pushNotiAllUser(
           creator: user,
-          userID: '17520184',
           courseID: course.courseID,
-          sessionID: sessionID);
+          sessionID: sessionID,
+          title: 'Thảo luận mới',
+          content: 'đã tạo một thảo luận mới trong lớp',
+          type: 1);
     } catch (e) {
       print('Create topic: ' + e.toString());
+    }
+  }
+
+  Future pushNotiAllUser({
+    User creator,
+    String sessionID,
+    String courseID,
+    String title,
+    String content,
+    int type,
+  }) async {
+    List<UserInfor> listUserInfor = await getStudents(courseID);
+    for (int i = 0; i < listUserInfor.length; i++) {
+      addNotification(
+        title: title,
+        creator: creator,
+        userID: listUserInfor[i].userID,
+        courseID: courseID,
+        sessionID: sessionID,
+        content: content,
+        type: type,
+      );
     }
   }
 
@@ -364,31 +412,37 @@ class FireStoreHelper {
         .map(
           (query) => query.documents
               .map(
-                (snapshot) => Noti.fromMap(snapshot.data),
+                (snapshot) =>
+                    Noti.fromMap(snapshot.data, id: snapshot.documentID),
               )
               .toList(),
         );
   }
 
-  Future addNotification(
-      {@required User creator,
-      @required String userID,
-      @required String courseID,
-      @required String sessionID}) async {
+  Future addNotification({
+    @required User creator,
+    @required String userID,
+    @required String courseID,
+    @required String sessionID,
+    @required String title,
+    @required String content,
+    @required int type,
+  }) async {
     try {
       await _db
           .collection(C_NOTIFICATION)
           .document(userID)
           .collection(C_NOTIS)
           .add({
-        'title': "Thảo luận mới đã được tạo",
+        'title': title,
         'creatorID': creator.uid,
         'creatorName': creator.name,
-        'content': "đã tạo thảo luận mới trong lớp",
+        'content': content,
         'courseID': courseID,
         'sessionID': sessionID,
-        'typeNoti': 1,
+        'typeNoti': type,
         'timestamp': Timestamp.fromDate(DateTime.now()),
+        'isRead': false,
       });
     } catch (e) {
       print('create attendance: ' + e.toString());
@@ -419,5 +473,32 @@ class FireStoreHelper {
       }
     });
     return allAttendances;
+  }
+
+  Future updateIsReadNoti(String userID, Noti noti) async {
+    await _db
+        .collection(C_NOTIFICATION)
+        .document(userID)
+        .collection(C_NOTIS)
+        .document(noti.id)
+        .updateData({'isRead': noti.isRead});
+  }
+
+  Future deleteNoti(String userID, Noti noti) async {
+    await _db
+        .collection(C_NOTIFICATION)
+        .document(userID)
+        .collection(C_NOTIS)
+        .document(noti.id)
+        .delete();
+  }
+
+  Future deleteTopic(String courseID, String postID) async {
+    await _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .collection(C_POST)
+        .document(postID)
+        .delete();
   }
 }

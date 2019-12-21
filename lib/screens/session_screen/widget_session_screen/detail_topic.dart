@@ -59,6 +59,7 @@ class _DetailTopicState extends State<DetailTopic> {
   Widget build(BuildContext context) {
     Course course = Provider.of<Course>(context, listen: false);
     User user = Provider.of<User>(context, listen: false);
+    final SlidableController slidableController = SlidableController();
     return Scaffold(
       body: Column(children: <Widget>[
         Expanded(
@@ -68,11 +69,9 @@ class _DetailTopicState extends State<DetailTopic> {
                 ? Column(
                     children: <Widget>[
                       ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              AssetImage('assets/images/logo-uit.png'),
-                          backgroundColor: Colors.white,
-                          radius: 25.0,
+                        leading: IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: widget.moveBack,
                         ),
                         title: Text(
                           widget.post.attendance.username,
@@ -81,9 +80,11 @@ class _DetailTopicState extends State<DetailTopic> {
                           ),
                         ),
                         subtitle: Text(widget.post.timestamp.toString()),
-                        trailing: IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: widget.moveBack,
+                        trailing: CircleAvatar(
+                          backgroundImage:
+                              AssetImage('assets/images/logo-uit.png'),
+                          backgroundColor: Colors.white,
+                          radius: 25.0,
                         ),
                       ),
                       Align(
@@ -105,8 +106,13 @@ class _DetailTopicState extends State<DetailTopic> {
                 : Card(
                     elevation: 2,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
                       child: Slidable(
+                        closeOnScroll: true,
+                        actionExtentRatio: 0.13,
+                        key: Key(widget.post.comments[index - 1].toString()),
+                        controller: slidableController,
                         child: Row(
                           children: [
                             SizedBox(
@@ -114,8 +120,8 @@ class _DetailTopicState extends State<DetailTopic> {
                             ),
                             CircleAvatar(
                               backgroundColor: Colors.white,
-                              backgroundImage:
-                                  const AssetImage('assets/images/logo-uit.png'),
+                              backgroundImage: const AssetImage(
+                                  'assets/images/logo-uit.png'),
                               radius: 25,
                             ),
                             Column(
@@ -172,8 +178,8 @@ class _DetailTopicState extends State<DetailTopic> {
                                       showEditCommentDialog(
                                           context,
                                           course,
-                                          widget
-                                              .post.comments[index - 1].content);
+                                          widget.post.comments[index - 1]
+                                              .content);
                                     }),
                               ]
                             : null,

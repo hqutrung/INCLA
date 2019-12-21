@@ -47,7 +47,7 @@ class _showTestState extends State<showTest>
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
+    User user = Provider.of<User>(context, listen: false);
     if (!isTestDetail) {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
@@ -63,6 +63,7 @@ class _showTestState extends State<showTest>
         body: StreamBuilder(
           stream: testsAsyncer,
           builder: (context, snapshot) {
+            final SlidableController slidableController = SlidableController();
             if (!snapshot.hasData)
               return const Center(child: CircularProgressIndicator());
             else {
@@ -72,12 +73,16 @@ class _showTestState extends State<showTest>
                 itemCount: tests.length,
                 itemBuilder: (BuildContext context, int index) => Card(
                   child: Slidable(
+                    closeOnScroll: true,
+                    actionExtentRatio: 0.13,
+                    key: Key(widget.key.toString()),
+                    controller: slidableController,
                     actionPane: SlidableDrawerActionPane(),
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         backgroundImage:
-                        AssetImage('assets/images/logo-uit.png'),
+                            AssetImage('assets/images/logo-uit.png'),
                       ),
                       title: Text(tests[index].title),
                       subtitle: Text('Thời gian: 15 phút'),
@@ -87,26 +92,27 @@ class _showTestState extends State<showTest>
                           isTestDetail = !isTestDetail;
                           detailTestAsyncer = FireStoreHelper()
                               .getDetailTestStream(
-                              widget.course, selectedTest.uid);
+                                  widget.course, selectedTest.uid);
                         });
                       },
                     ),
-                    actions: (user.type == UserType.Teacher) ? <Widget>[
-                      IconSlideAction(
-                          color: Colors.red,
-                          icon: Icons.delete_outline,
-                          onTap: (){
-                            confirmDialog(context, 'Xác nhận xóa test?', () {
-                              //Firebase xóa
-                            });
-                          }
-                      ),
-                      IconSlideAction(
-                          color: Colors.green,
-                          icon: Icons.edit,
-                          onTap: (){}
-                      ),
-                    ] : null,
+                    actions: (user.type == UserType.Teacher)
+                        ? <Widget>[
+                            IconSlideAction(
+                                color: Colors.red,
+                                icon: Icons.delete_outline,
+                                onTap: () {
+                                  confirmDialog(context, 'Xác nhận xóa test?',
+                                      () {
+                                    //Firebase xóa
+                                  });
+                                }),
+                            IconSlideAction(
+                                color: Colors.green,
+                                icon: Icons.edit,
+                                onTap: () {}),
+                          ]
+                        : null,
                   ),
                 ),
               );
