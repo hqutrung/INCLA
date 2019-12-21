@@ -3,6 +3,7 @@ import 'package:document/models/user.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 
 import 'package:document/services/firestore_helper.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +48,7 @@ class _HomeNotificationState extends State<HomeNotification> {
               ' ' +
               notis[index].courseID +
               '\n' +
-              notis[index].timestamp.toString()),
+              ConvertDateTime(notis[index].timestamp)),
           trailing: IconButton(
             onPressed: () {
               confirmDialog(context, 'Xác nhận xóa thông báo', () {

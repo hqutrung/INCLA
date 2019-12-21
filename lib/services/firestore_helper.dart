@@ -291,6 +291,27 @@ class FireStoreHelper {
     }
   }
 
+  Future createResult(
+      Course course, String testID, User user, int point, List<int> answers) async {
+    try {
+      Map<String, dynamic> x = {
+        'point': point,
+        'time': Timestamp.fromDate(DateTime.now()),
+        'answers' : answers,
+        'userID': user.uid,
+        'username': user.name,
+      };
+      return await course.reference
+          .collection(C_TEST)
+          .document(testID)
+          .setData({
+        'students': FieldValue.arrayUnion([x])
+      }, merge: true);
+    } catch (e) {
+      print('create result error: ' + e.toString());
+    }
+  }
+
   Stream<Post> getDetailPostStream(
     Course course,
     String postID,

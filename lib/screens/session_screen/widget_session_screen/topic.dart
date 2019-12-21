@@ -4,6 +4,7 @@ import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/detail_topic.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -137,7 +138,7 @@ class _showTopicState extends State<showTopic>
                           ),
                           title: Text(posts[index].title),
                           subtitle: Text(
-                              'Người tạo: ${posts[index].attendance.username}. \n${posts[index].timestamp} - ${posts[index].comments.length} Trả lời'),
+                              'Người tạo: ${posts[index].attendance.username}. \n' +  ConvertDateTime(posts[index].timestamp) + ' - ${posts[index].comments.length} Trả lời'),
                           trailing: IconButton(
                             icon: Icon(
                               Icons.bookmark,

@@ -3,6 +3,7 @@ import 'package:document/models/post.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,7 @@ class _DetailTopicState extends State<DetailTopic> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        subtitle: Text(widget.post.timestamp.toString()),
+                        subtitle: Text(ConvertDateTime(widget.post.timestamp)),
                         trailing: CircleAvatar(
                           backgroundImage:
                               AssetImage('assets/images/logo-uit.png'),

@@ -5,6 +5,7 @@ import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -137,7 +138,7 @@ class _SessionListState extends State<SessionList> {
                       child: ListTile(
                         title: Text(snapshot.data[index].topic),
                         subtitle:
-                            Text(snapshot.data[index].startTime.toString()),
+                            Text(ConvertDateTime(snapshot.data[index].startTime)),
                         trailing: Icon(
                           Icons.brightness_1,
                           color: (snapshot.data[index].endTime == null)

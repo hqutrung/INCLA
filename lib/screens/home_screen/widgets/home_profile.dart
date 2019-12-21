@@ -1,4 +1,5 @@
 import 'package:document/models/user.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -119,7 +120,7 @@ class Contact extends StatelessWidget {
                 SizedBox(
                   width: 120,
                 ),
-                Text(user.birthday.toDate().toString()),
+                Text(ConvertDateTimeToBirthday(user.birthday.toDate())),
               ],
             ),
           ),

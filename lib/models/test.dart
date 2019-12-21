@@ -8,12 +8,14 @@ class Test {
   String title;
   DateTime time;
   List<Question> questions;
+  List<int> results;
 
   Test.fromMap(Map data, {@required this.uid}) {
     time = (data['time'] as Timestamp).toDate();
     title = data['title'];
-    questions = (data['comments'] as List ?? []).map((question) {
+    questions = (data['questions'] as List ?? []).map((question) {
       return Question.fromMap(question);
     }).toList();
+    results = (data['results'].cast<int>() as List ?? []).toList();
   }
 }
