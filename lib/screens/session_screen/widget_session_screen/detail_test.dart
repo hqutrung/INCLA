@@ -55,7 +55,57 @@ class _DetailTestState extends State<DetailTest> {
     super.initState();
   }
 
-  listTest() {
+  listTeacherTest() {
+    return ListView.builder(
+      itemCount: widget.test.questions.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Card(
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Câu ${index + 1}: ' + widget.test.questions[index].question,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text('A: '),
+                      Text(widget.test.questions[index].A),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text('B: '),
+                      Text(widget.test.questions[index].B),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text('C: '),
+                      Text(widget.test.questions[index].C),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text('D: '),
+                      Text(widget.test.questions[index].D),
+                    ],
+                  ),
+                  Text(
+                    'Đáp án: ',
+                    style: TextStyle(color: Colors.red),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  listStudentTest() {
     return ListView.builder(
       itemCount: widget.test.questions.length,
       itemBuilder: (BuildContext context, int index) {
@@ -153,33 +203,61 @@ class _DetailTestState extends State<DetailTest> {
           ),
           Divider(),
           Expanded(
-            child: listTest(),
+            child: (user.type == UserType.Student)
+                ? listStudentTest()
+                : listTeacherTest(),
           ),
         ]),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    FireStoreHelper().createResult(
-                        course, widget.test.uid, user, CompareLists(widget.test.results, selection), selection);
-                    widget.moveBack;
-                    },
-                  child: Text('Nộp bài'),
-                  color: Colors.green),
-              FlatButton(
-                onPressed: () =>
-                  confirmDialog(
-                    context,
-                    'Xác nhận kết thúc bài kiểm tra?',
-                      widget.moveBack
-                  ),
-                child: Text('Hủy'),
-                color: Colors.black12,
-              ),
-            ],
-          ),
-        ));
+        bottomNavigationBar: (user.type == UserType.Student)
+            ? BottomAppBar(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    FlatButton(
+                        onPressed: () {
+                          FireStoreHelper().createResult(
+                              course,
+                              widget.test.uid,
+                              user,
+                              CompareLists(widget.test.results, selection),
+                              selection);
+                          widget.moveBack;
+                        },
+                        child: Text('Nộp bài'),
+                        color: Colors.green),
+                    FlatButton(
+                      onPressed: () => confirmDialog(context,
+                          'Xác nhận kết thúc bài kiểm tra?', widget.moveBack),
+                      child: Text('Hủy'),
+                      color: Colors.black12,
+                    ),
+                  ],
+                ),
+              )
+            : BottomAppBar(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    FlatButton(
+                        onPressed: () {
+                          FireStoreHelper().createResult(
+                              course,
+                              widget.test.uid,
+                              user,
+                              CompareLists(widget.test.results, selection),
+                              selection);
+                          widget.moveBack;
+                        },
+                        child: Text('Kết thúc'),
+                        color: Colors.red),
+                    FlatButton(
+                      onPressed: () => confirmDialog(context,
+                          'Xác nhận kết thúc bài kiểm tra?', widget.moveBack),
+                      child: Text('Kết quả'),
+                      color: Colors.black12,
+                    ),
+                  ],
+                ),
+              ));
   }
 }
