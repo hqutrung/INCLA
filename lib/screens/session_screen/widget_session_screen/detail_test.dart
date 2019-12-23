@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:document/models/course.dart';
 import 'package:document/models/test.dart';
 import 'package:document/models/user.dart';
+import 'package:document/screens/session_screen/widget_session_screen/detail_resultTest.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:document/utils/CompareLists.dart';
@@ -240,13 +241,16 @@ class _DetailTestState extends State<DetailTest> {
                   children: <Widget>[
                     FlatButton(
                         onPressed: () => confirmDialog(context,
-                          'Xác nhận kết thúc bài kiểm tra?', widget.moveBack),
+                            'Xác nhận kết thúc bài kiểm tra?', widget.moveBack),
                         child: Text('Kết thúc'),
                         color: Colors.red),
                     FlatButton(
                       onPressed: () {
-                        
-                      }, 
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ResultTest()));
+                      },
                       child: Text('Kết quả'),
                       color: Colors.black12,
                     ),
