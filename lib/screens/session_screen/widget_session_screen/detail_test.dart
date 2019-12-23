@@ -239,20 +239,14 @@ class _DetailTestState extends State<DetailTest> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     FlatButton(
-                        onPressed: () {
-                          FireStoreHelper().createResult(
-                              course,
-                              widget.test.uid,
-                              user,
-                              CompareLists(widget.test.results, selection),
-                              selection);
-                          widget.moveBack;
-                        },
+                        onPressed: () => confirmDialog(context,
+                          'Xác nhận kết thúc bài kiểm tra?', widget.moveBack),
                         child: Text('Kết thúc'),
                         color: Colors.red),
                     FlatButton(
-                      onPressed: () => confirmDialog(context,
-                          'Xác nhận kết thúc bài kiểm tra?', widget.moveBack),
+                      onPressed: () {
+                        
+                      }, 
                       child: Text('Kết quả'),
                       color: Colors.black12,
                     ),
