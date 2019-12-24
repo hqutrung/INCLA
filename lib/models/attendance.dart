@@ -15,10 +15,17 @@ class Attendance {
 
   Attendance.fromMap(Map data, {@required this.reference}) {
     offline = (data[OFFLINE_FIELD] as List ?? [])
-        .map((value) => UserInfor.fromMap(value)).toList();
+        .map((value) => UserInfor.fromMap(value))
+        .toList();
     online = (data[ONLINE_FIELD] as List ?? [])
-        .map((value) => UserInfor.fromMap(value)).toList();
+        .map((value) => UserInfor.fromMap(value))
+        .toList();
     duration = data['duration'];
     timestamp = (data['timestamp'] as Timestamp).toDate();
+  }
+
+  bool checkOnlineForUser(String userID) {
+    if (online == null) return false;
+    return (online.firstWhere((user) => user.userID == userID, orElse: () => null) != null);
   }
 }

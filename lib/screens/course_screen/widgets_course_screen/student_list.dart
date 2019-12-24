@@ -11,13 +11,11 @@ class StudentList extends StatefulWidget {
 
 class _StudentListState extends State<StudentList>
     with AutomaticKeepAliveClientMixin {
-  Future<List<UserInfor>> studentsAsyncer;
   Course course;
 
   @override
   void initState() {
     course = Provider.of<Course>(context, listen: false);
-    studentsAsyncer = FireStoreHelper().getStudents(course.courseID);
     super.initState();
   }
 

@@ -20,7 +20,7 @@ class _HomeMainState extends State<HomeMain> {
   @override
   void initState() {
     User user = Provider.of<User>(context, listen: false);
-    coursesNe = FireStoreHelper().getCourses(user.uid);
+    coursesNe = FireStoreHelper().getCourseFromUserCourse(user.uid);
     super.initState();
   }
 

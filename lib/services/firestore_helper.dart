@@ -33,7 +33,7 @@ class FireStoreHelper {
     Rates: (Map data) => Rates.fromMap(data),
   };
 
-  Future<List<Course>> getCourses(String userID) async {
+  Future<List<Course>> getCourseFromUserCourse(String userID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('userID', isEqualTo: userID)
@@ -52,10 +52,20 @@ class FireStoreHelper {
         .then((snapshot) => Course.fromMap(snapshot.data));
   }
 
-  Future<List<UserInfor>> getStudents(String courseID) async {
+  Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('courseID', isEqualTo: courseID)
+        .getDocuments();
+    return snapshots.documents.map((data) {
+      return UserInfor.fromMap(data.data);
+    }).toList();
+  }
+
+  Future<List<UserInfor>> getStudentFromUserCourse(String courseID) async {
+    QuerySnapshot snapshots = await _db
+        .collection(C_USER_COURSE)
+        .where('courseID', isEqualTo: courseID).where('user_type', isEqualTo: 1)
         .getDocuments();
     return snapshots.documents.map((data) {
       return UserInfor.fromMap(data.data);
@@ -287,7 +297,7 @@ class FireStoreHelper {
     String content,
     int type,
   }) async {
-    List<UserInfor> listUserInfor = await getStudents(courseID);
+    List<UserInfor> listUserInfor = await getUsersFromUserCourse(courseID);
     for (int i = 0; i < listUserInfor.length; i++) {
       addNotification(
         title: title,
