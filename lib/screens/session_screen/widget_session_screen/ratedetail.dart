@@ -29,7 +29,7 @@ class _RateDetailState extends State<RateDetail> {
         builder: (BuildContext context) {
           TextEditingController _textEditingController =
               TextEditingController();
-          int rate = 5;
+          double rate = 5;
 
           return AlertDialog(
             title: Text('Đánh giá'),
@@ -49,7 +49,7 @@ class _RateDetailState extends State<RateDetail> {
                     ),
                     onRatingUpdate: (rating) {
                       setState(() {
-                        rate = rating.toInt();
+                        rate = rating;
                       });
                     },
                   ),
@@ -133,21 +133,20 @@ class _RateDetailState extends State<RateDetail> {
                             '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                         
+                          RatingBar(
+                            allowHalfRating: true,
+                            ignoreGestures: true,
+                            initialRating: rates[index].star,
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            itemSize: 25,
+                            onRatingUpdate: (_) {},
+                          ),
                           Text(rates[index].content)
                         ],
                       ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(rates[index].star.toString()),
-                        Icon(
-                          Icons.star,
-                          color: Colors.orange,
-                        )
-                      ],
                     ),
                   ]),
                 ),

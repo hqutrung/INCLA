@@ -500,7 +500,7 @@ class FireStoreHelper {
       @required Session session,
       @required User user,
       @required String content,
-      @required int value}) async {
+      @required double value}) async {
     try {
       course.reference.collection(C_RATE).document(session.id).setData({
         'rates': FieldValue.arrayUnion([
