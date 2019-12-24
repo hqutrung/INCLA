@@ -49,7 +49,7 @@ class FireStoreHelper {
         .collection(C_COURSE)
         .document(courseID)
         .get()
-        .then((snapshot) => Course.fromMap(snapshot.data));
+        .then((snapshot) => Course.fromMap(snapshot.data, reference: snapshot.reference, courseID: snapshot.documentID));
   }
 
   Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
