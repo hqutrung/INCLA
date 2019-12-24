@@ -36,15 +36,19 @@ class _SessionScreenState extends State<SessionScreen> {
                 style: TextStyle(fontSize: 16.0),
               ),
               actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () => confirmDialog(
-                    context,
-                    'Xác nhận kết thúc buổi học?',
-                    () => FireStoreHelper()
-                        .endSession(widget.course, widget.session.id),
-                  ),
-                )
+                (widget.session.endTime == null)
+                    ? IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => confirmDialog(
+                            context, 'Xác nhận kết thúc buổi học?', () {
+                          FireStoreHelper()
+                              .endSession(widget.course, widget.session.id);
+                          setState(() {
+                            widget.session.endTime = DateTime.now();
+                          });
+                        }),
+                      )
+                    : Container(),
               ],
               bottom: TabBar(
                 tabs: <Widget>[
