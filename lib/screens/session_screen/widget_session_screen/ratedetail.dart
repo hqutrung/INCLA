@@ -133,6 +133,7 @@ class _RateDetailState extends State<RateDetail> {
                             '${rates[index].attendance.username} - ${rates[index].attendance.userID}',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
+                         
                           Text(rates[index].content)
                         ],
                       ),

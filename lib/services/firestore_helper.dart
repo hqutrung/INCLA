@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
+import 'package:document/models/comment.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/notification.dart';
 import 'package:document/models/post.dart';
@@ -279,6 +280,25 @@ class FireStoreHelper {
     }
   }
 
+  void updateTopic(String sessionID, Course course, User user,
+      {@required String postID,
+      @required String title,
+      @required String content}) {
+    try {
+      _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_POST)
+          .document(postID)
+          .updateData({
+        'content': content,
+        'title': title,
+      });
+    } catch (e) {
+      print('Create topic: ' + e.toString());
+    }
+  }
+
   Future pushNotiAllUser({
     User creator,
     String sessionID,
@@ -318,6 +338,40 @@ class FireStoreHelper {
       }, merge: true);
     } catch (e) {
       print('create comment error: ' + e.toString());
+    }
+  }
+
+  Future deleteComment(Course course, String postID, Comment comment) async {
+    try {
+      course.reference.collection(C_POST).document(postID).updateData({
+        'comments': FieldValue.arrayRemove([
+          {
+            'content': comment.content,
+            'timestamp': Timestamp.fromDate(comment.timestamp),
+            'userID': comment.attendance.userID,
+            'username': comment.attendance.username
+          },
+        ]),
+      });
+    } catch (e) {
+      print('delete comment error: ' + e.toString());
+    }
+  }
+
+  Future updateComment(Course course, String postID, Comment comment) async {
+    try {
+      course.reference.collection(C_POST).document(postID).setData({
+        'comments': FieldValue.arrayUnion([
+          {
+            'content': comment.content,
+            'timestamp': Timestamp.fromDate(comment.timestamp),
+            'userID': comment.attendance.userID,
+            'username': comment.attendance.username
+          },
+        ]),
+      },merge: true);
+    } catch (e) {
+      print('delete comment error: ' + e.toString());
     }
   }
 
