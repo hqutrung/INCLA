@@ -44,7 +44,13 @@ class FireStoreHelper {
     }).toList();
   }
 
-  Future<Course> getCoursefromID(String courseID) {}
+  Future<Course> getCoursefromID(String courseID) {
+    return _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .get()
+        .then((snapshot) => Course.fromMap(snapshot.data));
+  }
 
   Future<List<UserInfor>> getStudents(String courseID) async {
     QuerySnapshot snapshots = await _db
