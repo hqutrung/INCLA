@@ -190,21 +190,45 @@ class FireStoreHelper {
     }
   }
 
-  Future deleteSession(Course course, String id) async {
+  Future deletePostOfSession(Course course, String sessionID) async {
     try {
-      await course.reference.collection(C_SESSION).document(id).delete();
-      await course.reference.collection(C_RATE).document(id).delete();
-      await course.reference.collection(C_ATTENDANCE).document(id).delete();
       await course.reference
           .collection(C_POST)
-          .where('sessionID', isEqualTo: id)
+          .where('sessionID', isEqualTo: sessionID)
           .getDocuments()
           .then((querySnapshot) {
         for (int i = 0; i < querySnapshot.documents.length; i++)
           querySnapshot.documents[i].reference.delete();
       });
     } catch (e) {
-      print('delete session: ' + e.toString());
+      print('delete post of session: ' + e.toString());
+    }
+  }
+
+  Future deleteTestOfSession(Course course, String sessionID) async {
+    try {
+      await course.reference
+          .collection(C_TEST)
+          .where('sessionID', isEqualTo: sessionID)
+          .getDocuments()
+          .then((querySnapshot) {
+        for (int i = 0; i < querySnapshot.documents.length; i++)
+          querySnapshot.documents[i].reference.delete();
+      });
+    } catch (e) {
+      print('delete test of session: ' + e.toString());
+    }
+  }
+
+  Future deleteSession(Course course, String id) async {
+    try {
+      await course.reference.collection(C_SESSION).document(id).delete();
+      await course.reference.collection(C_RATE).document(id).delete();
+      await course.reference.collection(C_ATTENDANCE).document(id).delete();
+      await deletePostOfSession(course, id);
+      await deleteTestOfSession(course, id);
+    } catch (e) {
+      print("Delete session: " + e.toString());
     }
   }
 
@@ -291,13 +315,13 @@ class FireStoreHelper {
     }
   }
 
-  Future createResult(
-      Course course, String testID, User user, int point, List<int> answers) async {
+  Future createResult(Course course, String testID, User user, int point,
+      List<int> answers) async {
     try {
       Map<String, dynamic> x = {
         'point': point,
         'time': Timestamp.fromDate(DateTime.now()),
-        'answers' : answers,
+        'answers': answers,
         'userID': user.uid,
         'username': user.name,
       };
