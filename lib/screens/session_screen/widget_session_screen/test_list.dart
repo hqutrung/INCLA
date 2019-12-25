@@ -99,7 +99,6 @@ class _showTestState extends State<showTest>
                     actions: (user.type == UserType.Teacher)
                         ? <Widget>[
                             IconSlideAction(
-                                color: Colors.red,
                                 icon: Icons.delete_outline,
                                 onTap: () {
                                   confirmDialog(context, 'Xác nhận xóa test?',
@@ -108,7 +107,6 @@ class _showTestState extends State<showTest>
                                   });
                                 }),
                             IconSlideAction(
-                                color: Colors.green,
                                 icon: Icons.edit,
                                 onTap: () {}),
                           ]

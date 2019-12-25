@@ -22,43 +22,7 @@ class DetailTopic extends StatefulWidget {
 class _DetailTopicState extends State<DetailTopic> {
   TextEditingController _commentTextcontroller = TextEditingController();
 
-  showEditCommentDialog(BuildContext context, Course course, Comment comment,
-      String postID) async {
-    await showDialog<String>(
-        context: context,
-        builder: (BuildContext context) {
-          TextEditingController _textEditingController =
-              TextEditingController(text: comment.content);
-          return AlertDialog(
-            content: Row(
-              children: <Widget>[
-                Expanded(
-                    child: TextField(
-                  controller: _textEditingController,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    labelText: 'Chỉnh sửa',
-                  ),
-                ))
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                  child: const Text('Hủy'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              FlatButton(
-                  child: const Text('Sửa'),
-                  onPressed: () {
-                    comment.content = _textEditingController.text;
-                    FireStoreHelper().updateComment(course, postID, comment);
-                    Navigator.pop(context);
-                  })
-            ],
-          );
-        });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +36,7 @@ class _DetailTopicState extends State<DetailTopic> {
             itemCount: widget.post.comments.length + 1,
             itemBuilder: (context, index) => (index == 0)
                 ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       ListTile(
                         leading: IconButton(
@@ -79,12 +44,18 @@ class _DetailTopicState extends State<DetailTopic> {
                           onPressed: widget.moveBack,
                         ),
                         title: Text(
-                          widget.post.attendance.username,
+                          widget.post.title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        subtitle: Text(ConvertDateTime(widget.post.timestamp)),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(widget.post.attendance.username),
+                            Text(ConvertDateTime(widget.post.timestamp)),
+                          ],
+                        ),
                         trailing: CircleAvatar(
                           backgroundImage:
                               AssetImage('assets/images/logo-uit.png'),
@@ -99,106 +70,109 @@ class _DetailTopicState extends State<DetailTopic> {
                               horizontal: 10.0, vertical: 20.0),
                           child: Text(
                             widget.post.content,
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.start,
                           ),
                         ),
                       ),
                       Divider(
                         height: 10.0,
                       ),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.comment), 
+                          SizedBox(width: 10,),
+                          Text(
+                            widget.post.comments.length.toString() + ' bình luận',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        height: 10.0,
+                      ),
                     ],
                   )
-                : Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      child: Slidable(
-                        closeOnScroll: true,
-                        actionExtentRatio: 0.13,
-                        key: Key(widget.post.comments[index - 1].toString()),
-                        controller: slidableController,
-                        child: Row(
+                : Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 10, horizontal: 10),
+                  child: Slidable(
+                    closeOnScroll: true,
+                    actionExtentRatio: 0.13,
+                    key: Key(widget.post.comments[index - 1].toString()),
+                    controller: slidableController,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: const AssetImage(
+                              'assets/images/logo-uit.png'),
+                          radius: 25,
+                        ),
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: 10,
+                            Text(
+                              widget.post.comments[index - 1].attendance
+                                  .username,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              backgroundImage: const AssetImage(
-                                  'assets/images/logo-uit.png'),
-                              radius: 25,
+                            Text(
+                              ConvertDateTime(widget
+                                  .post.comments[index - 1].timestamp),
+                              style: TextStyle(fontSize: 11),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.post.comments[index - 1].attendance
-                                      .username,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width *
+                                          0.7),
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25),
+                                  topRight: Radius.circular(25),
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(25),
                                 ),
-                                Text(ConvertDateTime(
-                                    widget.post.comments[index - 1].timestamp),style: TextStyle(fontSize: 11),),
-                                Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth:
-                                          MediaQuery.of(context).size.width *
-                                              0.7),
-                                  padding: const EdgeInsets.all(15.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[200],
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25),
-                                      topRight: Radius.circular(25),
-                                      bottomLeft: Radius.circular(25),
-                                      bottomRight: Radius.circular(25),
-                                    ),
-                                  ),
-                                  child: Text(
-                                      widget.post.comments[index - 1].content),
-                                ),
-                              ],
+                              ),
+                              child: Text(
+                                  widget.post.comments[index - 1].content),
                             ),
                           ],
                         ),
-                        actionPane: SlidableDrawerActionPane(),
-                        actions: (user.type == UserType.Teacher ||
-                                user.uid ==
-                                    widget.post.comments[index - 1].attendance
-                                        .userID)
-                            ? <Widget>[
-                                IconSlideAction(
-                                    
-                                    icon: Icons.delete_outline,
-                                    onTap: () {
-                                      confirmDialog(
-                                          context, 'Xác nhận xóa bình luận?',
-                                          () {
-                                        print('xoa');
-                                        FireStoreHelper().deleteComment(
-                                            course,
-                                            widget.post.uid,
-                                            widget.post.comments[index - 1]);
-                                      });
-                                    }),
-                                IconSlideAction(
-                                    
-                                    icon: Icons.edit,
-                                    onTap: () {
-                                      showEditCommentDialog(
-                                          context,
-                                          course,
-                                          widget.post.comments[index - 1],
-                                          widget.post.uid);
-                                    }),
-                              ]
-                            : null,
-                      ),
+                      ],
                     ),
+                    actionPane: SlidableDrawerActionPane(),
+                    actions: (user.type == UserType.Teacher ||
+                            user.uid ==
+                                widget.post.comments[index - 1].attendance
+                                    .userID)
+                        ? <Widget>[
+                            IconSlideAction(
+                                icon: Icons.delete_outline,
+                                onTap: () {
+                                  confirmDialog(
+                                      context, 'Xác nhận xóa bình luận?',
+                                      () {
+                                    print('xoa');
+                                    FireStoreHelper().deleteComment(
+                                        course,
+                                        widget.post.uid,
+                                        widget.post.comments[index - 1]);
+                                  });
+                                }),
+                            
+                          ]
+                        : null,
                   ),
+                ),
           ),
         ),
       ]),

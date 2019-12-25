@@ -54,6 +54,7 @@ class _showTopicState extends State<showTopic>
                 )),
                 Expanded(
                     child: TextField(
+                  maxLines: 7,
                   controller: _contentEditingController,
                   autofocus: true,
                   decoration: InputDecoration(
@@ -102,6 +103,7 @@ class _showTopicState extends State<showTopic>
                 )),
                 Expanded(
                     child: TextField(
+                  maxLines: 7,
                   controller: _contentEditingController,
                   autofocus: true,
                   decoration: InputDecoration(
@@ -212,7 +214,6 @@ class _showTopicState extends State<showTopic>
                                 user.uid == posts[index].attendance.userID)
                             ? <Widget>[
                                 IconSlideAction(
-                                    color: Colors.red,
                                     icon: Icons.delete_outline,
                                     onTap: () {
                                       confirmDialog(
@@ -223,7 +224,6 @@ class _showTopicState extends State<showTopic>
                                       });
                                     }),
                                 IconSlideAction(
-                                    color: Colors.green,
                                     icon: Icons.edit,
                                     onTap: () {
                                       showUpdateTopicDialog(

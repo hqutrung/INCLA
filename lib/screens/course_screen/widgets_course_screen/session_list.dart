@@ -114,6 +114,7 @@ class _SessionListState extends State<SessionList> {
       builder: (context, snapshot) {
         final SlidableController slidableController = SlidableController();
         if (snapshot.hasData) {
+          print(user.type);
           snapshot.data.sort((a, b) => b.startTime.compareTo(a.startTime));
           return Scaffold(
             floatingActionButton: user.type == UserType.Teacher
@@ -124,7 +125,7 @@ class _SessionListState extends State<SessionList> {
                     label: Text('Tạo buổi'),
                     icon: Icon(Icons.add),
                   )
-                : Container(),
+                : null,
             body: ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -161,7 +162,6 @@ class _SessionListState extends State<SessionList> {
                       actions: user.type == UserType.Teacher
                           ? <Widget>[
                               IconSlideAction(
-                                color: Colors.red,
                                 icon: Icons.delete_outline,
                                 onTap: () {
                                   confirmDialog(
@@ -172,7 +172,6 @@ class _SessionListState extends State<SessionList> {
                                 },
                               ),
                               IconSlideAction(
-                                color: Colors.green,
                                 icon: Icons.edit,
                                 onTap: () {
                                   _showEditSessionDialog(

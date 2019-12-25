@@ -29,7 +29,7 @@ class _StudentListState extends State<StudentList>
             backgroundImage: AssetImage('assets/images/logo-uit.png'),
             backgroundColor: Colors.white,
           ),
-          title: Text(members[index].username),
+          title: Text(members[index].username, style: TextStyle(fontWeight: FontWeight.w600),),
           subtitle: Text('MSSV: ${members[index].userID}'),
         ),
       ),

@@ -170,7 +170,6 @@ class _CourseResourcesState extends State<CourseResources> {
                     actions: user.type == UserType.Teacher
                         ? <Widget>[
                             IconSlideAction(
-                                color: Colors.red,
                                 icon: Icons.delete_outline,
                                 onTap: () {
                                   confirmDialog(
@@ -180,7 +179,6 @@ class _CourseResourcesState extends State<CourseResources> {
                                   });
                                 }),
                             IconSlideAction(
-                              color: Colors.green,
                               icon: Icons.edit,
                               onTap: () {
                                 showEditResourceDialog(
