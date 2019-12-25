@@ -8,6 +8,7 @@ import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:document/utils/CompareLists.dart';
 import 'package:document/utils/ConvertDateTime.dart';
+import 'package:document/utils/ConvertResult.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -94,8 +95,8 @@ class _DetailTestState extends State<DetailTest> {
                     ],
                   ),
                   Text(
-                    'Đáp án: ',
-                    style: TextStyle(color: Colors.red),
+                    'Đáp án: ' + ConvertResult(widget.test.results[index]),
+                    style: TextStyle(color: Colors.green),
                   )
                 ],
               )

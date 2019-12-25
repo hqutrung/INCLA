@@ -10,7 +10,7 @@ class _ResultTestState extends State<ResultTest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bảng điểm kiểm tra'),
+        title: Text('Danh sách sinh viên đẫ kiểm tra'),
       ),
       body: ListView.builder(
         itemCount: 10,
