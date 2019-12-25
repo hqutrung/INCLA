@@ -19,10 +19,12 @@ class RollCall extends StatefulWidget {
 class _RollCallState extends State<RollCall> {
   Stream<Attendance> attendanceStream;
   Course course;
+  User user;
 
   @override
   void initState() {
     course = Provider.of<Course>(context, listen: false);
+    user = Provider.of<User>(context, listen: false);
     attendanceStream = FireStoreHelper()
         .getAttendanceStream(course: course, sessionID: widget.sessionID);
     super.initState();
@@ -70,7 +72,6 @@ class _RollCallState extends State<RollCall> {
 
   Future _applyQRCode() async {
     String code = await getApplyQRCode();
-    User user = Provider.of<User>(context, listen: false);
     String ok = FireStoreHelper().presentAttendance(
         course: course, sessionID: widget.sessionID, code: code, user: user);
     if (ok != null) confirmDialog(context, ok, () {});
@@ -82,7 +83,7 @@ class _RollCallState extends State<RollCall> {
     return StreamBuilder<Attendance>(
       stream: attendanceStream,
       builder: (context, snapshot) {
-        print(snapshot.connectionState);
+
         return Scaffold(
           body: SingleChildScrollView(
             child: Container(
@@ -93,13 +94,16 @@ class _RollCallState extends State<RollCall> {
                 children: (snapshot.data == null)
                     ? [
                         QRSection(
-                            createQR: () =>
-                                _showCreateQRDialog(context, course))
+                          qrInteraction: () =>
+                              user.type == UserType.Teacher ? _showCreateQRDialog(context, course) : () {},
+                          attendance: snapshot.data,
+                        )
                       ]
                     : [
                         QRSection(
-                            code: snapshot.data.reference.documentID,
-                            createQR: _applyQRCode),
+                          attendance: snapshot.data,
+                          qrInteraction: user.type == UserType.Student ? _applyQRCode : () {},
+                        ),
                         AttendanceList(attendance: snapshot.data),
                       ],
               ),

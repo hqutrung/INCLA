@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:document/models/attendance.dart';
+import 'package:document/models/comment.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/notification.dart';
 import 'package:document/models/post.dart';
@@ -33,7 +34,7 @@ class FireStoreHelper {
     Rates: (Map data) => Rates.fromMap(data),
   };
 
-  Future<List<Course>> getCourses(String userID) async {
+  Future<List<Course>> getCourseFromUserCourse(String userID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('userID', isEqualTo: userID)
@@ -44,12 +45,28 @@ class FireStoreHelper {
     }).toList();
   }
 
-  Future<Course> getCoursefromID(String courseID) {}
+  Future<Course> getCoursefromID(String courseID) {
+    return _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .get()
+        .then((snapshot) => Course.fromMap(snapshot.data, reference: snapshot.reference, courseID: snapshot.documentID));
+  }
 
-  Future<List<UserInfor>> getStudents(String courseID) async {
+  Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('courseID', isEqualTo: courseID)
+        .getDocuments();
+    return snapshots.documents.map((data) {
+      return UserInfor.fromMap(data.data);
+    }).toList();
+  }
+
+  Future<List<UserInfor>> getStudentFromUserCourse(String courseID) async {
+    QuerySnapshot snapshots = await _db
+        .collection(C_USER_COURSE)
+        .where('courseID', isEqualTo: courseID).where('user_type', isEqualTo: 1)
         .getDocuments();
     return snapshots.documents.map((data) {
       return UserInfor.fromMap(data.data);
@@ -190,21 +207,45 @@ class FireStoreHelper {
     }
   }
 
-  Future deleteSession(Course course, String id) async {
+  Future deletePostOfSession(Course course, String sessionID) async {
     try {
-      await course.reference.collection(C_SESSION).document(id).delete();
-      await course.reference.collection(C_RATE).document(id).delete();
-      await course.reference.collection(C_ATTENDANCE).document(id).delete();
       await course.reference
           .collection(C_POST)
-          .where('sessionID', isEqualTo: id)
+          .where('sessionID', isEqualTo: sessionID)
           .getDocuments()
           .then((querySnapshot) {
         for (int i = 0; i < querySnapshot.documents.length; i++)
           querySnapshot.documents[i].reference.delete();
       });
     } catch (e) {
-      print('delete session: ' + e.toString());
+      print('delete post of session: ' + e.toString());
+    }
+  }
+
+  Future deleteTestOfSession(Course course, String sessionID) async {
+    try {
+      await course.reference
+          .collection(C_TEST)
+          .where('sessionID', isEqualTo: sessionID)
+          .getDocuments()
+          .then((querySnapshot) {
+        for (int i = 0; i < querySnapshot.documents.length; i++)
+          querySnapshot.documents[i].reference.delete();
+      });
+    } catch (e) {
+      print('delete test of session: ' + e.toString());
+    }
+  }
+
+  Future deleteSession(Course course, String id) async {
+    try {
+      await course.reference.collection(C_SESSION).document(id).delete();
+      await course.reference.collection(C_RATE).document(id).delete();
+      await course.reference.collection(C_ATTENDANCE).document(id).delete();
+      await deletePostOfSession(course, id);
+      await deleteTestOfSession(course, id);
+    } catch (e) {
+      print("Delete session: " + e.toString());
     }
   }
 
@@ -249,6 +290,25 @@ class FireStoreHelper {
     }
   }
 
+  void updateTopic(String sessionID, Course course, User user,
+      {@required String postID,
+      @required String title,
+      @required String content}) {
+    try {
+      _db
+          .collection(C_COURSE)
+          .document(course.courseID)
+          .collection(C_POST)
+          .document(postID)
+          .updateData({
+        'content': content,
+        'title': title,
+      });
+    } catch (e) {
+      print('Create topic: ' + e.toString());
+    }
+  }
+
   Future pushNotiAllUser({
     User creator,
     String sessionID,
@@ -257,7 +317,7 @@ class FireStoreHelper {
     String content,
     int type,
   }) async {
-    List<UserInfor> listUserInfor = await getStudents(courseID);
+    List<UserInfor> listUserInfor = await getUsersFromUserCourse(courseID);
     for (int i = 0; i < listUserInfor.length; i++) {
       addNotification(
         title: title,
@@ -291,13 +351,47 @@ class FireStoreHelper {
     }
   }
 
-  Future createResult(
-      Course course, String testID, User user, int point, List<int> answers) async {
+  Future deleteComment(Course course, String postID, Comment comment) async {
+    try {
+      course.reference.collection(C_POST).document(postID).updateData({
+        'comments': FieldValue.arrayRemove([
+          {
+            'content': comment.content,
+            'timestamp': Timestamp.fromDate(comment.timestamp),
+            'userID': comment.attendance.userID,
+            'username': comment.attendance.username
+          },
+        ]),
+      });
+    } catch (e) {
+      print('delete comment error: ' + e.toString());
+    }
+  }
+
+  Future updateComment(Course course, String postID, Comment comment) async {
+    try {
+      course.reference.collection(C_POST).document(postID).setData({
+        'comments': FieldValue.arrayUnion([
+          {
+            'content': comment.content,
+            'timestamp': Timestamp.fromDate(comment.timestamp),
+            'userID': comment.attendance.userID,
+            'username': comment.attendance.username
+          },
+        ]),
+      },merge: true);
+    } catch (e) {
+      print('delete comment error: ' + e.toString());
+    }
+  }
+
+  Future createResult(Course course, String testID, User user, int point,
+      List<int> answers) async {
     try {
       Map<String, dynamic> x = {
         'point': point,
         'time': Timestamp.fromDate(DateTime.now()),
-        'answers' : answers,
+        'answers': answers,
         'userID': user.uid,
         'username': user.name,
       };
@@ -414,7 +508,7 @@ class FireStoreHelper {
       @required Session session,
       @required User user,
       @required String content,
-      @required int value}) async {
+      @required double value}) async {
     try {
       course.reference.collection(C_RATE).document(session.id).setData({
         'rates': FieldValue.arrayUnion([

@@ -82,6 +82,55 @@ class _showTopicState extends State<showTopic>
         });
   }
 
+  showUpdateTopicDialog(BuildContext context, User user, String postID,
+      String title, String content) async {
+    await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          var _titleEditingController = TextEditingController(text: title),
+              _contentEditingController = TextEditingController(text: content);
+          return AlertDialog(
+            content: Column(
+              children: <Widget>[
+                Expanded(
+                    child: TextField(
+                  controller: _titleEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Tiêu đề',
+                  ),
+                )),
+                Expanded(
+                    child: TextField(
+                  controller: _contentEditingController,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    labelText: 'Nội dung',
+                  ),
+                ))
+              ],
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: const Text('Hủy'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              FlatButton(
+                  child: const Text('Lưu'),
+                  onPressed: () {
+                    FireStoreHelper().updateTopic(
+                        widget.sessionID, widget.course, user,
+                        postID: postID,
+                        title: _titleEditingController.text,
+                        content: _contentEditingController.text);
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     updatePostsAsyncer();
@@ -126,7 +175,6 @@ class _showTopicState extends State<showTopic>
                       child: Slidable(
                         closeOnScroll: true,
                         actionExtentRatio: 0.13,
-                        
                         key: Key(posts[index].uid),
                         controller: slidableController,
                         actionPane: SlidableScrollActionPane(),
@@ -138,7 +186,9 @@ class _showTopicState extends State<showTopic>
                           ),
                           title: Text(posts[index].title),
                           subtitle: Text(
-                              'Người tạo: ${posts[index].attendance.username}. \n' +  ConvertDateTime(posts[index].timestamp) + ' - ${posts[index].comments.length} Trả lời'),
+                              'Người tạo: ${posts[index].attendance.username}. \n' +
+                                  ConvertDateTime(posts[index].timestamp) +
+                                  ' - ${posts[index].comments.length} Trả lời'),
                           trailing: IconButton(
                             icon: Icon(
                               Icons.bookmark,
@@ -172,11 +222,18 @@ class _showTopicState extends State<showTopic>
                                             posts[index].uid);
                                       });
                                     }),
-                               
                                 IconSlideAction(
                                     color: Colors.green,
                                     icon: Icons.edit,
-                                    onTap: () {}),
+                                    onTap: () {
+                                      showUpdateTopicDialog(
+                                          context,
+                                          user,
+                                          posts[index].uid,
+                                          posts[index].title,
+                                          posts[index].content);
+                                      //S
+                                    }),
                               ]
                             : null,
                       ),

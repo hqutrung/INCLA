@@ -20,7 +20,6 @@ class _ImportScreenState extends State<ImportScreen> {
   }
 
   Future getExcelData() async {
-    print('nene');
     var decoder = SpreadsheetDecoder.decodeBytes(File(path).readAsBytesSync());
     for (var table in decoder.tables.keys) {
       print(table);

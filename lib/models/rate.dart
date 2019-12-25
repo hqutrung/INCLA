@@ -4,7 +4,7 @@ import 'user_infor.dart';
 
 class Rate {
   UserInfor attendance;
-  int star;
+  double star;
   String content;
 
   Rate.fromMap(Map data) {

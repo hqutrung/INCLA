@@ -1,3 +1,4 @@
+import 'package:document/models/comment.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/post.dart';
 import 'package:document/models/user.dart';
@@ -21,16 +22,13 @@ class DetailTopic extends StatefulWidget {
 class _DetailTopicState extends State<DetailTopic> {
   TextEditingController _commentTextcontroller = TextEditingController();
 
-  showEditCommentDialog(
-    BuildContext context,
-    Course course,
-    String content,
-  ) async {
+  showEditCommentDialog(BuildContext context, Course course, Comment comment,
+      String postID) async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           TextEditingController _textEditingController =
-              TextEditingController(text: content);
+              TextEditingController(text: comment.content);
           return AlertDialog(
             content: Row(
               children: <Widget>[
@@ -50,7 +48,13 @@ class _DetailTopicState extends State<DetailTopic> {
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-              FlatButton(child: const Text('Sửa'), onPressed: () {})
+              FlatButton(
+                  child: const Text('Sửa'),
+                  onPressed: () {
+                    comment.content = _textEditingController.text;
+                    FireStoreHelper().updateComment(course, postID, comment);
+                    Navigator.pop(context);
+                  })
             ],
           );
         });
@@ -115,6 +119,7 @@ class _DetailTopicState extends State<DetailTopic> {
                         key: Key(widget.post.comments[index - 1].toString()),
                         controller: slidableController,
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
                               width: 10,
@@ -135,11 +140,13 @@ class _DetailTopicState extends State<DetailTopic> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                Text(ConvertDateTime(
+                                    widget.post.comments[index - 1].timestamp),style: TextStyle(fontSize: 11),),
                                 Container(
                                   constraints: BoxConstraints(
                                       maxWidth:
                                           MediaQuery.of(context).size.width *
-                                              0.8),
+                                              0.7),
                                   padding: const EdgeInsets.all(15.0),
                                   decoration: BoxDecoration(
                                     color: Colors.grey[200],
@@ -164,23 +171,28 @@ class _DetailTopicState extends State<DetailTopic> {
                                         .userID)
                             ? <Widget>[
                                 IconSlideAction(
-                                    color: Colors.red,
+                                    
                                     icon: Icons.delete_outline,
                                     onTap: () {
                                       confirmDialog(
-                                          context, 'Xác nhận xóa topic?', () {
-                                        //Firebase xóa
+                                          context, 'Xác nhận xóa bình luận?',
+                                          () {
+                                        print('xoa');
+                                        FireStoreHelper().deleteComment(
+                                            course,
+                                            widget.post.uid,
+                                            widget.post.comments[index - 1]);
                                       });
                                     }),
                                 IconSlideAction(
-                                    color: Colors.green,
+                                    
                                     icon: Icons.edit,
                                     onTap: () {
                                       showEditCommentDialog(
                                           context,
                                           course,
-                                          widget.post.comments[index - 1]
-                                              .content);
+                                          widget.post.comments[index - 1],
+                                          widget.post.uid);
                                     }),
                               ]
                             : null,

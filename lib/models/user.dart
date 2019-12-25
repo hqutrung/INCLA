@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'course.dart';
-
 
 enum UserType {
   Teacher,
@@ -21,7 +19,7 @@ class User {
   User.nullUser();
 
   User.fromMap(Map data,{@required this.email}) {
-    name = data['name'];
+    name = data['username'];
     uid = data['uid'];
     type = UserType.values[data['user_type']];
     phoneNumber = data['phoneNumber'];

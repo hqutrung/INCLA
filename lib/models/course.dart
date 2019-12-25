@@ -20,8 +20,7 @@ class Course {
 
   Future<List<UserInfor>> getAllMembersAsync() async {
     if (cachedStudents == null) {
-      cachedStudents = await FireStoreHelper().getStudents(courseID);
-      cachedStudents.removeWhere((UserInfor user) => user.username == teachername);
+      cachedStudents = await FireStoreHelper().getStudentFromUserCourse(courseID);
     }
     return cachedStudents;
   }
