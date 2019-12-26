@@ -26,10 +26,10 @@ class _ImportScreenState extends State<ImportScreen> {
 
   Future getExcelData() async {
     var decoder = SpreadsheetDecoder.decodeBytes(File(path).readAsBytesSync());
-    // getAccount(decoder.tables['User']);
+    getAccount(decoder.tables['User']);
     // getCourse(decoder.tables['courses']);
     // getSession(decoder.tables['Session']);
-    getUserCourse(decoder.tables['User_courses']);
+    // getUserCourse(decoder.tables['User_courses']);
     // await getRates(decoder.tables['rate']);
     // await getAttendance(decoder.tables['attendance']);
   }
@@ -43,7 +43,11 @@ class _ImportScreenState extends State<ImportScreen> {
       print(table.rows[i][6]);
       String email = table.rows[i][0];
       String password = table.rows[i][1].toString();
-      String userID = table.rows[i][2].toString();
+      String userID = '';
+      if (table.rows[i][2].runtimeType == double)
+        userID = (table.rows[i][2] as double).toInt().toString();
+      else
+        userID = table.rows[i][2];
       String username = table.rows[i][3];
       int userType = (table.rows[i][4] as double).toInt();
       String phoneNumber = table.rows[i][5];

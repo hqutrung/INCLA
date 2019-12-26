@@ -38,6 +38,7 @@ class FireStoreHelper {
   };
 
   Future<List<Course>> getCourseFromUserCourse(String userID) async {
+    print(userID);
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('userID', isEqualTo: userID)
