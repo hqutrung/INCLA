@@ -7,6 +7,7 @@ import 'package:document/models/ratestatistical.dart';
 import 'package:document/models/studentstatistical.dart';
 import 'package:document/models/user_infor.dart';
 import 'package:document/services/firestore_helper.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,55 @@ class RateChart extends StatefulWidget {
 class _RateChartState extends State<RateChart> {
   Future<List<Rates>> ratesAsyncer;
   Future<List<Attendance>> attendanceAsyncer;
+  DateTime _time = DateTime.now();
+  double _measures = 0;
+
+  DateTime _timestudent = DateTime.now();
+  int _measuresstudent = 0;
+
+  _onSelectionChanged(SelectionModel model) {
+    final selectedDatum = model.selectedDatum;
+    print(selectedDatum[0].datum.rate);
+    DateTime time = DateTime.now();
+    double measures = 0;
+
+    // We get the model that updated with a list of [SeriesDatum] which is
+    // simply a pair of series & datum.
+    //
+    // Walk the selection updating the measures map, storing off the sales and
+    // series name for each selection point.
+    if (selectedDatum.isNotEmpty) {
+      time = selectedDatum.first.datum.date;
+      measures = selectedDatum[0].datum.rate;
+    }
+    // Request a build.
+    setState(() {
+      _time = time;
+      print(_time);
+      _measures = measures;
+    });
+  }
+
+  _onStudentSelectionChanged(SelectionModel model) {
+    final selectedDatum = model.selectedDatum;
+    DateTime time = DateTime.now();
+    int measures = 0;
+
+    // We get the model that updated with a list of [SeriesDatum] which is
+    // simply a pair of series & datum.
+    //
+    // Walk the selection updating the measures map, storing off the sales and
+    // series name for each selection point.
+    if (selectedDatum.isNotEmpty) {
+      time = selectedDatum.first.datum.date;
+      measures = selectedDatum[0].datum.quantity;
+    }
+    // Request a build.
+    setState(() {
+      _timestudent = time;
+      _measuresstudent = measures;
+    });
+  }
 
   void initState() {
     Course course = Provider.of<Course>(context, listen: false);
@@ -87,24 +137,21 @@ class _RateChartState extends State<RateChart> {
   }
 
   Widget rateChart() => Container(
-        height: 250,
+        height: 300,
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  "Thống kê đánh giá",
-                  style: Theme.of(context).textTheme.body2,
-                ),
-                FutureBuilder<List<Rates>>(
-                    future: ratesAsyncer,
-                    initialData: [],
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data == null || snapshot.data.length == 0)
-                          return Text('Thiếu dữ liệu để đánh giá');
-                        return Expanded(
+            child: FutureBuilder<List<Rates>>(
+                future: ratesAsyncer,
+                initialData: [],
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.data == null || snapshot.data.length == 0)
+                      return Text('Thiếu dữ liệu để đánh giá');
+                    return Column(
+                      children: <Widget>[
+                        Text('Thống kê đánh giá'),
+                        Expanded(
                           child: TimeSeriesChart(
                             _getRateChartSeries(
                                 _getRateStatistical(snapshot.data)),
@@ -126,24 +173,40 @@ class _RateChartState extends State<RateChart> {
                               ),
                             ),
                             animate: true,
+                            selectionModels: [
+                              SelectionModelConfig(
+                                type: SelectionModelType.info,
+                                changedListener: _onSelectionChanged,
+                              )
+                            ],
                             dateTimeFactory: LocalDateTimeFactory(),
                             animationDuration: Duration(seconds: 1),
                             defaultRenderer: LineRendererConfig(
                                 includeArea: true, includePoints: true),
-                            behaviors: [
-                              ChartTitle('Đánh giá',
-                                  behaviorPosition: BehaviorPosition.start),
-                              ChartTitle('Ngày',
-                                  behaviorPosition: BehaviorPosition.bottom),
-                            ],
                           ),
-                        );
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    })
-              ],
-            ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text('Ngày: ' +
+                                ConvertDateTimeToBirthday(_time).toString()),
+                            Row(
+                              children: <Widget>[
+                                Text('Trung bình: ' + _measures.toString()),
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orange,
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }),
           ),
         ),
       );
@@ -153,34 +216,20 @@ class _RateChartState extends State<RateChart> {
         child: Card(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  "Thống kê điểm danh",
-                  style: Theme.of(context).textTheme.body2,
-                ),
-                FutureBuilder<List<Attendance>>(
-                  future: attendanceAsyncer,
-                  initialData: [],
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      String textSelect;
-                      if (snapshot.data.length > 0)
-                        return Expanded(
+            child: FutureBuilder<List<Attendance>>(
+              future: attendanceAsyncer,
+              initialData: [],
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data.length > 0)
+                    return Column(
+                      children: <Widget>[
+                        Text('Thống kê điểm danh'),
+                        Expanded(
                           child: TimeSeriesChart(
                             _getAttendanceChartSeries(
                                 _getAttendanceStatistical(snapshot.data)),
-                            selectionModels: [
-                              SelectionModelConfig(
-                                  changedListener: (SelectionModel model) {
-                                if (model.hasDatumSelection)
-                                  textSelect = model.selectedSeries[0]
-                                      .measureFn(model.selectedDatum[0].index)
-                                      .toString();
 
-                                print(textSelect);
-                              })
-                            ],
                             defaultRenderer: LineRendererConfig<DateTime>(
                                 includeArea: true, includePoints: true),
                             animationDuration: const Duration(seconds: 1),
@@ -203,24 +252,32 @@ class _RateChartState extends State<RateChart> {
                             ),
                             animate: true,
                             // dateTimeFactory: const LocalDateTimeFactory(),
-                            behaviors: [
-                              LinePointHighlighter(
-                                  symbolRenderer:
-                                      CustomCircleSymbolRenderer('3')),
-                              ChartTitle('Số lượng',
-                                  behaviorPosition: BehaviorPosition.start),
-                              ChartTitle('Ngày',
-                                  behaviorPosition: BehaviorPosition.bottom),
+                            selectionModels: [
+                              SelectionModelConfig(
+                                type: SelectionModelType.info,
+                                changedListener: _onStudentSelectionChanged,
+                              )
                             ],
                           ),
-                        );
-                      else
-                        return const Text('Thiếu dữ liệu thống kê');
-                    } else
-                      return const Center(child: CircularProgressIndicator());
-                  },
-                )
-              ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text('Ngày: ' +
+                                ConvertDateTimeToBirthday(_timestudent)
+                                    .toString()),
+                            Text('Có mặt: ' +
+                                _measuresstudent.toString() +
+                                ' sinh viên'),
+                          ],
+                        )
+                      ],
+                    );
+                  else
+                    return const Text('Thiếu dữ liệu thống kê');
+                } else
+                  return const Center(child: CircularProgressIndicator());
+              },
             ),
           ),
         ),
@@ -236,34 +293,5 @@ class _RateChartState extends State<RateChart> {
         ],
       ),
     );
-  }
-}
-
-class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
-  String _text;
-  CustomCircleSymbolRenderer(String text) {
-    this._text = text;
-    print(_text);
-  }
-  @override
-  void paint(ChartCanvas canvas, Rectangle<num> bounds,
-      {List<int> dashPattern,
-      Color fillColor,
-      Color strokeColor,
-      double strokeWidthPx}) {
-    super.paint(canvas, bounds,
-        dashPattern: dashPattern,
-        fillColor: fillColor,
-        strokeColor: strokeColor,
-        strokeWidthPx: strokeWidthPx);
-    canvas.drawRect(
-        Rectangle(bounds.left - 5, bounds.top - 30, bounds.width + 10,
-            bounds.height + 10),
-        fill: Color.white);
-    var textStyle = style.TextStyle();
-    textStyle.color = Color.black;
-    textStyle.fontSize = 15;
-    canvas.drawText(TextElement('_text', style: textStyle),
-        (bounds.left).round(), (bounds.top - 28).round());
   }
 }
