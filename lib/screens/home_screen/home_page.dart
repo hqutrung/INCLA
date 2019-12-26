@@ -1,11 +1,9 @@
-
 import 'package:document/screens/home_screen/widgets/home_main.dart';
 import 'package:document/screens/home_screen/widgets/home_notification.dart';
 import 'package:document/screens/home_screen/widgets/home_profile.dart';
 
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
-
 
 class HomePage extends StatefulWidget {
   static const String HOMESCREEN_PATH = '/home';
@@ -65,7 +63,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
     );

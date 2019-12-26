@@ -31,12 +31,14 @@ class _RateChartState extends State<RateChart> {
 
   List<RateStatistical> _getRateStatistical(List<Rates> rates) {
     List<RateStatistical> rateData = List<RateStatistical>();
-    double averageRate = 0;
+
     for (int i = 0; i < rates.length; i++) {
+      double averageRate = 0;
       List<Rate> sessionRates = rates[i].rates;
       if (sessionRates == null) continue;
-      for (int j = 0; j < sessionRates.length; j++)
+      for (int j = 0; j < sessionRates.length; j++) {
         averageRate += sessionRates[j].star;
+      }
       averageRate =
           (sessionRates.length == 0) ? 0 : (averageRate / sessionRates.length);
       rateData.add(RateStatistical(averageRate, rates[i].timestamp));
@@ -202,7 +204,6 @@ class _RateChartState extends State<RateChart> {
                             animate: true,
                             // dateTimeFactory: const LocalDateTimeFactory(),
                             behaviors: [
-                              
                               LinePointHighlighter(
                                   symbolRenderer:
                                       CustomCircleSymbolRenderer('3')),
@@ -262,7 +263,7 @@ class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
     var textStyle = style.TextStyle();
     textStyle.color = Color.black;
     textStyle.fontSize = 15;
-    canvas.drawText(TextElement('_text', style: textStyle), (bounds.left).round(),
-        (bounds.top - 28).round());
+    canvas.drawText(TextElement('_text', style: textStyle),
+        (bounds.left).round(), (bounds.top - 28).round());
   }
 }

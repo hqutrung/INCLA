@@ -45,12 +45,23 @@ class FireStoreHelper {
     }).toList();
   }
 
-  Future<Course> getCoursefromID(String courseID) {
-    return _db
+  Future<Course> getCoursefromID(String courseID) async {
+    return await _db.collection(C_COURSE).document(courseID).get().then(
+        (snapshot) => Course.fromMap(snapshot.data,
+            reference: snapshot.reference, courseID: snapshot.documentID));
+  }
+
+  Future<Session> getSessionfromID(String sessionID, String courseID) async {
+    var x = await _db
         .collection(C_COURSE)
         .document(courseID)
+        .collection(C_SESSION)
+        .document(sessionID)
         .get()
-        .then((snapshot) => Course.fromMap(snapshot.data, reference: snapshot.reference, courseID: snapshot.documentID));
+        .then((snapshot) {
+      if (snapshot.data != null) Session.fromMap(snapshot.data, id: sessionID);
+    });
+    return x;
   }
 
   Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
@@ -66,7 +77,8 @@ class FireStoreHelper {
   Future<List<UserInfor>> getStudentFromUserCourse(String courseID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
-        .where('courseID', isEqualTo: courseID).where('user_type', isEqualTo: 1)
+        .where('courseID', isEqualTo: courseID)
+        .where('user_type', isEqualTo: 1)
         .getDocuments();
     return snapshots.documents.map((data) {
       return UserInfor.fromMap(data.data);
@@ -379,7 +391,7 @@ class FireStoreHelper {
             'username': comment.attendance.username
           },
         ]),
-      },merge: true);
+      }, merge: true);
     } catch (e) {
       print('delete comment error: ' + e.toString());
     }
