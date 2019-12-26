@@ -48,10 +48,23 @@ class FireStoreHelper {
     }).toList();
   }
 
-  Future<Course> getCoursefromID(String courseID) {
-    return _db.collection(C_COURSE).document(courseID).get().then((snapshot) =>
-        Course.fromMap(snapshot.data,
+  Future<Course> getCoursefromID(String courseID) async {
+    return await _db.collection(C_COURSE).document(courseID).get().then(
+        (snapshot) => Course.fromMap(snapshot.data,
             reference: snapshot.reference, courseID: snapshot.documentID));
+  }
+
+  Future<Session> getSessionfromID(String sessionID, String courseID) async {
+    var x = await _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .collection(C_SESSION)
+        .document(sessionID)
+        .get()
+        .then((snapshot) {
+      if (snapshot.data != null) Session.fromMap(snapshot.data, id: sessionID);
+    });
+    return x;
   }
 
   Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
@@ -417,14 +430,6 @@ class FireStoreHelper {
   }
 
   Stream<Test> getDetailTestStream(
-    Course course,
-    String testID,
-  ) {
-    return course.reference.collection(C_TEST).document(testID).snapshots().map(
-        (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
-  }
-
-  Stream<Test> getResultTestStream(
     Course course,
     String testID,
   ) {

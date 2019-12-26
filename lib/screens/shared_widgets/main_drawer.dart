@@ -3,6 +3,19 @@ import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class ColorThemeNotifier with ChangeNotifier {
+  MaterialColor color;
+
+  ColorThemeNotifier(this.color);
+
+  MaterialColor getColor() => color;
+
+  setTheme(MaterialColor _color) async {
+    color = _color;
+    notifyListeners();
+  }
+}
+
 class MainDrawer extends StatelessWidget {
   MainDrawer();
   final AuthService auth = AuthService();
@@ -34,6 +47,64 @@ class MainDrawer extends StatelessWidget {
                 auth.signOut();
                 Navigator.pop(context);
               }),
+          Divider(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  final colorthemeNotifier =
+                      Provider.of<ColorThemeNotifier>(context);
+                  colorthemeNotifier.setTheme(Colors.red);
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.red,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  final colorthemeNotifier =
+                      Provider.of<ColorThemeNotifier>(context);
+                  colorthemeNotifier.setTheme(Colors.blue);
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  final colorthemeNotifier =
+                      Provider.of<ColorThemeNotifier>(context);
+                  colorthemeNotifier.setTheme(Colors.cyan);
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.cyan,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  final colorthemeNotifier =
+                      Provider.of<ColorThemeNotifier>(context);
+                  colorthemeNotifier.setTheme(Colors.pink);
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.pink,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  final colorthemeNotifier =
+                      Provider.of<ColorThemeNotifier>(context);
+                  colorthemeNotifier.setTheme(Colors.deepOrange);
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.deepOrange,
+                ),
+              )
+            ],
+          )
         ],
       ),
     );

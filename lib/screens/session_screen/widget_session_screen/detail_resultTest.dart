@@ -1,6 +1,12 @@
+import 'package:document/models/result.dart';
+import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
 
 class ResultTest extends StatefulWidget {
+  final List<Result> results;
+
+  ResultTest({@required this.results});
+
   @override
   _ResultTestState createState() => _ResultTestState();
 }
@@ -13,7 +19,7 @@ class _ResultTestState extends State<ResultTest> {
         title: Text('Danh sách sinh viên đẫ kiểm tra'),
       ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: widget.results.length,
         itemBuilder: (context, index) => Card(
           child: ListTile(
             leading: CircleAvatar(
@@ -22,11 +28,11 @@ class _ResultTestState extends State<ResultTest> {
               radius: 25,
             ),
             title: Text(
-              'Huỳnh Quốc Trung',
+              widget.results[index].attendance.username,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('MSSV: 17520184'),
-            trailing: Text('10 điểm',),
+            subtitle: Text(widget.results[index].attendance.userID + ' - Nộp bài: '+ ConvertDateTime(widget.results[index].time)),
+            trailing: Text(widget.results[index].point.toString() + 'điểm',),
           ),
         ),
       ),

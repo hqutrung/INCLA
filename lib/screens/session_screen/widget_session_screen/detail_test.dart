@@ -36,7 +36,7 @@ class _DetailTestState extends State<DetailTest> {
         () {
           if (_start < 1) {
             timer.cancel();
-            widget.moveBack;
+            widget.moveBack();
           } else {
             _start = _start - 1;
           }
@@ -217,13 +217,16 @@ class _DetailTestState extends State<DetailTest> {
                   children: <Widget>[
                     FlatButton(
                         onPressed: () {
-                          FireStoreHelper().createResult(
-                              course,
-                              widget.test.uid,
-                              user,
-                              CompareLists(widget.test.results, selection),
-                              selection);
-                          widget.moveBack;
+                          confirmDialog(context, 'Xác nhận nộp bài?', () {
+                            FireStoreHelper().createResult(
+                                course,
+                                widget.test.uid,
+                                user,
+                                CompareLists(widget.test.results, selection),
+                                selection);
+                          widget.moveBack();
+                          });
+                           
                         },
                         child: Text('Nộp bài'),
                         color: Colors.green),
@@ -250,7 +253,8 @@ class _DetailTestState extends State<DetailTest> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ResultTest()));
+                                builder: (context) =>
+                                    ResultTest(results: widget.test.students)));
                       },
                       child: Text('Kết quả'),
                       color: Colors.black12,

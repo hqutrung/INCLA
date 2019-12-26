@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeMain extends StatefulWidget {
-
-  const HomeMain({Key key, }) : super(key: key);
+  const HomeMain({
+    Key key,
+  }) : super(key: key);
   @override
   _HomeMainState createState() => _HomeMainState();
 }
 
 class _HomeMainState extends State<HomeMain> {
-
   Future<List<Course>> coursesNe;
 
   @override
@@ -33,10 +33,6 @@ class _HomeMainState extends State<HomeMain> {
           leading: Text(course[index].courseID),
           title: Text(course[index].name),
           subtitle: Text(course[index].teacherName),
-          // trailing: Icon(
-          //   Icons.hotel,
-          //   color: Colors.black,
-          // ),
           onTap: () {
             Navigator.push(
               context,
@@ -56,7 +52,6 @@ class _HomeMainState extends State<HomeMain> {
   Widget build(BuildContext context) {
     // print("HomeMain build");
     return Scaffold(
-      
       body: FutureBuilder(
         future: coursesNe,
         builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {

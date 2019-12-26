@@ -1,5 +1,8 @@
+import 'package:document/models/course.dart';
 import 'package:document/models/notification.dart';
+import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
+import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 
 import 'package:document/services/firestore_helper.dart';
@@ -8,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeNotification extends StatefulWidget {
-  
-
-  const HomeNotification({Key key,}) : super(key: key);
+  const HomeNotification({
+    Key key,
+  }) : super(key: key);
   @override
   _HomeNotificationState createState() => _HomeNotificationState();
 }
@@ -34,13 +37,16 @@ class _HomeNotificationState extends State<HomeNotification> {
       scrollDirection: Axis.vertical,
       itemCount: notis.length,
       itemBuilder: (BuildContext context, int index) => Card(
-        color: notis[index].isRead ? Colors.white : Colors.grey[300],
+        color: notis[index].isRead ? Colors.white : Colors.grey[200],
         child: ListTile(
           leading: CircleAvatar(
             backgroundColor: Colors.white,
             backgroundImage: AssetImage('assets/images/logo-uit.png'),
           ),
-          title: Text(notis[index].title, style: TextStyle(fontWeight: FontWeight.w400),),
+          title: Text(
+            notis[index].title,
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
           isThreeLine: true,
           subtitle: Text(notis[index].usercreate.username +
               ' ' +
@@ -57,8 +63,19 @@ class _HomeNotificationState extends State<HomeNotification> {
             },
             icon: Icon(Icons.more_horiz),
           ),
-          onTap: () {
-            //Navigator.push(context, MaterialPageRoute(builder: (context)=> SessionScreen(course: ,session: )));
+          onTap: () async {
+            Course _course =
+                await FireStoreHelper().getCoursefromID(notis[index].courseID);
+            Session _session = await FireStoreHelper().getSessionfromID(
+                notis[index].sessionID, notis[index].courseID);
+            (_session != null)
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SessionScreen(course: _course, session: _session)))
+                : confirmDialog(context, 'Buổi học không tồn tại',
+                    () => FireStoreHelper().deleteNoti(userID, notis[index]));
             setState(() {
               notis[index].isRead = true;
               FireStoreHelper().updateIsReadNoti(userID, notis[index]);
@@ -74,7 +91,6 @@ class _HomeNotificationState extends State<HomeNotification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: StreamBuilder<List<Noti>>(
         initialData: [],
         stream: notiList,
