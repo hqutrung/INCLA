@@ -5,12 +5,13 @@ import 'package:document/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(
-      ChangeNotifierProvider<ColorThemeNotifier>(
+void main() {
+  runApp(
+    ChangeNotifierProvider<ColorThemeNotifier>(
         child: MyApp(),
-        create: (BuildContext context) => ColorThemeNotifier(Colors.blue),
-      ),
-    );
+        create: (BuildContext context) => ColorThemeNotifier(Colors.blue)),
+  );
+}
 
 class MyApp extends StatefulWidget {
   @override

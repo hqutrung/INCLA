@@ -24,6 +24,5 @@ class User {
     type = UserType.values[data['user_type']];
     phoneNumber = data['phoneNumber'];
     birthday = data['birthday'];
-    print(birthday.toDate().toString());
   }
 }

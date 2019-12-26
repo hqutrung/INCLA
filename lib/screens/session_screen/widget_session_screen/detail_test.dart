@@ -36,7 +36,7 @@ class _DetailTestState extends State<DetailTest> {
         () {
           if (_start < 1) {
             timer.cancel();
-            widget.moveBack;
+            widget.moveBack();
           } else {
             _start = _start - 1;
           }
