@@ -12,8 +12,12 @@ class Rate {
       userID: data['userID'],
       username: data['username'],
     );
-    star = data['value'];
+    if (data['value'].runtimeType == int)
+      star = (data['value'] as int).toDouble();
+    else
+      star = data['value'] as double;
     content = data['content'];
+    print('2');
   }
 }
 

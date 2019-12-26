@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:document/models/course.dart';
+import 'package:document/models/question_test.dart';
 import 'package:document/models/test.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/detail_test.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
+import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 
 class showTest extends StatefulWidget {
   final Course course;
@@ -45,18 +50,53 @@ class _showTestState extends State<showTest>
         .getTestsStream(widget.course.courseID, widget.sessionID);
   }
 
+  String path;
+
+  Future getExcelFilePath() async {
+    print('asd');
+    path = await FilePicker.getFilePath(
+        type: FileType.CUSTOM, fileExtension: 'xlsx');
+    getExcelData();
+  }
+
+  Future getExcelData() async {
+    var decoder = SpreadsheetDecoder.decodeBytes(File(path).readAsBytesSync());
+    print('asd');
+    await createTest(decoder.tables['test_sql']);
+  }
+
+  Future createTest(SpreadsheetTable table) async {
+    String title = table.rows[1][0];
+    int count = table.rows[1][1];
+    print(count);
+    List<Question> questions = List<Question>();
+    List<int> results = List<int>();
+    for (int i = 1; i <= count; i++) {
+      String content = table.rows[i][2].toString();
+      String a = table.rows[i][3].toString();
+      String b = table.rows[i][4].toString();
+      String c = table.rows[i][5].toString();
+      String d = table.rows[i][6].toString();
+      int result = table.rows[i][7];
+      questions.add(Question(question: content, A: a, B: b, C: c, D: d));
+      results.add(result);
+    }
+    await FireStoreHelper().addTest(
+      course: widget.course,
+      questions: questions,
+      results: results,
+      sessionID: widget.sessionID,
+      title: title,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<User>(context, listen: false);
     if (!isTestDetail) {
       return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // Import Bài Test
-            //
-            //
-            //
-          },
+          onPressed: getExcelFilePath,
           label: Text('Test'),
           icon: Icon(Icons.add),
         ),
@@ -106,9 +146,7 @@ class _showTestState extends State<showTest>
                                     //Firebase xóa
                                   });
                                 }),
-                            IconSlideAction(
-                                icon: Icons.edit,
-                                onTap: () {}),
+                            IconSlideAction(icon: Icons.edit, onTap: () {}),
                           ]
                         : null,
                   ),

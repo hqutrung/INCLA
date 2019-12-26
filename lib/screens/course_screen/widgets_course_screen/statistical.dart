@@ -100,7 +100,7 @@ class _RateChartState extends State<RateChart> {
                     initialData: [],
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data.length == 0)
+                        if (snapshot.data == null || snapshot.data.length == 0)
                           return Text('Thiếu dữ liệu để đánh giá');
                         return Expanded(
                           child: TimeSeriesChart(
@@ -202,7 +202,6 @@ class _RateChartState extends State<RateChart> {
                             animate: true,
                             // dateTimeFactory: const LocalDateTimeFactory(),
                             behaviors: [
-                              
                               LinePointHighlighter(
                                   symbolRenderer:
                                       CustomCircleSymbolRenderer('3')),
@@ -262,7 +261,7 @@ class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
     var textStyle = style.TextStyle();
     textStyle.color = Color.black;
     textStyle.fontSize = 15;
-    canvas.drawText(TextElement('_text', style: textStyle), (bounds.left).round(),
-        (bounds.top - 28).round());
+    canvas.drawText(TextElement('_text', style: textStyle),
+        (bounds.left).round(), (bounds.top - 28).round());
   }
 }

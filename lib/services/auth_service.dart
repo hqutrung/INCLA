@@ -57,6 +57,10 @@ class AuthService {
     }
   }
 
+  Future<User> signUp(String email, String password) async {
+    AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+  }
+
   bool hasUser() {
     return _auth.currentUser() != null;
   }

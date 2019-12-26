@@ -6,20 +6,21 @@ class Course {
   String courseID;
   String name;
   DocumentReference reference;
-  String teachername;
+  String teacherName;
 
   List<UserInfor> cachedStudents;
 
   Course.fromMap(Map data, {this.courseID, this.reference}) {
     if (courseID == null) courseID = data['courseID'];
     name = data['name'];
-    teachername = data['teachername'];
+    teacherName = data['teacherName'];
     
     getAllMembersAsync();
   }
 
   Future<List<UserInfor>> getAllMembersAsync() async {
     if (cachedStudents == null) {
+      print('huhu');
       cachedStudents = await FireStoreHelper().getStudentFromUserCourse(courseID);
     }
     return cachedStudents;

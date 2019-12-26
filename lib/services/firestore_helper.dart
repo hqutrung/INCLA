@@ -4,6 +4,7 @@ import 'package:document/models/comment.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/notification.dart';
 import 'package:document/models/post.dart';
+import 'package:document/models/question_test.dart';
 import 'package:document/models/rate.dart';
 import 'package:document/models/resource.dart';
 import 'package:document/models/session.dart';
@@ -23,6 +24,8 @@ class FireStoreHelper {
   static const String C_RESOURCE = 'resource';
   static const String C_NOTIFICATION = 'notification';
   static const String C_NOTIS = 'notis';
+  //DO NOT USE
+  static const String C_USER = 'user';
 
   Firestore _db = Firestore.instance;
 
@@ -46,11 +49,9 @@ class FireStoreHelper {
   }
 
   Future<Course> getCoursefromID(String courseID) {
-    return _db
-        .collection(C_COURSE)
-        .document(courseID)
-        .get()
-        .then((snapshot) => Course.fromMap(snapshot.data, reference: snapshot.reference, courseID: snapshot.documentID));
+    return _db.collection(C_COURSE).document(courseID).get().then((snapshot) =>
+        Course.fromMap(snapshot.data,
+            reference: snapshot.reference, courseID: snapshot.documentID));
   }
 
   Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
@@ -66,7 +67,8 @@ class FireStoreHelper {
   Future<List<UserInfor>> getStudentFromUserCourse(String courseID) async {
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
-        .where('courseID', isEqualTo: courseID).where('user_type', isEqualTo: 1)
+        .where('courseID', isEqualTo: courseID)
+        .where('user_type', isEqualTo: 1)
         .getDocuments();
     return snapshots.documents.map((data) {
       return UserInfor.fromMap(data.data);
@@ -379,7 +381,7 @@ class FireStoreHelper {
             'username': comment.attendance.username
           },
         ]),
-      },merge: true);
+      }, merge: true);
     } catch (e) {
       print('delete comment error: ' + e.toString());
     }
@@ -423,11 +425,11 @@ class FireStoreHelper {
   }
 
   Stream<Test> getResultTestStream(
-      Course course,
-      String testID,
-      ) {
+    Course course,
+    String testID,
+  ) {
     return course.reference.collection(C_TEST).document(testID).snapshots().map(
-            (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
+        (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
   }
 
   Future createAttendance(
@@ -623,5 +625,220 @@ class FireStoreHelper {
         .collection(C_POST)
         .document(postID)
         .delete();
+  }
+
+  //DO NOT USE IN REAL APP
+  Future addUserForAdmin(
+      {@required String email,
+      @required String userID,
+      @required String username,
+      @required int userType,
+      @required String phoneNumber,
+      @required DateTime birthday,
+      @required String degree}) async {
+    Map<String, dynamic> x = {
+      'birthday': Timestamp.fromDate(birthday),
+      'phoneNumber': phoneNumber,
+      'uid': userID,
+      'user_type': userType,
+      'username': username,
+    };
+    if (userType == 0) x['degree'] = degree;
+    return await _db.collection(C_USER).document(email).setData(x);
+  }
+
+  Future addCourseForAdmin(
+      {@required String courseID,
+      @required String name,
+      @required String teacherName}) async {
+    Map<String, dynamic> x = {
+      'name': name,
+      'teacherName': teacherName,
+    };
+    return await _db.collection(C_COURSE).document(courseID).setData(x);
+  }
+
+  Future addSessionForAdmin(
+      {@required DateTime start,
+      @required DateTime end,
+      @required String topic,
+      @required String courseID}) async {
+    try {
+      var x = await _db
+          .collection(C_COURSE)
+          .document(courseID)
+          .collection(C_SESSION)
+          .add({
+        'start': Timestamp.fromDate(start),
+        'end': Timestamp.fromDate(end),
+        'topic': topic,
+      });
+    } catch (e) {
+      print('ERROR: add session for admin: ' + e.toString());
+    }
+  }
+
+  Future addUserCourseForAdmin(
+      {@required String courseID,
+      @required String teacherName,
+      @required String name,
+      @required String userID,
+      @required int user_type,
+      @required String username}) async {
+    Map<String, dynamic> x = {
+      'courseID': courseID,
+      'teacherName': teacherName,
+      'userID': userID,
+      'name': name,
+      'user_type': user_type,
+      'username': username,
+    };
+    try {
+      return await _db.collection(C_USER_COURSE).add(x);
+    } catch (e) {
+      print('ERROR: create user course for admin: ' + e.toString());
+    }
+  }
+
+  Future editUserCourseForAdmin(
+      {@required String courseID,
+      @required String teacherName,
+      @required String name,
+      @required String userID,
+      @required int user_type,
+      @required String username}) async {
+    Map<String, dynamic> x = {
+      'courseID': courseID,
+      'teacherName': teacherName,
+      'userID': userID,
+      'name': name,
+      'user_type': user_type,
+      'username': username,
+    };
+    try {
+      QuerySnapshot snapshots = await _db
+          .collection(C_USER_COURSE)
+          .where('userID', isEqualTo: userID)
+          .getDocuments();
+      for (int i = 0; i < snapshots.documents.length; i++) {
+        print(userID);
+        snapshots.documents[i].reference.setData(x);
+      }
+    } catch (e) {
+      print('ERROR: create user course for admin: ' + e.toString());
+    }
+  }
+
+  Future<List<String>> getAllSessionIDForAdmin(
+      {@required String courseID}) async {
+    QuerySnapshot snapshots = await _db
+        .collection(C_COURSE)
+        .document(courseID)
+        .collection(C_SESSION)
+        .getDocuments();
+    List<String> sessionIDs = List<String>();
+    for (int i = 0; i < snapshots.documents.length; i++) {
+      sessionIDs.add(snapshots.documents[i].documentID);
+    }
+    return sessionIDs;
+  }
+
+  Future rateSessionIDForAdmin(
+      {@required String courseID,
+      @required String sessionID,
+      @required int value,
+      @required String content,
+      @required String userID,
+      @required String username,
+      @required DateTime timestamp}) async {
+    try {
+      _db
+          .collection(C_COURSE)
+          .document(courseID)
+          .collection(C_RATE)
+          .document(sessionID)
+          .setData({
+        'rates': FieldValue.arrayUnion([
+          {
+            'value': value,
+            'content': content,
+            'userID': userID,
+            'username': username,
+          }
+        ]),
+        'timestamp': Timestamp.fromDate(timestamp),
+      }, merge: true);
+    } catch (e) {
+      print('ERROR rate session: ' + e.toString());
+    }
+  }
+
+  Future presentAttendanceForAdmin(
+      {@required String sessionID,
+      @required String courseID,
+      @required int duration,
+      @required String userID,
+      @required String username,
+      @required int isAttend,
+      @required DateTime timestamp}) async {
+    if (isAttend == 0)
+      await _db
+          .collection(C_COURSE)
+          .document(courseID)
+          .collection(C_ATTENDANCE)
+          .document(sessionID)
+          .setData({
+        'online': FieldValue.arrayRemove([
+          {'userID': userID, 'username': username},
+        ]),
+        'offline': FieldValue.arrayUnion([
+          {'userID': userID, 'username': username}
+        ]),
+        'timestamp': Timestamp.fromDate(timestamp),
+        'duration': duration,
+      }, merge: true);
+    else
+      await _db
+          .collection(C_COURSE)
+          .document(courseID)
+          .collection(C_ATTENDANCE)
+          .document(sessionID)
+          .setData({
+        'offline': FieldValue.arrayRemove([
+          {'userID': userID, 'username': username},
+        ]),
+        'online': FieldValue.arrayUnion([
+          {'userID': userID, 'username': username}
+        ]),
+      }, merge: true);
+  }
+
+  Future deleteUserForAdmin({@required username}) async {
+    QuerySnapshot snapshots = await _db
+        .collection(C_USER_COURSE)
+        .where('username', isEqualTo: username)
+        .getDocuments();
+    for (int i = 0; i < snapshots.documents.length; i++) {
+      snapshots.documents[i].reference.delete();
+    }
+  }
+
+  Future addTest(
+      {@required Course course,
+      @required String sessionID,
+      @required List<Question> questions,
+      @required List<int> results,
+      @required String title}) async {
+    for (var i in results) {
+      print(i);
+    }
+    await course.reference.collection(C_TEST).add({
+      'title': title,
+      'time': Timestamp.fromDate(DateTime.now()),
+      'sessionID': sessionID,
+      'questions': FieldValue.arrayUnion(
+          [...questions.map((question) => question.toMap())]),
+      'results': results,
+    });
   }
 }
