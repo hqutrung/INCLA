@@ -422,14 +422,6 @@ class FireStoreHelper {
         (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
   }
 
-  Stream<Test> getResultTestStream(
-      Course course,
-      String testID,
-      ) {
-    return course.reference.collection(C_TEST).document(testID).snapshots().map(
-            (snapshot) => Test.fromMap(snapshot.data, uid: snapshot.documentID));
-  }
-
   Future createAttendance(
       {@required Course course,
       int duration,

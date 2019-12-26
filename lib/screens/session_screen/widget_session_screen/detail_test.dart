@@ -250,7 +250,7 @@ class _DetailTestState extends State<DetailTest> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ResultTest()));
+                                builder: (context) => ResultTest(results: widget.test.students)));
                       },
                       child: Text('Kết quả'),
                       color: Colors.black12,
