@@ -76,7 +76,7 @@ class Contact extends StatelessWidget {
               children: <Widget>[
                 Icon(Icons.account_box),
                 SizedBox(
-                  width: 120,
+                  width: 50,
                 ),
                 Text(user.name),
               ],
@@ -90,7 +90,7 @@ class Contact extends StatelessWidget {
               children: <Widget>[
                 Icon(Icons.call),
                 SizedBox(
-                  width: 120,
+                  width: 50,
                 ),
                 Text(user.phoneNumber),
               ],
@@ -104,7 +104,7 @@ class Contact extends StatelessWidget {
               children: <Widget>[
                 Icon(Icons.mail),
                 SizedBox(
-                  width: 120,
+                  width: 50,
                 ),
                 Text(user.email),
               ],
@@ -118,7 +118,7 @@ class Contact extends StatelessWidget {
               children: <Widget>[
                 Icon(Icons.calendar_today),
                 SizedBox(
-                  width: 120,
+                  width: 50,
                 ),
                 Text(ConvertDateTimeToBirthday(user.birthday.toDate())),
               ],
@@ -132,7 +132,7 @@ class Contact extends StatelessWidget {
               children: <Widget>[
                 Icon(Icons.supervised_user_circle),
                 SizedBox(
-                  width: 120,
+                  width: 50,
                 ),
                 Text((user.type == UserType.Student)
                     ? 'Sinh viên'

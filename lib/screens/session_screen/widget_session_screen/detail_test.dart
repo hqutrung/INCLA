@@ -26,7 +26,7 @@ class DetailTest extends StatefulWidget {
 class _DetailTestState extends State<DetailTest> {
   Timer _timer;
   int _start = 900; // 15 phút
-  List<int> selection = List.filled(2, 0, growable: true);
+  List<int> selection;
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -54,6 +54,7 @@ class _DetailTestState extends State<DetailTest> {
   @override
   void initState() {
     startTimer();
+    selection = List.filled(widget.test.questions.length, 0, growable: true);
     super.initState();
   }
 
@@ -131,7 +132,17 @@ class _DetailTestState extends State<DetailTest> {
                             });
                           },
                           value: 1),
-                      Text(widget.test.questions[index].A),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.test.questions[index].A,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -146,7 +157,17 @@ class _DetailTestState extends State<DetailTest> {
                         },
                         value: 2,
                       ),
-                      Text(widget.test.questions[index].B),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.test.questions[index].B,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -160,7 +181,17 @@ class _DetailTestState extends State<DetailTest> {
                             });
                           },
                           value: 3),
-                      Text(widget.test.questions[index].C),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.test.questions[index].C,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -174,7 +205,17 @@ class _DetailTestState extends State<DetailTest> {
                             });
                           },
                           value: 4),
-                      Text(widget.test.questions[index].D),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.test.questions[index].D,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -224,9 +265,8 @@ class _DetailTestState extends State<DetailTest> {
                                 user,
                                 CompareLists(widget.test.results, selection),
                                 selection);
-                          widget.moveBack();
+                            widget.moveBack();
                           });
-                           
                         },
                         child: Text('Nộp bài'),
                         color: Colors.green),
