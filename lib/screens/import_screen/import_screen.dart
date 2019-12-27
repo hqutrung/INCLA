@@ -26,10 +26,10 @@ class _ImportScreenState extends State<ImportScreen> {
 
   Future getExcelData() async {
     var decoder = SpreadsheetDecoder.decodeBytes(File(path).readAsBytesSync());
-    getAccount(decoder.tables['User']);
+    // getAccount(decoder.tables['User']);
     // getCourse(decoder.tables['courses']);
     // getSession(decoder.tables['Session']);
-    // getUserCourse(decoder.tables['User_courses']);
+    getUserCourse(decoder.tables['User_courses']);
     // await getRates(decoder.tables['rate']);
     // await getAttendance(decoder.tables['attendance']);
   }
@@ -102,6 +102,10 @@ class _ImportScreenState extends State<ImportScreen> {
       String name = table.rows[i][1];
       String teacherName = table.rows[i][2];
       String userID = '';
+      if (!courseID.contains('IT005'))
+      continue;
+      else 
+        courseID = 'IT005.J13';
       if (table.rows[i][3].runtimeType == double)
         userID = (table.rows[i][3] as double).toInt().toString();
       else
@@ -185,6 +189,10 @@ class _ImportScreenState extends State<ImportScreen> {
     print('done');
   }
 
+  void customFunction() {
+    // FireStoreHelper().changeIT005();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,6 +208,10 @@ class _ImportScreenState extends State<ImportScreen> {
               child: Text('Click to import'),
               onPressed: getExcelFilePath,
             ),
+            RaisedButton(
+              child: Text("Custom"),
+              onPressed: customFunction,
+            )
           ],
         ),
       ),

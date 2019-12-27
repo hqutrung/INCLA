@@ -847,4 +847,13 @@ class FireStoreHelper {
       'results': results,
     });
   }
+
+  Future changeIT005() async {
+    QuerySnapshot snapshot = await _db.collection(C_USER_COURSE).getDocuments();
+    for (int i = 0; i < snapshot.documents.length; i++) {
+      if (snapshot.documents[i].data['courseID'].toString().contains('IT005')) {
+        snapshot.documents[i].reference.delete();//setData({'courseID': 'IT005.J13'});
+      }
+    }
+  }
 }
