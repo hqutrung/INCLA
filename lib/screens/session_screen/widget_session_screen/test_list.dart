@@ -42,6 +42,7 @@ class _showTestState extends State<showTest>
   @override
   void initState() {
     updateTestsAsyncer();
+    user = Provider.of<User>(context, listen: false);
     super.initState();
   }
 
@@ -61,7 +62,6 @@ class _showTestState extends State<showTest>
 
   Future getExcelData() async {
     var decoder = SpreadsheetDecoder.decodeBytes(File(path).readAsBytesSync());
-    print('asd');
     await createTest(decoder.tables['test_sql']);
   }
 
@@ -90,72 +90,77 @@ class _showTestState extends State<showTest>
     );
   }
 
+  Widget _buildTestList() {
+    return StreamBuilder(
+      stream: testsAsyncer,
+      builder: (context, snapshot) {
+        final SlidableController slidableController = SlidableController();
+        if (!snapshot.hasData)
+          return const Center(child: CircularProgressIndicator());
+        else {
+          List<Test> tests = snapshot.data;
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: tests.length,
+            itemBuilder: (BuildContext context, int index) => Card(
+              child: Slidable(
+                closeOnScroll: true,
+                actionExtentRatio: 0.13,
+                key: Key(widget.key.toString()),
+                controller: slidableController,
+                actionPane: SlidableDrawerActionPane(),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: AssetImage('assets/images/logo-uit.png'),
+                  ),
+                  title: Text(tests[index].title),
+                  subtitle: Text('Thời gian: 15 phút'),
+                  onTap: () {
+                    setState(() {
+                      selectedTest = tests[index];
+                      isTestDetail = !isTestDetail;
+                      detailTestAsyncer = FireStoreHelper()
+                          .getDetailTestStream(widget.course, selectedTest.uid);
+                    });
+                  },
+                ),
+                actions: (user.type == UserType.Teacher)
+                    ? <Widget>[
+                        IconSlideAction(
+                            icon: Icons.delete_outline,
+                            onTap: () {
+                              confirmDialog(context, 'Xác nhận xóa test?', () {
+                                //Firebase xóa
+                              });
+                            }),
+                        IconSlideAction(icon: Icons.edit, onTap: () {}),
+                      ]
+                    : null,
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context, listen: false);
     if (!isTestDetail) {
-      return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: getExcelFilePath,
-          label: Text('Test'),
-          icon: Icon(Icons.add),
-        ),
-        body: StreamBuilder(
-          stream: testsAsyncer,
-          builder: (context, snapshot) {
-            final SlidableController slidableController = SlidableController();
-            if (!snapshot.hasData)
-              return const Center(child: CircularProgressIndicator());
-            else {
-              List<Test> tests = snapshot.data;
-              return ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: tests.length,
-                itemBuilder: (BuildContext context, int index) => Card(
-                  child: Slidable(
-                    closeOnScroll: true,
-                    actionExtentRatio: 0.13,
-                    key: Key(widget.key.toString()),
-                    controller: slidableController,
-                    actionPane: SlidableDrawerActionPane(),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        backgroundImage:
-                            AssetImage('assets/images/logo-uit.png'),
-                      ),
-                      title: Text(tests[index].title),
-                      subtitle: Text('Thời gian: 15 phút'),
-                      onTap: () {
-                        setState(() {
-                          selectedTest = tests[index];
-                          isTestDetail = !isTestDetail;
-                          detailTestAsyncer = FireStoreHelper()
-                              .getDetailTestStream(
-                                  widget.course, selectedTest.uid);
-                        });
-                      },
-                    ),
-                    actions: (user.type == UserType.Teacher)
-                        ? <Widget>[
-                            IconSlideAction(
-                                icon: Icons.delete_outline,
-                                onTap: () {
-                                  confirmDialog(context, 'Xác nhận xóa test?',
-                                      () {
-                                    //Firebase xóa
-                                  });
-                                }),
-                            IconSlideAction(icon: Icons.edit, onTap: () {}),
-                          ]
-                        : null,
-                  ),
-                ),
-              );
-            }
-          },
-        ),
-      );
+      if (user.type == UserType.Teacher)
+        return Scaffold(
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: getExcelFilePath,
+            label: Text('Test'),
+            icon: Icon(Icons.add),
+          ),
+          body: _buildTestList(),
+        );
+      else
+        return Scaffold(
+          body: _buildTestList(),
+        );
     } else if (isTestDetail) {
       return StreamBuilder<Test>(
           stream: detailTestAsyncer,
