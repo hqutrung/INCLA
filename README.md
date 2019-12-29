@@ -21,4 +21,4 @@ Trong đề tài này, nhóm đã phân tích và thiết kế ra những chức
   
   
 # Một số hình ảnh minh họa: 
-    
+![Alt text](/screenshots/AnhMinhHoa.png?raw=true "Buổi học tương tác")
