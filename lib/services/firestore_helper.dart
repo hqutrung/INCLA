@@ -56,16 +56,13 @@ class FireStoreHelper {
   }
 
   Future<Session> getSessionfromID(String sessionID, String courseID) async {
-    var x = await _db
+    return await _db
         .collection(C_COURSE)
         .document(courseID)
         .collection(C_SESSION)
         .document(sessionID)
         .get()
-        .then((snapshot) {
-      if (snapshot.data != null) Session.fromMap(snapshot.data, id: sessionID);
-    });
-    return x;
+        .then((snapshot) => Session.fromMap(snapshot.data, id: sessionID));
   }
 
   Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {

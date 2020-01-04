@@ -64,41 +64,65 @@ class _DetailTestState extends State<DetailTest> {
       itemBuilder: (BuildContext context, int index) {
         return Card(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Text(
                 'Câu ${index + 1}: ' + widget.test.questions[index].question,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              SizedBox(
+                height: 10,
+              ),
               Column(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text('A: '),
-                      Text(widget.test.questions[index].A),
-                    ],
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      'A: ' + widget.test.questions[index].A,
+                      overflow: TextOverflow.clip,
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text('B: '),
-                      Text(widget.test.questions[index].B),
-                    ],
+                  SizedBox(
+                    height: 10,
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text('C: '),
-                      Text(widget.test.questions[index].C),
-                    ],
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      'B: ' + widget.test.questions[index].B,
+                      overflow: TextOverflow.clip,
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text('D: '),
-                      Text(widget.test.questions[index].D),
-                    ],
+                  SizedBox(
+                    height: 10,
                   ),
-                  Text(
-                    'Đáp án: ' + ConvertResult(widget.test.results[index]),
-                    style: TextStyle(color: Colors.green),
-                  )
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      'C: ' + widget.test.questions[index].C,
+                      overflow: TextOverflow.clip,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      'D: ' + widget.test.questions[index].D,
+                      overflow: TextOverflow.clip,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      'Đáp án: ' + ConvertResult(widget.test.results[index]),
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(color: Colors.green),
+                    ),
+                  ),
                 ],
               )
             ],
@@ -208,7 +232,7 @@ class _DetailTestState extends State<DetailTest> {
                       Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Column(
-                         crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
                               widget.test.questions[index].D,

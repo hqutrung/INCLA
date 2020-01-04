@@ -192,7 +192,7 @@ class _RateChartState extends State<RateChart> {
                                 ConvertDateTimeToBirthday(_time).toString()),
                             Row(
                               children: <Widget>[
-                                Text('Trung bình: ' + _measures.toString()),
+                                Text('Trung bình: ' + _measures.toStringAsFixed(2)),
                                 Icon(
                                   Icons.star,
                                   color: Colors.orange,
