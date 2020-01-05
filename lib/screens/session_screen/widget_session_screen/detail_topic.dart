@@ -170,27 +170,6 @@ class _DetailTopicState extends State<DetailTopic> {
                             ]
                           : null,
                     ),
-                    actionPane: SlidableDrawerActionPane(),
-                    actions: (user.type == UserType.Teacher ||
-                            user.uid ==
-                                widget.post.comments[index - 1].attendance
-                                    .userID)
-                        ? <Widget>[
-                            IconSlideAction(
-                                icon: Icons.delete_outline,
-                                onTap: () {
-                                  confirmDialog(
-                                      context, 'Xác nhận xóa bình luận?',
-                                      () {
-                                    FireStoreHelper().deleteComment(
-                                        course,
-                                        widget.post.uid,
-                                        widget.post.comments[index - 1]);
-                                  });
-                                }),
-                            
-                          ]
-                        : null,
                   ),
           ),
         ),
