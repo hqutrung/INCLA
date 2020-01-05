@@ -20,7 +20,7 @@ class Course {
 
   Future<List<UserInfor>> getAllMembersAsync() async {
     if (cachedStudents == null) {
-      print('huhu');
+
       cachedStudents = await FireStoreHelper().getStudentFromUserCourse(courseID);
     }
     return cachedStudents;

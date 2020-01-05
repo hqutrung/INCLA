@@ -26,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("LoginScreen rebuild: " + context.toString());
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

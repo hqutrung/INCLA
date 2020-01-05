@@ -38,7 +38,6 @@ class FireStoreHelper {
   };
 
   Future<List<Course>> getCourseFromUserCourse(String userID) async {
-    print(userID);
     QuerySnapshot snapshots = await _db
         .collection(C_USER_COURSE)
         .where('userID', isEqualTo: userID)
@@ -99,7 +98,6 @@ class FireStoreHelper {
   }
 
   Stream<List<Post>> getPostsStream(String courseID, String sessionID) {
-    print(courseID + ' ' + sessionID);
     return _db
         .collection(C_COURSE)
         .document(courseID)
@@ -117,7 +115,6 @@ class FireStoreHelper {
   }
 
   Stream<List<Test>> getTestsStream(String courseID, String sessionID) {
-    print(courseID + ' ' + sessionID);
     return _db
         .collection(C_COURSE)
         .document(courseID)
@@ -724,7 +721,6 @@ class FireStoreHelper {
           .where('userID', isEqualTo: userID)
           .getDocuments();
       for (int i = 0; i < snapshots.documents.length; i++) {
-        print(userID);
         snapshots.documents[i].reference.setData(x);
       }
     } catch (e) {
@@ -833,7 +829,6 @@ class FireStoreHelper {
       @required List<int> results,
       @required String title}) async {
     for (var i in results) {
-      print(i);
     }
     await course.reference.collection(C_TEST).add({
       'title': title,

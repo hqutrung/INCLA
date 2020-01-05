@@ -114,7 +114,7 @@ class _SessionListState extends State<SessionList> {
       builder: (context, snapshot) {
         final SlidableController slidableController = SlidableController();
         if (snapshot.hasData) {
-          print(user.type);
+
           snapshot.data.sort((a, b) => b.startTime.compareTo(a.startTime));
           return Scaffold(
             floatingActionButton: user.type == UserType.Teacher

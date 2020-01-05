@@ -22,7 +22,6 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Main Drawer rebuild");
     User user = Provider.of<User>(context, listen: false);
     String name = (user != null) ? user.name : 'loading';
     String email = (user != null) ? user.email : 'loading';

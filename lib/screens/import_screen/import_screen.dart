@@ -36,11 +36,8 @@ class _ImportScreenState extends State<ImportScreen> {
 
   Future getAccount(SpreadsheetTable table) async {
     AuthService _auth = AuthService();
-    // for (var row in table.rows) {
-    //   print("$row");
-    // }
+
     for (int i = 1; i < table.rows.length; i++) {
-      print(table.rows[i][6]);
       String email = table.rows[i][0];
       String password = table.rows[i][1].toString();
       String userID = '';
@@ -122,9 +119,9 @@ class _ImportScreenState extends State<ImportScreen> {
         username: username,
         user_type: usertype,
       );
-      print(i);
+
     }
-    print('add user course done');
+
   }
 
   Future getRates(SpreadsheetTable table) async {
@@ -153,9 +150,7 @@ class _ImportScreenState extends State<ImportScreen> {
         content: content,
         timestamp: timestamp,
       );
-      print(i);
     }
-    print('done rates');
   }
 
   Future getAttendance(SpreadsheetTable table) async {
@@ -184,9 +179,7 @@ class _ImportScreenState extends State<ImportScreen> {
         timestamp: timestamp,
         isAttend: isAttend,
       );
-      print(i);
     }
-    print('done');
   }
 
   void customFunction() {

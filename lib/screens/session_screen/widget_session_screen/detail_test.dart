@@ -152,7 +152,6 @@ class _DetailTestState extends State<DetailTest> {
                           onChanged: (value) {
                             setState(() {
                               selection[index] = value;
-                              print(selection);
                             });
                           },
                           value: 1),
@@ -176,7 +175,6 @@ class _DetailTestState extends State<DetailTest> {
                         onChanged: (value) {
                           setState(() {
                             selection[index] = value;
-                            print(selection);
                           });
                         },
                         value: 2,
@@ -201,7 +199,6 @@ class _DetailTestState extends State<DetailTest> {
                           onChanged: (value) {
                             setState(() {
                               selection[index] = value;
-                              print(selection);
                             });
                           },
                           value: 3),
@@ -225,7 +222,6 @@ class _DetailTestState extends State<DetailTest> {
                           onChanged: (value) {
                             setState(() {
                               selection[index] = value;
-                              print(selection);
                             });
                           },
                           value: 4),

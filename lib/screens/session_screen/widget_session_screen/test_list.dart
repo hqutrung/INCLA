@@ -54,7 +54,6 @@ class _showTestState extends State<showTest>
   String path;
 
   Future getExcelFilePath() async {
-    print('asd');
     path = await FilePicker.getFilePath(
         type: FileType.CUSTOM, fileExtension: 'xlsx');
     getExcelData();
@@ -68,7 +67,6 @@ class _showTestState extends State<showTest>
   Future createTest(SpreadsheetTable table) async {
     String title = table.rows[1][0];
     int count = table.rows[1][1];
-    print(count);
     List<Question> questions = List<Question>();
     List<int> results = List<int>();
     for (int i = 1; i <= count; i++) {

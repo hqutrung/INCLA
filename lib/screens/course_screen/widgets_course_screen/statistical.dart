@@ -30,7 +30,7 @@ class _RateChartState extends State<RateChart> {
 
   _onSelectionChanged(SelectionModel model) {
     final selectedDatum = model.selectedDatum;
-    print(selectedDatum[0].datum.rate);
+
     DateTime time = DateTime.now();
     double measures = 0;
 
@@ -46,7 +46,7 @@ class _RateChartState extends State<RateChart> {
     // Request a build.
     setState(() {
       _time = time;
-      print(_time);
+
       _measures = measures;
     });
   }
@@ -93,6 +93,7 @@ class _RateChartState extends State<RateChart> {
           (sessionRates.length == 0) ? 0 : (averageRate / sessionRates.length);
       rateData.add(RateStatistical(averageRate, rates[i].timestamp));
     }
+    rateData.sort((a, b) => a.date.compareTo(b.date));
     return rateData;
   }
 
@@ -118,11 +119,13 @@ class _RateChartState extends State<RateChart> {
           (attendances[i].online == null) ? 0 : attendances[i].online.length;
       attendanceData.add(StudentStatistical(extra, attendances[i].timestamp));
     }
+    attendanceData.sort((a, b) => a.date.compareTo(b.date));
     return attendanceData;
   }
 
   List<Series<StudentStatistical, DateTime>> _getAttendanceChartSeries(
       List<StudentStatistical> attendanceData) {
+        
     return [
       Series(
         data: attendanceData,

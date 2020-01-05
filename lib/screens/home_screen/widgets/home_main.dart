@@ -50,7 +50,7 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
-    // print("HomeMain build");
+
     return Scaffold(
       body: FutureBuilder(
         future: coursesNe,

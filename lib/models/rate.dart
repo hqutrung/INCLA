@@ -17,7 +17,7 @@ class Rate {
     else
       star = data['value'] as double;
     content = data['content'];
-    print('2');
+
   }
 }
 

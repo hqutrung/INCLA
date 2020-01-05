@@ -161,7 +161,6 @@ class _DetailTopicState extends State<DetailTopic> {
                                   confirmDialog(
                                       context, 'Xác nhận xóa bình luận?',
                                       () {
-                                    print('xoa');
                                     FireStoreHelper().deleteComment(
                                         course,
                                         widget.post.uid,
