@@ -62,7 +62,11 @@ class FireStoreHelper {
         .collection(C_SESSION)
         .document(sessionID)
         .get()
-        .then((snapshot) => Session.fromMap(snapshot.data, id: sessionID));
+        .then((snapshot) {
+      if (snapshot.data != null)
+        return Session.fromMap(snapshot.data, id: sessionID);
+      return null;
+    });
   }
 
   Future<List<UserInfor>> getUsersFromUserCourse(String courseID) async {
@@ -829,8 +833,7 @@ class FireStoreHelper {
       @required List<Question> questions,
       @required List<int> results,
       @required String title}) async {
-    for (var i in results) {
-    }
+    for (var i in results) {}
     await course.reference.collection(C_TEST).add({
       'title': title,
       'time': Timestamp.fromDate(DateTime.now()),
