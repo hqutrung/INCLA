@@ -1,10 +1,9 @@
 import 'package:document/models/course.dart';
-import 'package:document/screens/course_screen/widgets_course_screen/session_list.dart';
+import 'package:document/models/user.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/course_resources.dart';
+import 'package:document/screens/course_screen/widgets_course_screen/session_list.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/statistical.dart';
 import 'package:document/screens/course_screen/widgets_course_screen/student_list.dart';
-import 'package:document/models/user.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

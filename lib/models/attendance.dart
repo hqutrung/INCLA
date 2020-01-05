@@ -26,6 +26,8 @@ class Attendance {
 
   bool checkOnlineForUser(String userID) {
     if (online == null) return false;
-    return (online.firstWhere((user) => user.userID == userID, orElse: () => null) != null);
+    return (online.firstWhere((user) => user.userID == userID,
+            orElse: () => null) !=
+        null);
   }
 }

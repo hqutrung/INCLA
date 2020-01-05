@@ -2,8 +2,8 @@ import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
 import 'package:document/screens/session_screen/widget_session_screen/ratedetail.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
-import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
 import 'package:document/screens/session_screen/widget_session_screen/test_list.dart';
+import 'package:document/screens/session_screen/widget_session_screen/topic.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class SessionScreen extends StatefulWidget {
   final Session session;
 
   SessionScreen({@required this.course, @required this.session});
+
   @override
   _SessionScreenState createState() => _SessionScreenState();
 }

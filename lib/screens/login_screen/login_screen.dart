@@ -50,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 15,
               ),
               RaisedButton(
-                
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),

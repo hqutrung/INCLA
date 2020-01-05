@@ -1,13 +1,14 @@
 import 'package:document/screens/home_screen/widgets/home_main.dart';
 import 'package:document/screens/home_screen/widgets/home_notification.dart';
 import 'package:document/screens/home_screen/widgets/home_profile.dart';
-
 import 'package:document/screens/shared_widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   static const String HOMESCREEN_PATH = '/home';
+
   HomePage();
+
   @override
   _HomePageState createState() => _HomePageState();
 }

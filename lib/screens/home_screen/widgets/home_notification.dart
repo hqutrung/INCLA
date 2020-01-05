@@ -4,7 +4,6 @@ import 'package:document/models/session.dart';
 import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/session_screen.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
-
 import 'package:document/services/firestore_helper.dart';
 import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +13,7 @@ class HomeNotification extends StatefulWidget {
   const HomeNotification({
     Key key,
   }) : super(key: key);
+
   @override
   _HomeNotificationState createState() => _HomeNotificationState();
 }

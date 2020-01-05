@@ -1,13 +1,13 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/resource.dart';
+import 'package:document/models/user.dart';
 import 'package:document/screens/shared_widgets/confirm_dialog.dart';
 import 'package:document/services/collection_firestore.dart';
 import 'package:document/services/firestore_helper.dart';
+import 'package:document/utils/WebViewContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:document/utils/WebViewContainer.dart';
-import 'package:document/models/user.dart';
 
 class CourseResources extends StatefulWidget {
   CourseResources();

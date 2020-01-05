@@ -18,7 +18,7 @@ class User {
 
   User.nullUser();
 
-  User.fromMap(Map data,{@required this.email}) {
+  User.fromMap(Map data, {@required this.email}) {
     name = data['username'];
     uid = data['uid'];
     type = UserType.values[data['user_type']];

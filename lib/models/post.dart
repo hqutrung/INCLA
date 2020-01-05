@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'user_infor.dart';
 import 'comment.dart';
+import 'user_infor.dart';
 
 class Post {
   String uid;

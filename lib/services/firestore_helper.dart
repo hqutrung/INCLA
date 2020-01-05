@@ -24,6 +24,7 @@ class FireStoreHelper {
   static const String C_RESOURCE = 'resource';
   static const String C_NOTIFICATION = 'notification';
   static const String C_NOTIS = 'notis';
+
   //DO NOT USE
   static const String C_USER = 'user';
 
@@ -844,7 +845,8 @@ class FireStoreHelper {
     QuerySnapshot snapshot = await _db.collection(C_USER_COURSE).getDocuments();
     for (int i = 0; i < snapshot.documents.length; i++) {
       if (snapshot.documents[i].data['courseID'].toString().contains('IT005')) {
-        snapshot.documents[i].reference.delete();//setData({'courseID': 'IT005.J13'});
+        snapshot.documents[i].reference
+            .delete(); //setData({'courseID': 'IT005.J13'});
       }
     }
   }

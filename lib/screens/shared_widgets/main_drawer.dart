@@ -18,6 +18,7 @@ class ColorThemeNotifier with ChangeNotifier {
 
 class MainDrawer extends StatelessWidget {
   MainDrawer();
+
   final AuthService auth = AuthService();
 
   @override
