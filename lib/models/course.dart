@@ -14,14 +14,15 @@ class Course {
     if (courseID == null) courseID = data['courseID'];
     name = data['name'];
     teacherName = data['teacherName'];
-    
+
     getAllMembersAsync();
   }
 
   Future<List<UserInfor>> getAllMembersAsync() async {
     if (cachedStudents == null) {
       print('huhu');
-      cachedStudents = await FireStoreHelper().getStudentFromUserCourse(courseID);
+      cachedStudents =
+          await FireStoreHelper().getStudentFromUserCourse(courseID);
     }
     return cachedStudents;
   }
@@ -30,11 +31,12 @@ class Course {
     if (cachedStudents == null) await getAllMembersAsync();
     List<Map<String, dynamic>> listMap = List<Map<String, dynamic>>();
     for (int i = 0; i < cachedStudents.length; i++) {
-      Map<String, dynamic> x = {'userID': cachedStudents[i].userID, 'username': cachedStudents[i].username};
+      Map<String, dynamic> x = {
+        'userID': cachedStudents[i].userID,
+        'username': cachedStudents[i].username
+      };
       listMap.add(x);
     }
     return listMap;
   }
-
-  
 }

@@ -11,7 +11,9 @@ import 'package:provider/provider.dart';
 
 class RollCall extends StatefulWidget {
   final String sessionID;
+
   RollCall({@required this.sessionID});
+
   @override
   _RollCallState createState() => _RollCallState();
 }
@@ -83,7 +85,6 @@ class _RollCallState extends State<RollCall> {
     return StreamBuilder<Attendance>(
       stream: attendanceStream,
       builder: (context, snapshot) {
-
         return Scaffold(
           body: SingleChildScrollView(
             child: Container(
@@ -94,15 +95,18 @@ class _RollCallState extends State<RollCall> {
                 children: (snapshot.data == null)
                     ? [
                         QRSection(
-                          qrInteraction: () =>
-                              user.type == UserType.Teacher ? _showCreateQRDialog(context, course) : () {},
+                          qrInteraction: () => user.type == UserType.Teacher
+                              ? _showCreateQRDialog(context, course)
+                              : () {},
                           attendance: snapshot.data,
                         )
                       ]
                     : [
                         QRSection(
                           attendance: snapshot.data,
-                          qrInteraction: user.type == UserType.Student ? _applyQRCode : () {},
+                          qrInteraction: user.type == UserType.Student
+                              ? _applyQRCode
+                              : () {},
                         ),
                         AttendanceList(attendance: snapshot.data),
                       ],

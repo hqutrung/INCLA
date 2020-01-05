@@ -22,7 +22,8 @@ class AuthService {
   }
 
   Stream<User> get getUserStream {
-    return FirebaseAuth.instance.onAuthStateChanged.asyncMap((firebaseUser) async {
+    return FirebaseAuth.instance.onAuthStateChanged
+        .asyncMap((firebaseUser) async {
       if (firebaseUser == null) return User.nullUser();
       DocumentReference docRef =
           _db.collection(User.COLLECTION_PATH).document(firebaseUser.email);
@@ -58,7 +59,8 @@ class AuthService {
   }
 
   Future<User> signUp(String email, String password) async {
-    AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    AuthResult result = await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
   }
 
   bool hasUser() {

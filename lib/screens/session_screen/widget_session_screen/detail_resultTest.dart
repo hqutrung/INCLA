@@ -31,8 +31,12 @@ class _ResultTestState extends State<ResultTest> {
               widget.results[index].attendance.username,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text(widget.results[index].attendance.userID + ' - Nộp bài: '+ ConvertDateTime(widget.results[index].time)),
-            trailing: Text(widget.results[index].point.toString() + 'điểm',),
+            subtitle: Text(widget.results[index].attendance.userID +
+                ' - Nộp bài: ' +
+                ConvertDateTime(widget.results[index].time)),
+            trailing: Text(
+              widget.results[index].point.toString() + 'điểm',
+            ),
           ),
         ),
       ),

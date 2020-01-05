@@ -5,7 +5,7 @@ class Question {
   String C;
   String D;
 
-  Question({this.question, this.A, this.B,this.C,this.D});
+  Question({this.question, this.A, this.B, this.C, this.D});
 
   Question.fromMap(Map data) {
     question = data['question'];

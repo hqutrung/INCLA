@@ -23,6 +23,5 @@ class Noti {
     courseID = data['courseID'];
     sessionID = data['sessionID'];
     isRead = data['isRead'];
-    
   }
 }

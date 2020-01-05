@@ -1,18 +1,13 @@
-import 'dart:math';
-
+import 'package:charts_flutter/flutter.dart';
 import 'package:document/models/attendance.dart';
 import 'package:document/models/course.dart';
 import 'package:document/models/rate.dart';
 import 'package:document/models/ratestatistical.dart';
 import 'package:document/models/studentstatistical.dart';
-import 'package:document/models/user_infor.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:document/utils/ConvertDateTime.dart';
 import 'package:flutter/material.dart';
-import 'package:charts_flutter/flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:charts_flutter/src/text_element.dart';
-import 'package:charts_flutter/src/text_style.dart' as style;
 
 class RateChart extends StatefulWidget {
   @override
@@ -192,7 +187,8 @@ class _RateChartState extends State<RateChart> {
                                 ConvertDateTimeToBirthday(_time).toString()),
                             Row(
                               children: <Widget>[
-                                Text('Trung bình: ' + _measures.toStringAsFixed(2)),
+                                Text('Trung bình: ' +
+                                    _measures.toStringAsFixed(2)),
                                 Icon(
                                   Icons.star,
                                   color: Colors.orange,

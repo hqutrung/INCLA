@@ -9,6 +9,7 @@ class QRSection extends StatefulWidget {
   final Attendance attendance;
 
   QRSection({@required this.qrInteraction, @required this.attendance});
+
   @override
   _QRSectionState createState() => _QRSectionState();
 }
@@ -32,8 +33,7 @@ class _QRSectionState extends State<QRSection>
       isOnline = (widget.attendance == null)
           ? false
           : widget.attendance.checkOnlineForUser(user.uid);
-      if (isOnline)      
-        realFunction = () {};
+      if (isOnline) realFunction = () {};
     }
 
     return GestureDetector(

@@ -1,13 +1,11 @@
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
 
-import 'package:charts_flutter/flutter.dart';
 import 'package:document/services/auth_service.dart';
 import 'package:document/services/firestore_helper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:path_provider/path_provider.dart';
 import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 
 class ImportScreen extends StatefulWidget {
@@ -103,8 +101,8 @@ class _ImportScreenState extends State<ImportScreen> {
       String teacherName = table.rows[i][2];
       String userID = '';
       if (!courseID.contains('IT005'))
-      continue;
-      else 
+        continue;
+      else
         courseID = 'IT005.J13';
       if (table.rows[i][3].runtimeType == double)
         userID = (table.rows[i][3] as double).toInt().toString();

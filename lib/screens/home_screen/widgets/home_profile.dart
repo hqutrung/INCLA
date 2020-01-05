@@ -1,6 +1,5 @@
 import 'package:document/models/user.dart';
 import 'package:document/utils/ConvertDateTime.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,6 +7,7 @@ class Profile extends StatefulWidget {
   const Profile({
     Key key,
   }) : super(key: key);
+
   @override
   _ProfileState createState() => _ProfileState();
 }

@@ -14,6 +14,7 @@ class AttendanceList extends StatefulWidget {
 class _AttendanceListState extends State<AttendanceList>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+
   @override
   void initState() {
     super.initState();

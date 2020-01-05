@@ -1,6 +1,5 @@
-import 'package:document/models/user_infor.dart';
 import 'package:document/models/course.dart';
-import 'package:document/services/firestore_helper.dart';
+import 'package:document/models/user_infor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +28,10 @@ class _StudentListState extends State<StudentList>
             backgroundImage: AssetImage('assets/images/logo-uit.png'),
             backgroundColor: Colors.white,
           ),
-          title: Text(members[index].username, style: TextStyle(fontWeight: FontWeight.w600),),
+          title: Text(
+            members[index].username,
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           subtitle: Text('MSSV: ${members[index].userID}'),
         ),
       ),
