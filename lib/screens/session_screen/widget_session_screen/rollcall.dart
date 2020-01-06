@@ -72,7 +72,11 @@ class _RollCallState extends State<RollCall> {
     return await BarcodeScanner.scan();
   }
 
-  Future _applyQRCode() async {
+  Future _applyQRCode(Attendance attendance) async {
+    if (attendance.timestamp.add(Duration(minutes: attendance.duration)).isBefore(DateTime.now())) {
+      toastDialog(context, "Đã hết thời gian điểm danh", () {});
+    }
+
     String code = await getApplyQRCode();
     String ok = FireStoreHelper().presentAttendance(
         course: course, sessionID: widget.sessionID, code: code, user: user);
@@ -105,7 +109,7 @@ class _RollCallState extends State<RollCall> {
                         QRSection(
                           attendance: snapshot.data,
                           qrInteraction: user.type == UserType.Student
-                              ? _applyQRCode
+                              ? () => _applyQRCode(snapshot.data)
                               : () {},
                         ),
                         AttendanceList(attendance: snapshot.data),

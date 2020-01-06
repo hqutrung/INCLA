@@ -26,3 +26,25 @@ confirmDialog(BuildContext context, String text, Function confirm) async {
         );
       });
 }
+
+toastDialog(BuildContext context, String text, Function confirm) async {
+  await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Row(
+            children: <Widget>[
+              Text(text),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+                child: const Text('Tôi đã biết'),
+                onPressed: () {
+                  confirm();
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      });
+}
