@@ -1,5 +1,6 @@
 import 'package:document/models/course.dart';
 import 'package:document/models/session.dart';
+import 'package:document/models/user.dart';
 import 'package:document/screens/session_screen/widget_session_screen/ratedetail.dart';
 import 'package:document/screens/session_screen/widget_session_screen/rollcall.dart';
 import 'package:document/screens/session_screen/widget_session_screen/test_list.dart';
@@ -26,6 +27,7 @@ class _SessionScreenState extends State<SessionScreen> {
   }
 
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context, listen: false);
     return Provider<Course>.value(
       value: widget.course,
       child: DefaultTabController(
@@ -37,8 +39,10 @@ class _SessionScreenState extends State<SessionScreen> {
                 style: TextStyle(fontSize: 16.0),
               ),
               actions: <Widget>[
-                (widget.session.endTime == null)
-                    ? IconButton(
+                (widget.session.endTime != null ||
+                        user.type == UserType.Student)
+                    ? Container()
+                    : IconButton(
                         icon: Icon(Icons.close),
                         onPressed: () => confirmDialog(
                             context, 'Xác nhận kết thúc buổi học?', () {
@@ -49,7 +53,6 @@ class _SessionScreenState extends State<SessionScreen> {
                           });
                         }),
                       )
-                    : Container(),
               ],
               bottom: TabBar(
                 tabs: <Widget>[

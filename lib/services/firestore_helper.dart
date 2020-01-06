@@ -334,15 +334,17 @@ class FireStoreHelper {
   }) async {
     List<UserInfor> listUserInfor = await getUsersFromUserCourse(courseID);
     for (int i = 0; i < listUserInfor.length; i++) {
-      addNotification(
-        title: title,
-        creator: creator,
-        userID: listUserInfor[i].userID,
-        courseID: courseID,
-        sessionID: sessionID,
-        content: content,
-        type: type,
-      );
+      if (listUserInfor[i].userID != creator.uid) {
+        addNotification(
+          title: title,
+          creator: creator,
+          userID: listUserInfor[i].userID,
+          courseID: courseID,
+          sessionID: sessionID,
+          content: content,
+          type: type,
+        );
+      }
     }
   }
 
